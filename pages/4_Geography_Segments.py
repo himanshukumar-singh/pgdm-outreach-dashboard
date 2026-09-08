@@ -903,8 +903,11 @@ with left:
 
             fig.update_xaxes(
                 title="Activities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1077,8 +1080,11 @@ with c1:
 
             fig.update_xaxes(
                 title="Activities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1164,8 +1170,11 @@ with c2:
 
             fig.update_xaxes(
                 title="Activities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1265,8 +1274,11 @@ with r1:
 
             fig.update_xaxes(
                 title="Activities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1362,8 +1374,11 @@ with r2:
                 fig.update_xaxes(title="")
                 fig.update_yaxes(
                     title="Activities",
-                    dtick=1,
                     rangemode="tozero",
+                    showticklabels=False,
+                    ticks="",
+                    showgrid=False,
+                    zeroline=False,
                 )
 
                 st.plotly_chart(
