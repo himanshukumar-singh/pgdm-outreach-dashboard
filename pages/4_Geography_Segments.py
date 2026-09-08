@@ -1323,7 +1323,7 @@ with r2:
     with st.container(border=True):
         card_header(
             "Campus × State Coverage",
-            "Heatmap view of outreach activity count by campus and state.",
+            "Activity count by campus and state. Cell numbers show actual activities.",
         )
 
         if not {
@@ -1407,9 +1407,19 @@ with r2:
                     650,
                 )
 
+                # Display only actual counts inside cells.
+                # Zero values are kept in the heatmap for layout, but their labels are hidden.
+                text_matrix = heatmap_df.astype(object).copy()
+
+                for state in text_matrix.index:
+                    for campus in text_matrix.columns:
+                        value = heatmap_df.loc[state, campus]
+                        text_matrix.loc[state, campus] = (
+                            "" if value == 0 else f"{int(value)}"
+                        )
+
                 fig = px.imshow(
                     heatmap_df,
-                    text_auto=".0f",
                     aspect="auto",
                     color_continuous_scale=[
                         [0.0, "#F5F8FC"],
@@ -1426,6 +1436,8 @@ with r2:
                 )
 
                 fig.update_traces(
+                    text=text_matrix.values,
+                    texttemplate="%{text}",
                     hovertemplate=(
                         "<b>%{y}</b><br>"
                         "Campus: %{x}<br>"
@@ -1447,14 +1459,7 @@ with r2:
                     ),
                     paper_bgcolor="#FFFFFF",
                     plot_bgcolor="#FFFFFF",
-                    coloraxis_colorbar=dict(
-                        title="Activities",
-                        thickness=10,
-                        len=0.72,
-                        tickfont=dict(
-                            size=9,
-                        ),
-                    ),
+                    coloraxis_showscale=False,
                 )
 
                 fig.update_xaxes(
