@@ -369,13 +369,6 @@ def sidebar_nav():
         st.caption("● Live Google Sheet")
         st.caption("↻ Auto-sync every 60 sec")
 
-        st.markdown('<div class="side-section">DASHBOARD PAGES</div>', unsafe_allow_html=True)
-        for path, label, icon in PAGE_LINKS:
-            st.page_link(path, label=label, icon=icon)
-
-        st.markdown('<div class="side-section">DATA SOURCE</div>', unsafe_allow_html=True)
-        st.caption("● Live Google Sheet")
-        st.caption("↻ Auto-sync every 60 sec")
 
 
 def header(title, subtitle):
