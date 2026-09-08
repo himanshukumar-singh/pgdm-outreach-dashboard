@@ -297,6 +297,33 @@ def inject_css():
             font-size: .76rem;
             margin-top: .30rem;
         }
+
+        /* ---------------- Hide Streamlit Cloud top-right toolbar ---------------- */
+        [data-testid="stToolbar"],
+        [data-testid="stAppToolbar"],
+        [data-testid="stStatusWidget"],
+        [data-testid="stDecoration"],
+        [data-testid="stHeaderActionElements"],
+        #MainMenu {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        header[data-testid="stHeader"] {
+            height: 0 !important;
+            min-height: 0 !important;
+            background: transparent !important;
+        }
+
+        /* Extra safety for Share / GitHub / Edit controls */
+        button[title="Share"],
+        button[aria-label="Share"],
+        a[aria-label="GitHub"],
+        a[title="GitHub"] {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
         </style>
         """,
         unsafe_allow_html=True,
