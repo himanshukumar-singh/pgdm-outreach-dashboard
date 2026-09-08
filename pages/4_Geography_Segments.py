@@ -1323,7 +1323,7 @@ with r2:
     with st.container(border=True):
         card_header(
             "Campus × State Coverage",
-            "How each campus is distributed across outreach states.",
+            "Heatmap view of outreach activity count by campus and state.",
         )
 
         if not {
@@ -1343,8 +1343,8 @@ with r2:
                 )
                 .groupby(
                     [
-                        "Campus",
                         "State",
+                        "Campus",
                     ]
                 )
                 .size()
@@ -1356,37 +1356,127 @@ with r2:
                     "Campus-state coverage available nahi hai."
                 )
             else:
-                fig = px.bar(
-                    campus_state,
-                    x="Campus",
-                    y="Activities",
-                    color="State",
-                    barmode="stack",
-                    text="Activities",
+                heatmap_df = (
+                    campus_state.pivot(
+                        index="State",
+                        columns="Campus",
+                        values="Activities",
+                    )
+                    .fillna(0)
+                )
+
+                preferred_campus_order = [
+                    "Lucknow",
+                    "Noida",
+                    "Jaipur",
+                    "Indore",
+                ]
+
+                ordered_campuses = [
+                    campus
+                    for campus in preferred_campus_order
+                    if campus in heatmap_df.columns
+                ] + [
+                    campus
+                    for campus in heatmap_df.columns
+                    if campus not in preferred_campus_order
+                ]
+
+                heatmap_df = heatmap_df[
+                    ordered_campuses
+                ]
+
+                state_totals = heatmap_df.sum(
+                    axis=1
+                )
+
+                heatmap_df = heatmap_df.loc[
+                    state_totals.sort_values(
+                        ascending=False
+                    ).index
+                ]
+
+                # Future-proof height:
+                # more states automatically create a taller chart,
+                # capped to avoid an excessively long dashboard.
+                dynamic_height = min(
+                    max(
+                        280,
+                        125 + len(heatmap_df) * 34,
+                    ),
+                    650,
+                )
+
+                fig = px.imshow(
+                    heatmap_df,
+                    text_auto=".0f",
+                    aspect="auto",
+                    color_continuous_scale=[
+                        [0.0, "#F5F8FC"],
+                        [0.15, "#DCEBFA"],
+                        [0.45, "#8BBDE8"],
+                        [0.75, "#397FC1"],
+                        [1.0, "#0E4F93"],
+                    ],
+                    labels={
+                        "x": "Campus",
+                        "y": "State",
+                        "color": "Activities",
+                    },
                 )
 
                 fig.update_traces(
-                    textposition="inside",
-                    textfont=dict(size=8),
-                    marker_line_width=0,
+                    hovertemplate=(
+                        "<b>%{y}</b><br>"
+                        "Campus: %{x}<br>"
+                        "Activities: %{z:.0f}"
+                        "<extra></extra>"
+                    ),
+                    textfont=dict(
+                        size=10,
+                    ),
                 )
 
-                fig.update_xaxes(title="")
-                fig.update_yaxes(
-                    title="Activities",
-                    rangemode="tozero",
-                    showticklabels=False,
-                    ticks="",
+                fig.update_layout(
+                    height=dynamic_height,
+                    margin=dict(
+                        l=10,
+                        r=10,
+                        t=8,
+                        b=8,
+                    ),
+                    paper_bgcolor="#FFFFFF",
+                    plot_bgcolor="#FFFFFF",
+                    coloraxis_colorbar=dict(
+                        title="Activities",
+                        thickness=10,
+                        len=0.72,
+                        tickfont=dict(
+                            size=9,
+                        ),
+                    ),
+                )
+
+                fig.update_xaxes(
+                    title="",
+                    side="top",
                     showgrid=False,
-                    zeroline=False,
+                    tickfont=dict(
+                        size=10,
+                    ),
+                )
+
+                fig.update_yaxes(
+                    title="",
+                    showgrid=False,
+                    tickfont=dict(
+                        size=9,
+                    ),
+                    automargin=True,
                 )
 
                 st.plotly_chart(
-                    clean_chart(
-                        fig,
-                        225,
-                        legend=True,
-                    ),
+                    fig,
                     width="stretch",
                     config=CHART_CONFIG,
                 )
@@ -1413,11 +1503,17 @@ with r2:
                     state_per_campus.iloc[0]
                 )
 
+                total_state_count = int(
+                    heatmap_df.index.nunique()
+                )
+
                 action_note(
                     "Campus Geography Insight",
                     (
                         f'{top_geo_campus} currently has the broadest state '
-                        f'coverage with {top_geo_states} unique states in the selected view.'
+                        f'coverage with {top_geo_states} unique states. '
+                        f'The heatmap currently covers {total_state_count} states '
+                        f'and will automatically expand as new states are added.'
                     ),
                     "blue",
                 )
