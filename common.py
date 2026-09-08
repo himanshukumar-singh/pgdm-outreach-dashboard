@@ -3,6 +3,8 @@ import time
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+from pathlib import Path
+
 
 CLOSED_STATUSES = {"Completed", "Cancelled"}
 
@@ -332,14 +334,40 @@ def inject_css():
 
 def sidebar_nav():
     with st.sidebar:
-        st.markdown(
-            """
-            <div class="brand-wrap">
-                <div class="brand-sub">Jaipuria Institute Of Management<br>Lucknow. Noida. Jaipur. Indore</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
+
+        logo_path = (
+            Path(__file__).resolve().parent
+            / "assets"
+            / "jaipuria_logo.png"
         )
+
+        if logo_path.exists():
+            st.image(
+                str(logo_path),
+                width=230
+            )
+        else:
+            st.warning("Jaipuria logo not found.")
+
+        st.markdown(
+            '<div class="side-section">DASHBOARD PAGES</div>',
+            unsafe_allow_html=True
+        )
+
+        for path, label, icon in PAGE_LINKS:
+            st.page_link(
+                path,
+                label=label,
+                icon=icon
+            )
+
+        st.markdown(
+            '<div class="side-section">DATA SOURCE</div>',
+            unsafe_allow_html=True
+        )
+
+        st.caption("● Live Google Sheet")
+        st.caption("↻ Auto-sync every 60 sec")
 
         st.markdown('<div class="side-section">DASHBOARD PAGES</div>', unsafe_allow_html=True)
         for path, label, icon in PAGE_LINKS:
