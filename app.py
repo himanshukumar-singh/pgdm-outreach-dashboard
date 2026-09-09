@@ -421,6 +421,59 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .10rem;
 }
 
+/* ---------- Compact Status Snapshot cards ---------- */
+.status-snapshot-card {
+    min-height: 88px;
+    background: linear-gradient(145deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid #DDE6F0;
+    border-radius: 12px;
+    padding: .58rem .62rem;
+    box-shadow: 0 4px 12px rgba(15,42,69,.025);
+    position: relative;
+    overflow: hidden;
+}
+
+.status-snapshot-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--snap-accent, #2B6DE8);
+}
+
+.status-snapshot-card .slabel {
+    color: #74879D;
+    font-size: .57rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    white-space: nowrap;
+}
+
+.status-snapshot-card .svalue {
+    color: #0F2A45;
+    font-size: 1.02rem;
+    font-weight: 900;
+    margin-top: .14rem;
+    line-height: 1.08;
+}
+
+.status-snapshot-card .snote {
+    color: #8596AA;
+    font-size: .57rem;
+    margin-top: .12rem;
+    line-height: 1.35;
+}
+
+.snap-blue  { --snap-accent:#2F6FBC; }
+.snap-cyan  { --snap-accent:#55A8D8; }
+.snap-green { --snap-accent:#2F9B6B; }
+.snap-amber { --snap-accent:#D99A32; }
+.snap-violet{ --snap-accent:#7A56D8; }
+.snap-teal  { --snap-accent:#159E8C; }
+
 /* ---------- Table ---------- */
 .table-title {
     color: #0F2A45;
@@ -674,6 +727,19 @@ def mini_insight(label, value, note):
             f'<div class="label">{label}</div>'
             f'<div class="value">{value}</div>'
             f'<div class="note">{note}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def status_snapshot_card(label, value, note, css_class="snap-blue"):
+    st.markdown(
+        (
+            f'<div class="status-snapshot-card {css_class}">'
+            f'<div class="slabel">{label}</div>'
+            f'<div class="svalue">{value}</div>'
+            f'<div class="snote">{note}</div>'
             '</div>'
         ),
         unsafe_allow_html=True,
@@ -1129,7 +1195,7 @@ with k6:
 # =========================================================
 # CHART 1 — CAMPUS STATUS + MATCHED INSIGHT
 # =========================================================
-row1_left, row1_right = st.columns([2.35, 1.0], gap="medium")
+row1_left, row1_right = st.columns([2.15, 1.15], gap="medium")
 
 with row1_left:
     with st.container(border=True):
@@ -1195,8 +1261,12 @@ with row1_left:
                 zeroline=False,
             )
 
+            fig.update_layout(
+                bargap=0.28,
+            )
+
             st.plotly_chart(
-                professional_chart(fig, 270),
+                professional_chart(fig, 315),
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1263,21 +1333,103 @@ with row1_right:
                 ].sum()
             )
 
-            mini_insight(
-                "Top campus",
-                top_campus,
-                f"{top_value} outreach activities",
+            completed_total = int(
+                status_data.loc[
+                    status_data["Status"].eq("Completed"),
+                    "Activities",
+                ].sum()
             )
-            mini_insight(
-                "Confirmed",
-                f"{confirmed_total}",
-                "Current confirmed activities",
+
+            active_campuses = int(
+                status_data["Campus"].nunique()
             )
-            mini_insight(
-                "Still planned",
-                f"{planned_total}",
-                "Needs execution follow-through",
+
+            status_totals = (
+                status_data.groupby("Status")["Activities"]
+                .sum()
+                .sort_values(ascending=False)
             )
+
+            dominant_status = (
+                str(status_totals.index[0])
+                if not status_totals.empty
+                else "N/A"
+            )
+
+            dominant_status_count = (
+                int(status_totals.iloc[0])
+                if not status_totals.empty
+                else 0
+            )
+
+            total_status_activities = int(
+                status_data["Activities"].sum()
+            )
+
+            confirmed_share = (
+                round(
+                    confirmed_total
+                    / total_status_activities
+                    * 100,
+                    1,
+                )
+                if total_status_activities
+                else 0
+            )
+
+            s1, s2 = st.columns(2, gap="small")
+
+            with s1:
+                status_snapshot_card(
+                    "Top campus",
+                    top_campus,
+                    f"{top_value} outreach activities",
+                    "snap-blue",
+                )
+
+            with s2:
+                status_snapshot_card(
+                    "Dominant status",
+                    dominant_status,
+                    f"{dominant_status_count} activities",
+                    "snap-violet",
+                )
+
+            s3, s4 = st.columns(2, gap="small")
+
+            with s3:
+                status_snapshot_card(
+                    "Confirmed",
+                    f"{confirmed_total}",
+                    f"{confirmed_share}% of status-linked activities",
+                    "snap-cyan",
+                )
+
+            with s4:
+                status_snapshot_card(
+                    "Still planned",
+                    f"{planned_total}",
+                    "Needs execution follow-through",
+                    "snap-amber",
+                )
+
+            s5, s6 = st.columns(2, gap="small")
+
+            with s5:
+                status_snapshot_card(
+                    "Completed",
+                    f"{completed_total}",
+                    "Activities marked completed",
+                    "snap-green",
+                )
+
+            with s6:
+                status_snapshot_card(
+                    "Campuses in view",
+                    f"{active_campuses}",
+                    "Distinct campuses in selected view",
+                    "snap-teal",
+                )
 
 
 # =========================================================
