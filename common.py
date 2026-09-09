@@ -475,9 +475,70 @@ def inject_css():
     hide_streamlit_cloud_branding()
 
 
-def sidebar_nav():
-    with st.sidebar:
+def _apply_sidebar_visibility():
+    """Apply the current custom sidebar visibility state."""
+    hidden = st.session_state.get("_dashboard_sidebar_hidden", False)
 
+    if hidden:
+        st.markdown(
+            """
+            <style>
+            [data-testid="stSidebar"] {
+                display: none !important;
+                visibility: hidden !important;
+            }
+
+            [data-testid="stSidebarCollapsedControl"],
+            [data-testid="stSidebarCollapseButton"] {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            """
+            <style>
+            [data-testid="stSidebar"] {
+                display: block !important;
+                visibility: visible !important;
+                transform: translateX(0) !important;
+            }
+
+            [data-testid="stSidebarCollapsedControl"],
+            [data-testid="stSidebarCollapseButton"] {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+
+def sidebar_nav():
+    """Sidebar can be hidden and restored reliably."""
+    if "_dashboard_sidebar_hidden" not in st.session_state:
+        st.session_state["_dashboard_sidebar_hidden"] = False
+
+    _apply_sidebar_visibility()
+
+    if st.session_state["_dashboard_sidebar_hidden"]:
+        show_col, _ = st.columns([1.15, 10.85])
+        with show_col:
+            if st.button(
+                "☰ Show Menu",
+                key="_show_dashboard_sidebar",
+                help="Show dashboard navigation",
+                use_container_width=True,
+            ):
+                st.session_state["_dashboard_sidebar_hidden"] = False
+                st.rerun()
+        return
+
+    with st.sidebar:
         logo_path = (
             Path(__file__).resolve().parent
             / "assets"
@@ -485,10 +546,7 @@ def sidebar_nav():
         )
 
         if logo_path.exists():
-            st.image(
-                str(logo_path),
-                width=230
-            )
+            st.image(str(logo_path), width=230)
         else:
             st.warning("Jaipuria logo not found.")
 
@@ -498,11 +556,7 @@ def sidebar_nav():
         )
 
         for path, label, icon in PAGE_LINKS:
-            st.page_link(
-                path,
-                label=label,
-                icon=icon
-            )
+            st.page_link(path, label=label, icon=icon)
 
         st.markdown(
             '<div class="side-section">DATA SOURCE</div>',
@@ -512,7 +566,16 @@ def sidebar_nav():
         st.caption("● Live Google Sheet")
         st.caption("↻ Auto-sync every 60 sec")
 
+        st.markdown("<div style='height:0.35rem'></div>", unsafe_allow_html=True)
 
+        if st.button(
+            "◀ Hide Menu",
+            key="_hide_dashboard_sidebar",
+            help="Hide dashboard navigation",
+            use_container_width=True,
+        ):
+            st.session_state["_dashboard_sidebar_hidden"] = True
+            st.rerun()
 
 def header(title, subtitle):
     st.markdown('<div class="topbar-wrap">', unsafe_allow_html=True)
