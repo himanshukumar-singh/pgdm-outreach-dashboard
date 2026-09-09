@@ -261,7 +261,7 @@ div[data-testid="stDateInput"] input {
     position: relative;
     z-index: 2;
     color: #60758C;
-    font-size: .66rem;
+    font-size: .55rem;
     font-weight: 850;
     white-space: nowrap;
 }
@@ -280,7 +280,7 @@ div[data-testid="stDateInput"] input {
     position: relative;
     z-index: 2;
     color: #8293A8;
-    font-size: .60rem;
+    font-size: .55rem;
     margin-top: .17rem;
 }
 
@@ -374,7 +374,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .chart-insight .ititle {
-    color: #173A61;
+    color: #153A5F;
     font-size: .70rem;
     font-weight: 850;
     margin-bottom: .18rem;
@@ -398,7 +398,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .mini-insight .label {
     color: #74879D;
-    font-size: .62rem;
+    font-size: .56rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: .04em;
@@ -442,7 +442,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .upcoming-table-scroll {
     width: 100%;
-    max-height: 330px;
+    max-height: 300px;
     overflow: auto;
     scrollbar-width: thin;
     scrollbar-color: #C7D4E2 transparent;
@@ -450,7 +450,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .upcoming-pro-table {
     width: 100%;
-    min-width: 1080px;
+    min-width: 960px;
     border-collapse: separate;
     border-spacing: 0;
     font-family: Arial, sans-serif;
@@ -460,12 +460,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     position: sticky;
     top: 0;
     z-index: 4;
-    padding: .52rem .56rem;
-    background: linear-gradient(180deg, #F4F8FD 0%, #EDF3FA 100%);
-    color: #4C6178;
+    padding: .40rem .44rem;
+    background: linear-gradient(180deg, #F2F6FB 0%, #EAF1F8 100%);
+    color: #415A73;
     border-bottom: 1px solid #DCE5EF;
     border-right: 1px solid #E5ECF4;
-    font-size: .62rem;
+    font-size: .56rem;
     font-weight: 850;
     letter-spacing: .035em;
     text-transform: uppercase;
@@ -474,12 +474,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .upcoming-pro-table tbody td {
-    padding: .43rem .56rem;
+    padding: .33rem .44rem;
     color: #334B63;
     border-bottom: 1px solid #E8EEF5;
     border-right: 1px solid #EEF2F7;
-    font-size: .66rem;
-    line-height: 1.22;
+    font-size: .55rem;
+    line-height: 1.18;
     vertical-align: middle;
     background: #FFFFFF;
     white-space: nowrap;
@@ -490,7 +490,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .upcoming-pro-table tbody tr:hover td {
-    background: #F2F7FD;
+    background: #EEF5FC;
 }
 
 .upcoming-pro-table thead th:last-child,
@@ -503,22 +503,22 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .upcoming-pro-table .institution-cell {
-    min-width: 190px;
-    max-width: 280px;
+    min-width: 165px;
+    max-width: 235px;
     white-space: normal;
-    font-weight: 700;
-    color: #173A61;
+    font-weight: 650;
+    color: #153A5F;
 }
 
 .upcoming-pro-table .owner-cell {
-    min-width: 125px;
-    font-weight: 650;
+    min-width: 105px;
+    font-weight: 600;
 }
 
 .upcoming-pro-table .numeric-cell {
     text-align: right;
     font-variant-numeric: tabular-nums;
-    font-weight: 700;
+    font-weight: 650;
 }
 
 .upcoming-pro-table .date-cell {
@@ -531,10 +531,10 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 46px;
-    padding: .20rem .40rem;
+    min-width: 42px;
+    padding: .16rem .34rem;
     border-radius: 999px;
-    font-size: .59rem;
+    font-size: .53rem;
     font-weight: 850;
     border: 1px solid transparent;
     white-space: nowrap;
@@ -593,11 +593,11 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     display: flex;
     justify-content: space-between;
     gap: .8rem;
-    padding: .44rem .62rem;
+    padding: .36rem .50rem;
     background: #FAFCFE;
     border-top: 1px solid #E3EAF2;
     color: #7A8DA3;
-    font-size: .60rem;
+    font-size: .55rem;
 }
 
 .upcoming-table-footer strong {
