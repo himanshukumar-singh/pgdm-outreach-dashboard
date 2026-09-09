@@ -622,6 +622,14 @@ def blank_mask(series):
     )
 
 
+def compact_table_height(row_count, max_visible_rows=8, row_height=30):
+    visible_rows = min(
+        max(int(row_count), 1),
+        max_visible_rows,
+    )
+    return 38 + (visible_rows * row_height)
+
+
 def add_issue(
     collector,
     frame,
@@ -1212,13 +1220,17 @@ with left:
             textposition="outside",
             textfont=dict(size=9),
             marker_line_width=0,
+            cliponaxis=False,
         )
 
         fig.update_xaxes(title="")
         fig.update_yaxes(
             title="Exceptions",
-            dtick=1,
             rangemode="tozero",
+            showticklabels=False,
+            ticks="",
+            showgrid=False,
+            zeroline=False,
         )
 
         st.plotly_chart(
@@ -1286,10 +1298,34 @@ with right:
                 .value_counts()
             )
 
-            top_issue = issue_counts.index[0]
             top_issue_count = int(
                 issue_counts.iloc[0]
             )
+
+            tied_issues = (
+                issue_counts[
+                    issue_counts.eq(
+                        top_issue_count
+                    )
+                ]
+                .index.astype(str)
+                .tolist()
+            )
+
+            shown_issues = tied_issues[:3]
+            extra_issues = max(
+                0,
+                len(tied_issues) - len(shown_issues),
+            )
+
+            top_issue_display = "; ".join(
+                shown_issues
+            )
+
+            if extra_issues > 0:
+                top_issue_display += (
+                    f" +{extra_issues} more"
+                )
 
             action_insight(
                 "Immediate attention",
@@ -1299,8 +1335,12 @@ with right:
 
             action_insight(
                 "Most common issue",
-                str(top_issue),
-                f"{top_issue_count} exception rows",
+                top_issue_display,
+                (
+                    f"{top_issue_count} exception rows each"
+                    if len(tied_issues) > 1
+                    else f"{top_issue_count} exception rows"
+                ),
             )
 
             if (
@@ -1313,10 +1353,43 @@ with right:
                     .value_counts()
                 )
 
+                top_campus_count = int(
+                    campus_counts.iloc[0]
+                )
+
+                tied_campuses = (
+                    campus_counts[
+                        campus_counts.eq(
+                            top_campus_count
+                        )
+                    ]
+                    .index.astype(str)
+                    .tolist()
+                )
+
+                shown_campuses = tied_campuses[:3]
+                extra_campuses = max(
+                    0,
+                    len(tied_campuses) - len(shown_campuses),
+                )
+
+                campus_display = ", ".join(
+                    shown_campuses
+                )
+
+                if extra_campuses > 0:
+                    campus_display += (
+                        f" +{extra_campuses} more"
+                    )
+
                 action_insight(
                     "Most affected campus",
-                    str(campus_counts.index[0]),
-                    f'{int(campus_counts.iloc[0])} exception rows',
+                    campus_display,
+                    (
+                        f"{top_campus_count} exception rows each"
+                        if len(tied_campuses) > 1
+                        else f"{top_campus_count} exception rows"
+                    ),
                 )
             else:
                 action_insight(
@@ -1335,10 +1408,43 @@ with right:
                     .value_counts()
                 )
 
+                top_owner_count = int(
+                    owner_counts.iloc[0]
+                )
+
+                tied_owners = (
+                    owner_counts[
+                        owner_counts.eq(
+                            top_owner_count
+                        )
+                    ]
+                    .index.astype(str)
+                    .tolist()
+                )
+
+                shown_owners = tied_owners[:3]
+                extra_owners = max(
+                    0,
+                    len(tied_owners) - len(shown_owners),
+                )
+
+                owner_display = ", ".join(
+                    shown_owners
+                )
+
+                if extra_owners > 0:
+                    owner_display += (
+                        f" +{extra_owners} more"
+                    )
+
                 action_insight(
                     "Most affected owner",
-                    str(owner_counts.index[0]),
-                    f'{int(owner_counts.iloc[0])} exception rows',
+                    owner_display,
+                    (
+                        f"{top_owner_count} exception rows each"
+                        if len(tied_owners) > 1
+                        else f"{top_owner_count} exception rows"
+                    ),
                 )
             else:
                 action_insight(
@@ -1389,20 +1495,32 @@ with c1:
                 textposition="outside",
                 textfont=dict(size=8),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Exceptions",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
 
+            issue_chart_height = min(
+                max(
+                    250,
+                    105 + len(issue_type_df) * 38,
+                ),
+                520,
+            )
+
             st.plotly_chart(
                 clean_chart(
                     fig,
-                    260,
+                    issue_chart_height,
                     legend=False,
                 ),
                 width="stretch",
@@ -1467,20 +1585,32 @@ with c2:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Exceptions",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
 
+            campus_chart_height = min(
+                max(
+                    235,
+                    115 + len(campus_issue_df) * 38,
+                ),
+                430,
+            )
+
             st.plotly_chart(
                 clean_chart(
                     fig,
-                    235,
+                    campus_chart_height,
                     legend=False,
                 ),
                 width="stretch",
@@ -1554,20 +1684,32 @@ with r1:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Exceptions",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
 
+            owner_chart_height = min(
+                max(
+                    240,
+                    110 + len(owner_issue_df) * 34,
+                ),
+                520,
+            )
+
             st.plotly_chart(
                 clean_chart(
                     fig,
-                    240,
+                    owner_chart_height,
                     legend=False,
                 ),
                 width="stretch",
@@ -1626,12 +1768,39 @@ with r2:
                     "Campus-priority exception data available nahi hai."
                 )
             else:
+                campus_totals = (
+                    campus_priority.groupby(
+                        "Campus",
+                        as_index=False,
+                    )["Exceptions"]
+                    .sum()
+                    .sort_values(
+                        "Exceptions",
+                        ascending=False,
+                    )
+                )
+
+                campus_order = (
+                    campus_totals["Campus"]
+                    .astype(str)
+                    .tolist()
+                )
+
+                priority_chart_height = min(
+                    max(
+                        250,
+                        120 + len(campus_order) * 42,
+                    ),
+                    460,
+                )
+
                 fig = px.bar(
                     campus_priority,
-                    x="Campus",
-                    y="Exceptions",
+                    x="Exceptions",
+                    y="Campus",
                     color="Issue Priority",
-                    barmode="stack",
+                    orientation="h",
+                    barmode="group",
                     text="Exceptions",
                     color_discrete_map={
                         "High": "#C9404B",
@@ -1648,22 +1817,32 @@ with r2:
                 )
 
                 fig.update_traces(
-                    textposition="inside",
-                    textfont=dict(size=8),
+                    textposition="outside",
+                    textfont=dict(size=9),
                     marker_line_width=0,
+                    cliponaxis=False,
                 )
 
-                fig.update_xaxes(title="")
-                fig.update_yaxes(
+                fig.update_xaxes(
                     title="Exceptions",
-                    dtick=1,
                     rangemode="tozero",
+                    showticklabels=False,
+                    ticks="",
+                    showgrid=False,
+                    zeroline=False,
+                )
+
+                fig.update_yaxes(
+                    title="",
+                    categoryorder="array",
+                    categoryarray=campus_order,
+                    autorange="reversed",
                 )
 
                 st.plotly_chart(
                     clean_chart(
                         fig,
-                        240,
+                        priority_chart_height,
                         legend=True,
                     ),
                     width="stretch",
@@ -1685,12 +1864,47 @@ with r2:
                         "No High-priority campus exception is currently generated."
                     )
                 else:
-                    row = high_campus.iloc[0]
-
-                    high_message = (
-                        f'{row["Campus"]} has the highest High-priority '
-                        f'exception count ({int(row["Exceptions"])}).'
+                    highest_high_count = int(
+                        high_campus["Exceptions"].max()
                     )
+
+                    tied_high_campuses = (
+                        high_campus.loc[
+                            high_campus["Exceptions"].eq(
+                                highest_high_count
+                            ),
+                            "Campus",
+                        ]
+                        .astype(str)
+                        .tolist()
+                    )
+
+                    shown_high_campuses = tied_high_campuses[:3]
+                    extra_high_campuses = max(
+                        0,
+                        len(tied_high_campuses)
+                        - len(shown_high_campuses),
+                    )
+
+                    high_names = ", ".join(
+                        shown_high_campuses
+                    )
+
+                    if extra_high_campuses > 0:
+                        high_names += (
+                            f" +{extra_high_campuses} more"
+                        )
+
+                    if len(tied_high_campuses) == 1:
+                        high_message = (
+                            f"{high_names} has the highest High-priority "
+                            f"exception count ({highest_high_count})."
+                        )
+                    else:
+                        high_message = (
+                            f"{high_names} jointly have the highest High-priority "
+                            f"exception count ({highest_high_count} each)."
+                        )
 
                 note_box(
                     "Campus Priority Insight",
@@ -1825,48 +2039,70 @@ else:
         ),
     }
 
+    high_view = exceptions_sorted[
+        exceptions_sorted["Issue Priority"].eq("High")
+    ][display_cols]
+
+    medium_view = exceptions_sorted[
+        exceptions_sorted["Issue Priority"].eq("Medium")
+    ][display_cols]
+
+    low_view = exceptions_sorted[
+        exceptions_sorted["Issue Priority"].eq("Low")
+    ][display_cols]
+
+    all_view = exceptions_sorted[
+        display_cols
+    ]
+
     with high_tab:
         st.dataframe(
-            exceptions_sorted[
-                exceptions_sorted["Issue Priority"].eq("High")
-            ][display_cols],
+            high_view,
             width="stretch",
             hide_index=True,
-            height=300,
+            height=compact_table_height(
+                len(high_view),
+                max_visible_rows=8,
+            ),
             row_height=30,
             column_config=column_config,
         )
 
     with medium_tab:
         st.dataframe(
-            exceptions_sorted[
-                exceptions_sorted["Issue Priority"].eq("Medium")
-            ][display_cols],
+            medium_view,
             width="stretch",
             hide_index=True,
-            height=300,
+            height=compact_table_height(
+                len(medium_view),
+                max_visible_rows=8,
+            ),
             row_height=30,
             column_config=column_config,
         )
 
     with low_tab:
         st.dataframe(
-            exceptions_sorted[
-                exceptions_sorted["Issue Priority"].eq("Low")
-            ][display_cols],
+            low_view,
             width="stretch",
             hide_index=True,
-            height=300,
+            height=compact_table_height(
+                len(low_view),
+                max_visible_rows=8,
+            ),
             row_height=30,
             column_config=column_config,
         )
 
     with all_tab:
         st.dataframe(
-            exceptions_sorted[display_cols],
+            all_view,
             width="stretch",
             hide_index=True,
-            height=320,
+            height=compact_table_height(
+                len(all_view),
+                max_visible_rows=9,
+            ),
             row_height=30,
             column_config=column_config,
         )
