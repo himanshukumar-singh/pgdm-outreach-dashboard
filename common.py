@@ -240,33 +240,54 @@ def inject_css():
             display: none;
         }
 
-        /* ---------------- Minimal sidebar toggle ----------------
-           Use Streamlit's native collapse/expand behavior, but render
-           it as a slim clickable line instead of a boxed button. */
-
-        [data-testid="stSidebarHeader"] {
-            position: relative !important;
+        /* ---------------- Minimal sidebar toggle ---------------- */
+        /* Hide Streamlit's native sidebar controls. We use our own
+           slim clickable line so there is no button/box UI. */
+        [data-testid="stSidebarCollapseButton"],
+        [data-testid="stSidebarCollapsedControl"],
+        [data-testid="collapsedControl"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
 
-        [data-testid="stSidebarCollapseButton"] {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: absolute !important;
-            top: 0.55rem !important;
-            right: -0.15rem !important;
-            width: 14px !important;
+        /* Custom line while sidebar is OPEN. */
+        .st-key-_sidebar_hide_line,
+        div[class*="st-key-_sidebar_hide_line"] {
+            position: fixed !important;
+            left: 270px !important;
+            top: 76px !important;
+            width: 16px !important;
             height: 48px !important;
+            z-index: 999999 !important;
             margin: 0 !important;
-            z-index: 99999 !important;
+            padding: 0 !important;
         }
 
-        [data-testid="stSidebarCollapseButton"] button {
+        /* Custom line while sidebar is HIDDEN. */
+        .st-key-_sidebar_show_line,
+        div[class*="st-key-_sidebar_show_line"] {
+            position: fixed !important;
+            left: 2px !important;
+            top: 76px !important;
+            width: 16px !important;
+            height: 48px !important;
+            z-index: 999999 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .st-key-_sidebar_hide_line button,
+        div[class*="st-key-_sidebar_hide_line"] button,
+        .st-key-_sidebar_show_line button,
+        div[class*="st-key-_sidebar_show_line"] button {
             position: absolute !important;
             inset: 0 !important;
-            width: 14px !important;
-            min-width: 14px !important;
+            width: 16px !important;
+            min-width: 16px !important;
             height: 48px !important;
+            min-height: 48px !important;
             padding: 0 !important;
             margin: 0 !important;
             background: transparent !important;
@@ -274,96 +295,65 @@ def inject_css():
             border-radius: 0 !important;
             box-shadow: none !important;
             outline: none !important;
+            color: transparent !important;
+            font-size: 0 !important;
         }
 
-        [data-testid="stSidebarCollapseButton"] button:hover,
-        [data-testid="stSidebarCollapseButton"] button:focus,
-        [data-testid="stSidebarCollapseButton"] button:active {
+        .st-key-_sidebar_hide_line button:hover,
+        div[class*="st-key-_sidebar_hide_line"] button:hover,
+        .st-key-_sidebar_show_line button:hover,
+        div[class*="st-key-_sidebar_show_line"] button:hover,
+        .st-key-_sidebar_hide_line button:focus,
+        div[class*="st-key-_sidebar_hide_line"] button:focus,
+        .st-key-_sidebar_show_line button:focus,
+        div[class*="st-key-_sidebar_show_line"] button:focus {
             background: transparent !important;
             border: 0 !important;
             box-shadow: none !important;
             outline: none !important;
         }
 
-        [data-testid="stSidebarCollapseButton"] button svg,
-        [data-testid="stSidebarCollapseButton"] button span {
+        .st-key-_sidebar_hide_line button p,
+        div[class*="st-key-_sidebar_hide_line"] button p,
+        .st-key-_sidebar_show_line button p,
+        div[class*="st-key-_sidebar_show_line"] button p {
             display: none !important;
         }
 
-        [data-testid="stSidebarCollapseButton"] button::after {
+        .st-key-_sidebar_hide_line button::after,
+        div[class*="st-key-_sidebar_hide_line"] button::after {
             content: "";
             position: absolute;
-            top: 8px;
-            right: 4px;
+            top: 7px;
+            left: 7px;
             width: 2px;
-            height: 32px;
+            height: 34px;
             border-radius: 999px;
-            background: rgba(255,255,255,0.58);
-            transition: background .15s ease, width .15s ease;
+            background: rgba(255,255,255,0.62);
+            transition: width .15s ease, background .15s ease;
         }
 
-        [data-testid="stSidebarCollapseButton"] button:hover::after {
+        .st-key-_sidebar_hide_line button:hover::after,
+        div[class*="st-key-_sidebar_hide_line"] button:hover::after {
             width: 3px;
             background: #ffffff;
         }
 
-        /* When sidebar is collapsed, keep only a slim line on the far left. */
-        [data-testid="stSidebarCollapsedControl"],
-        [data-testid="collapsedControl"] {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: fixed !important;
-            left: 0 !important;
-            top: 0.85rem !important;
-            width: 14px !important;
-            height: 48px !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            z-index: 999999 !important;
-            background: transparent !important;
-            border: 0 !important;
-            box-shadow: none !important;
-        }
-
-        [data-testid="stSidebarCollapsedControl"] button,
-        [data-testid="collapsedControl"] button {
-            position: absolute !important;
-            inset: 0 !important;
-            width: 14px !important;
-            min-width: 14px !important;
-            height: 48px !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            background: transparent !important;
-            border: 0 !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-            outline: none !important;
-        }
-
-        [data-testid="stSidebarCollapsedControl"] button svg,
-        [data-testid="stSidebarCollapsedControl"] button span,
-        [data-testid="collapsedControl"] button svg,
-        [data-testid="collapsedControl"] button span {
-            display: none !important;
-        }
-
-        [data-testid="stSidebarCollapsedControl"] button::after,
-        [data-testid="collapsedControl"] button::after {
+        .st-key-_sidebar_show_line button::after,
+        div[class*="st-key-_sidebar_show_line"] button::after {
             content: "";
             position: absolute;
-            top: 8px;
-            left: 4px;
+            top: 7px;
+            left: 6px;
             width: 2px;
-            height: 32px;
+            height: 34px;
             border-radius: 999px;
-            background: #54789e;
-            transition: background .15s ease, width .15s ease;
+            background: #6b7f97;
+            transition: width .15s ease, background .15s ease;
         }
 
-        [data-testid="stSidebarCollapsedControl"] button:hover::after,
-        [data-testid="collapsedControl"] button:hover::after {
+        .st-key-_sidebar_show_line button:hover::after,
+        div[class*="st-key-_sidebar_show_line"] button:hover::after {
             width: 3px;
             background: #17365d;
         }
@@ -618,9 +608,70 @@ def inject_css():
     hide_streamlit_cloud_branding()
 
 
+def _apply_sidebar_visibility():
+    """Hide/show the sidebar while keeping the main dashboard layout clean."""
+    hidden = st.session_state.get("_dashboard_sidebar_hidden", False)
+
+    if hidden:
+        st.markdown(
+            """
+            <style>
+            [data-testid="stSidebar"] {
+                display: none !important;
+                visibility: hidden !important;
+                width: 0 !important;
+                min-width: 0 !important;
+                max-width: 0 !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            """
+            <style>
+            [data-testid="stSidebar"] {
+                display: block !important;
+                visibility: visible !important;
+                min-width: 280px !important;
+                max-width: 280px !important;
+                transform: translateX(0) !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+
 def sidebar_nav():
-    """Render dashboard navigation and use Streamlit's native slim sidebar toggle."""
+    """Render the sidebar with only a slim line to hide/show it."""
+    if "_dashboard_sidebar_hidden" not in st.session_state:
+        st.session_state["_dashboard_sidebar_hidden"] = False
+
+    _apply_sidebar_visibility()
+
+    # Sidebar hidden: show only a slim clickable line on the far left.
+    if st.session_state["_dashboard_sidebar_hidden"]:
+        if st.button(
+            "Show navigation",
+            key="_sidebar_show_line",
+            help="Show navigation",
+        ):
+            st.session_state["_dashboard_sidebar_hidden"] = False
+            st.rerun()
+        return
+
+    # Sidebar visible: render normal content plus a slim line at its upper-right edge.
     with st.sidebar:
+        if st.button(
+            "Hide navigation",
+            key="_sidebar_hide_line",
+            help="Hide navigation",
+        ):
+            st.session_state["_dashboard_sidebar_hidden"] = True
+            st.rerun()
+
         logo_path = (
             Path(__file__).resolve().parent
             / "assets"
