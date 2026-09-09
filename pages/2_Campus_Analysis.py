@@ -1069,11 +1069,13 @@ display_cols = [
     if col in scorecard.columns
 ]
 
+scorecard_height = 38 + (len(scorecard[display_cols]) * 31)
+
 st.dataframe(
     scorecard[display_cols],
     width="stretch",
     hide_index=True,
-    height=220,
+    height=scorecard_height,
     row_height=31,
     column_config={
         "Campus": st.column_config.TextColumn(
@@ -1170,12 +1172,16 @@ with left:
             textposition="outside",
             textfont=dict(size=9),
             marker_line_width=0,
+            cliponaxis=False,
         )
 
         fig.update_xaxes(
             title="Activities",
-            dtick=1,
             rangemode="tozero",
+            showticklabels=False,
+            ticks="",
+            showgrid=False,
+            zeroline=False,
         )
 
         fig.update_yaxes(title="")
@@ -1328,12 +1334,16 @@ with c1:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Institutions",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1406,12 +1416,16 @@ with c2:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Cities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1529,12 +1543,17 @@ with r1:
                     textposition="outside",
                     textfont=dict(size=9),
                     marker_line_width=0,
+                    cliponaxis=False,
                 )
 
                 fig.update_xaxes(title="")
                 fig.update_yaxes(
                     title="Students",
                     rangemode="tozero",
+                    showticklabels=False,
+                    ticks="",
+                    showgrid=False,
+                    zeroline=False,
                 )
 
                 st.plotly_chart(
@@ -1648,13 +1667,17 @@ with r2:
             textposition="outside",
             textfont=dict(size=9),
             marker_line_width=0,
+            cliponaxis=False,
         )
 
         fig.update_xaxes(title="")
         fig.update_yaxes(
             title="Activities",
-            dtick=1,
             rangemode="tozero",
+            showticklabels=False,
+            ticks="",
+            showgrid=False,
+            zeroline=False,
         )
 
         st.plotly_chart(
