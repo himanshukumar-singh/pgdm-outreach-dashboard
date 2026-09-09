@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -19,57 +20,59 @@
         body {
             margin: 0;
             padding: 0;
+
             width: 100%;
             height: 100%;
+
             overflow: hidden;
+
             background: #f4f7fb;
         }
 
         .dashboard-wrapper {
             position: fixed;
-            inset: 0;
+
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
             width: 100vw;
             height: 100vh;
+
             overflow: hidden;
+
             background: #f4f7fb;
         }
 
         #dashboard {
             position: absolute;
+
             top: 0;
             left: 0;
 
             width: 100%;
-            height: 100%;
 
-            border: 0;
+            /*
+            iframe ko actual browser viewport se
+            55px zyada height di hai.
+
+            Streamlit ka Built with Streamlit /
+            Fullscreen footer isi extra area me
+            chala jayega aur wrapper usse crop karega.
+            */
+
+            height: calc(100vh + 55px);
+
+            border: none;
             margin: 0;
             padding: 0;
 
             display: block;
         }
-
-        /*
-        Covers Streamlit embed footer:
-        "Built with Streamlit" + "Fullscreen"
-        */
-        .streamlit-footer-cover {
-            position: fixed;
-
-            left: 0;
-            right: 0;
-            bottom: 0;
-
-            height: 48px;
-
-            background: #f4f7fb;
-
-            z-index: 999999;
-
-            pointer-events: auto;
-        }
     </style>
 </head>
+
 
 <body>
 
@@ -82,9 +85,8 @@
             loading="eager">
         </iframe>
 
-        <div class="streamlit-footer-cover"></div>
-
     </div>
 
 </body>
+
 </html>
