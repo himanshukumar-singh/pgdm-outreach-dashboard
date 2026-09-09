@@ -240,6 +240,134 @@ def inject_css():
             display: none;
         }
 
+        /* ---------------- Minimal sidebar toggle ----------------
+           Use Streamlit's native collapse/expand behavior, but render
+           it as a slim clickable line instead of a boxed button. */
+
+        [data-testid="stSidebarHeader"] {
+            position: relative !important;
+        }
+
+        [data-testid="stSidebarCollapseButton"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: absolute !important;
+            top: 0.55rem !important;
+            right: -0.15rem !important;
+            width: 14px !important;
+            height: 48px !important;
+            margin: 0 !important;
+            z-index: 99999 !important;
+        }
+
+        [data-testid="stSidebarCollapseButton"] button {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 14px !important;
+            min-width: 14px !important;
+            height: 48px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: transparent !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        [data-testid="stSidebarCollapseButton"] button:hover,
+        [data-testid="stSidebarCollapseButton"] button:focus,
+        [data-testid="stSidebarCollapseButton"] button:active {
+            background: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        [data-testid="stSidebarCollapseButton"] button svg,
+        [data-testid="stSidebarCollapseButton"] button span {
+            display: none !important;
+        }
+
+        [data-testid="stSidebarCollapseButton"] button::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            right: 4px;
+            width: 2px;
+            height: 32px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.58);
+            transition: background .15s ease, width .15s ease;
+        }
+
+        [data-testid="stSidebarCollapseButton"] button:hover::after {
+            width: 3px;
+            background: #ffffff;
+        }
+
+        /* When sidebar is collapsed, keep only a slim line on the far left. */
+        [data-testid="stSidebarCollapsedControl"],
+        [data-testid="collapsedControl"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: fixed !important;
+            left: 0 !important;
+            top: 0.85rem !important;
+            width: 14px !important;
+            height: 48px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            z-index: 999999 !important;
+            background: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+        }
+
+        [data-testid="stSidebarCollapsedControl"] button,
+        [data-testid="collapsedControl"] button {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 14px !important;
+            min-width: 14px !important;
+            height: 48px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: transparent !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        [data-testid="stSidebarCollapsedControl"] button svg,
+        [data-testid="stSidebarCollapsedControl"] button span,
+        [data-testid="collapsedControl"] button svg,
+        [data-testid="collapsedControl"] button span {
+            display: none !important;
+        }
+
+        [data-testid="stSidebarCollapsedControl"] button::after,
+        [data-testid="collapsedControl"] button::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 4px;
+            width: 2px;
+            height: 32px;
+            border-radius: 999px;
+            background: #54789e;
+            transition: background .15s ease, width .15s ease;
+        }
+
+        [data-testid="stSidebarCollapsedControl"] button:hover::after,
+        [data-testid="collapsedControl"] button:hover::after {
+            width: 3px;
+            background: #17365d;
+        }
+
         .brand-wrap {
             margin-top: 0.10rem;
             margin-bottom: 1.15rem;
@@ -455,6 +583,7 @@ def inject_css():
             height: 0 !important;
             min-height: 0 !important;
             background: transparent !important;
+            overflow: visible !important;
         }
 
         /* Extra safety for Share / GitHub / Edit controls */
@@ -489,70 +618,8 @@ def inject_css():
     hide_streamlit_cloud_branding()
 
 
-def _apply_sidebar_visibility():
-    """Apply the current custom sidebar visibility state."""
-    hidden = st.session_state.get("_dashboard_sidebar_hidden", False)
-
-    if hidden:
-        st.markdown(
-            """
-            <style>
-            [data-testid="stSidebar"] {
-                display: none !important;
-                visibility: hidden !important;
-            }
-
-            [data-testid="stSidebarCollapsedControl"],
-            [data-testid="stSidebarCollapseButton"] {
-                display: none !important;
-                visibility: hidden !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            """
-            <style>
-            [data-testid="stSidebar"] {
-                display: block !important;
-                visibility: visible !important;
-                transform: translateX(0) !important;
-            }
-
-            [data-testid="stSidebarCollapsedControl"],
-            [data-testid="stSidebarCollapseButton"] {
-                display: none !important;
-                visibility: hidden !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-
-
 def sidebar_nav():
-    """Custom sidebar with reliable Hide Menu / Show Menu controls."""
-    if "_dashboard_sidebar_hidden" not in st.session_state:
-        st.session_state["_dashboard_sidebar_hidden"] = False
-
-    _apply_sidebar_visibility()
-
-    # When hidden, show only a compact restore button in the main area.
-    if st.session_state["_dashboard_sidebar_hidden"]:
-        show_col, _ = st.columns([1.15, 10.85])
-        with show_col:
-            if st.button(
-                "☰ Show Menu",
-                key="_show_dashboard_sidebar",
-                help="Show dashboard navigation",
-                use_container_width=True,
-            ):
-                st.session_state["_dashboard_sidebar_hidden"] = False
-                st.rerun()
-        return
-
+    """Render dashboard navigation and use Streamlit's native slim sidebar toggle."""
     with st.sidebar:
         logo_path = (
             Path(__file__).resolve().parent
@@ -564,16 +631,6 @@ def sidebar_nav():
             st.image(str(logo_path), width=230)
         else:
             st.warning("Jaipuria logo not found.")
-
-        # Keep the custom hide control easy to find, directly below the logo.
-        if st.button(
-            "◀ Hide Menu",
-            key="_hide_dashboard_sidebar",
-            help="Hide dashboard navigation",
-            use_container_width=True,
-        ):
-            st.session_state["_dashboard_sidebar_hidden"] = True
-            st.rerun()
 
         st.markdown(
             '<div class="side-section">DASHBOARD PAGES</div>',
@@ -590,6 +647,7 @@ def sidebar_nav():
 
         st.caption("● Live Google Sheet")
         st.caption("↻ Auto-sync every 60 sec")
+
 
 def header(title, subtitle):
     st.markdown('<div class="topbar-wrap">', unsafe_allow_html=True)
