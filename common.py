@@ -475,9 +475,20 @@ def inject_css():
     hide_streamlit_cloud_branding()
 
 
+SIDEBAR_STATE_KEY = "_dashboard_sidebar_hidden"
+
+
 def _apply_sidebar_visibility():
-    """Apply the current custom sidebar visibility state."""
-    hidden = st.session_state.get("_dashboard_sidebar_hidden", False)
+    """
+    Custom sidebar visibility controller.
+
+    - Default: sidebar visible.
+    - Hide Menu: sidebar is removed and main dashboard expands.
+    - Show Menu: sidebar comes back.
+    - State survives Streamlit reruns / 60-sec auto refresh / page navigation
+      within the same session.
+    """
+    hidden = bool(st.session_state.get(SIDEBAR_STATE_KEY, False))
 
     if hidden:
         st.markdown(
@@ -486,10 +497,16 @@ def _apply_sidebar_visibility():
             [data-testid="stSidebar"] {
                 display: none !important;
                 visibility: hidden !important;
+                width: 0 !important;
+                min-width: 0 !important;
+                max-width: 0 !important;
+                flex: 0 0 0 !important;
+                transform: translateX(-100%) !important;
             }
 
             [data-testid="stSidebarCollapsedControl"],
-            [data-testid="stSidebarCollapseButton"] {
+            [data-testid="stSidebarCollapseButton"],
+            button[data-testid="stSidebarCollapseButton"] {
                 display: none !important;
                 visibility: hidden !important;
             }
@@ -504,11 +521,16 @@ def _apply_sidebar_visibility():
             [data-testid="stSidebar"] {
                 display: block !important;
                 visibility: visible !important;
+                width: 280px !important;
+                min-width: 280px !important;
+                max-width: 280px !important;
+                flex: 0 0 280px !important;
                 transform: translateX(0) !important;
             }
 
             [data-testid="stSidebarCollapsedControl"],
-            [data-testid="stSidebarCollapseButton"] {
+            [data-testid="stSidebarCollapseButton"],
+            button[data-testid="stSidebarCollapseButton"] {
                 display: none !important;
                 visibility: hidden !important;
             }
@@ -519,14 +541,16 @@ def _apply_sidebar_visibility():
 
 
 def sidebar_nav():
-    """Sidebar can be hidden and restored reliably."""
-    if "_dashboard_sidebar_hidden" not in st.session_state:
-        st.session_state["_dashboard_sidebar_hidden"] = False
+    """
+    Render the Jaipuria navigation with a persistent custom Hide/Show Menu.
+    """
+    if SIDEBAR_STATE_KEY not in st.session_state:
+        st.session_state[SIDEBAR_STATE_KEY] = False
 
     _apply_sidebar_visibility()
 
-    if st.session_state["_dashboard_sidebar_hidden"]:
-        show_col, _ = st.columns([1.15, 10.85])
+    if st.session_state[SIDEBAR_STATE_KEY]:
+        show_col, _ = st.columns([1.15, 10.85], gap="small")
         with show_col:
             if st.button(
                 "☰ Show Menu",
@@ -534,7 +558,7 @@ def sidebar_nav():
                 help="Show dashboard navigation",
                 use_container_width=True,
             ):
-                st.session_state["_dashboard_sidebar_hidden"] = False
+                st.session_state[SIDEBAR_STATE_KEY] = False
                 st.rerun()
         return
 
@@ -552,7 +576,7 @@ def sidebar_nav():
 
         st.markdown(
             '<div class="side-section">DASHBOARD PAGES</div>',
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
         for path, label, icon in PAGE_LINKS:
@@ -560,13 +584,16 @@ def sidebar_nav():
 
         st.markdown(
             '<div class="side-section">DATA SOURCE</div>',
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
         st.caption("● Live Google Sheet")
         st.caption("↻ Auto-sync every 60 sec")
 
-        st.markdown("<div style='height:0.35rem'></div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div style='height:0.35rem'></div>",
+            unsafe_allow_html=True,
+        )
 
         if st.button(
             "◀ Hide Menu",
@@ -574,8 +601,9 @@ def sidebar_nav():
             help="Hide dashboard navigation",
             use_container_width=True,
         ):
-            st.session_state["_dashboard_sidebar_hidden"] = True
+            st.session_state[SIDEBAR_STATE_KEY] = True
             st.rerun()
+
 
 def header(title, subtitle):
     st.markdown('<div class="topbar-wrap">', unsafe_allow_html=True)
