@@ -222,9 +222,23 @@ def inject_css():
         /* ---------------- Sidebar ---------------- */
         [data-testid="stSidebar"] {
             background: linear-gradient(180deg, #082546 0%, #0d315a 100%);
+            border-right: 0;
+        }
+
+        /* Keep the 280px design ONLY while the sidebar is open.
+           When Streamlit collapses it, release the width completely so
+           the dashboard expands to the full available viewport. */
+        [data-testid="stSidebar"][aria-expanded="true"] {
+            width: 280px !important;
             min-width: 280px !important;
             max-width: 280px !important;
-            border-right: 0;
+        }
+
+        [data-testid="stSidebar"][aria-expanded="false"] {
+            width: 0 !important;
+            min-width: 0 !important;
+            max-width: 0 !important;
+            flex-basis: 0 !important;
         }
 
         [data-testid="stSidebar"] * {
@@ -240,7 +254,7 @@ def inject_css():
         }
 
         /* ---------------- Native Streamlit sidebar toggle ---------------- */
-        /* Keep Streamlit's own chevrons. No custom box, line, or text button. */
+        /* Keep Streamlit's original << / >> controls. No custom box/line. */
         [data-testid="stSidebarCollapseButton"],
         [data-testid="stExpandSidebarButton"],
         [data-testid="stSidebarCollapsedControl"],
