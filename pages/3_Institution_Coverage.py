@@ -992,14 +992,25 @@ display_cols = [
     if col in scorecard.columns
 ]
 
+scorecard_view = scorecard[display_cols].sort_values(
+    ["Activities", "Institution / Event Name"],
+    ascending=[False, True],
+)
+
+visible_scorecard_rows = min(
+    max(len(scorecard_view), 1),
+    8,
+)
+
+scorecard_height = 38 + (
+    visible_scorecard_rows * 30
+)
+
 st.dataframe(
-    scorecard[display_cols].sort_values(
-        ["Activities", "Institution / Event Name"],
-        ascending=[False, True],
-    ),
+    scorecard_view,
     width="stretch",
     hide_index=True,
-    height=275,
+    height=scorecard_height,
     row_height=30,
     column_config={
         "Campus": st.column_config.TextColumn(
@@ -1089,12 +1100,16 @@ with left:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Activities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1109,22 +1124,51 @@ with left:
                 config=CHART_CONFIG,
             )
 
-            top_row = (
-                institution_rank
-                .sort_values(
-                    "Activities",
-                    ascending=False,
+            top_activity_count = int(
+                institution_rank["Activities"].max()
+            )
+
+            tied_top = (
+                institution_rank.loc[
+                    institution_rank["Activities"].eq(
+                        top_activity_count
+                    ),
+                    "Institution",
+                ]
+                .astype(str)
+                .sort_values()
+                .tolist()
+            )
+
+            shown_top = tied_top[:3]
+            extra_top = max(
+                0,
+                len(tied_top) - len(shown_top),
+            )
+
+            if len(shown_top) == 1:
+                leader_names = shown_top[0]
+                leader_phrase = "has"
+            elif len(shown_top) == 2:
+                leader_names = (
+                    f"{shown_top[0]} and {shown_top[1]}"
                 )
-                .iloc[0]
-            )
+                leader_phrase = "jointly have"
+            else:
+                leader_names = (
+                    ", ".join(shown_top[:-1])
+                    + f", and {shown_top[-1]}"
+                )
+                leader_phrase = "jointly have"
 
-            total_activity_rows = int(
-                institution_rank["Activities"].sum()
-            )
+            if extra_top > 0:
+                leader_names += (
+                    f" and {extra_top} more"
+                )
 
-            share = (
+            share_each = (
                 round(
-                    int(top_row["Activities"])
+                    top_activity_count
                     / len(f)
                     * 100,
                     1,
@@ -1136,10 +1180,10 @@ with left:
             action_note(
                 "Institution Engagement Insight",
                 (
-                    f'{top_row["Institution"]} has the highest activity frequency '
-                    f'with {int(top_row["Activities"])} activities '
-                    f'({share}% of all selected outreach records). '
-                    f'{repeat_institutions} institutions currently have repeat engagement.'
+                    f"{leader_names} {leader_phrase} the highest activity frequency "
+                    f"with {top_activity_count} activities each "
+                    f"({share_each}% of all selected outreach records per institution). "
+                    f"{repeat_institutions} institutions currently have repeat engagement."
                 ),
                 "blue",
             )
@@ -1152,22 +1196,50 @@ with right:
             "Management-ready institution coverage summary.",
         )
 
-        top_institution = (
-            institution_activity_count.index[0]
-            if not institution_activity_count.empty
-            else "N/A"
-        )
+        if institution_activity_count.empty:
+            top_institution_display = "N/A"
+            top_institution_count = 0
+            top_institution_note = "No institution activity available."
+        else:
+            top_institution_count = int(
+                institution_activity_count.iloc[0]
+            )
 
-        top_institution_count = (
-            int(institution_activity_count.iloc[0])
-            if not institution_activity_count.empty
-            else 0
-        )
+            tied_institutions = (
+                institution_activity_count[
+                    institution_activity_count.eq(
+                        top_institution_count
+                    )
+                ]
+                .index.astype(str)
+                .tolist()
+            )
+
+            shown_tied = tied_institutions[:3]
+            extra_tied = max(
+                0,
+                len(tied_institutions) - len(shown_tied),
+            )
+
+            top_institution_display = ", ".join(
+                shown_tied
+            )
+
+            if extra_tied > 0:
+                top_institution_display += (
+                    f" +{extra_tied} more"
+                )
+
+            top_institution_note = (
+                f"{top_institution_count} outreach activities each"
+                if len(tied_institutions) > 1
+                else f"{top_institution_count} outreach activities"
+            )
 
         institution_insight(
             "Most engaged institution",
-            str(top_institution),
-            f"{top_institution_count} outreach activities",
+            top_institution_display,
+            top_institution_note,
         )
 
         institution_insight(
@@ -1286,12 +1358,16 @@ with c1:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Institutions",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1369,13 +1445,17 @@ with c2:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(title="")
             fig.update_yaxes(
                 title="Activities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             st.plotly_chart(
@@ -1516,11 +1596,16 @@ with r1:
                     textposition="outside",
                     textfont=dict(size=9),
                     marker_line_width=0,
+                    cliponaxis=False,
                 )
 
                 fig.update_xaxes(
                     title="Students",
                     rangemode="tozero",
+                    showticklabels=False,
+                    ticks="",
+                    showgrid=False,
+                    zeroline=False,
                 )
 
                 fig.update_yaxes(title="")
@@ -1592,12 +1677,16 @@ with r2:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Activities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
