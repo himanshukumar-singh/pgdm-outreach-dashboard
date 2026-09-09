@@ -61,8 +61,6 @@ def hide_streamlit_cloud_branding():
     st.markdown(
         """
         <style>
-        [data-testid="stToolbar"],
-        [data-testid="stAppToolbar"],
         [data-testid="stStatusWidget"],
         [data-testid="stDecoration"],
         [data-testid="stHeaderActionElements"],
@@ -136,8 +134,6 @@ def hide_streamlit_cloud_branding():
 
                     // Known/likely Streamlit controls.
                     doc.querySelectorAll(`
-                        [data-testid="stToolbar"],
-                        [data-testid="stAppToolbar"],
                         [data-testid="stStatusWidget"],
                         [data-testid="stDecoration"],
                         [data-testid="stHeaderActionElements"],
@@ -192,7 +188,6 @@ def hide_streamlit_cloud_branding():
         width=0,
     )
 
-
 def inject_css():
     enable_auto_refresh(60)
     st.markdown(
@@ -244,8 +239,8 @@ def inject_css():
             display: none;
         }
 
-        /* ---------------- Native sidebar toggle ---------------- */
-        /* Keep Streamlit's original chevrons exactly as in the reference video. */
+        /* ---------------- Native Streamlit sidebar toggle ---------------- */
+        /* Keep Streamlit's own chevrons. No custom box, line, or text button. */
         [data-testid="stSidebarCollapseButton"],
         [data-testid="stExpandSidebarButton"],
         [data-testid="stSidebarCollapsedControl"],
@@ -253,16 +248,6 @@ def inject_css():
             visibility: visible !important;
             opacity: 1 !important;
             pointer-events: auto !important;
-        }
-
-        [data-testid="stSidebarCollapseButton"] button,
-        [data-testid="stExpandSidebarButton"] button,
-        [data-testid="stSidebarCollapsedControl"] button,
-        [data-testid="collapsedControl"] button {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            outline: none !important;
         }
 
         .brand-wrap {
@@ -466,8 +451,6 @@ def inject_css():
         }
 
         /* ---------------- Hide Streamlit Cloud top-right toolbar ---------------- */
-        [data-testid="stToolbar"],
-        [data-testid="stAppToolbar"],
         [data-testid="stStatusWidget"],
         [data-testid="stDecoration"],
         [data-testid="stHeaderActionElements"],
@@ -516,14 +499,16 @@ def inject_css():
     hide_streamlit_cloud_branding()
 
 
+
 def sidebar_nav():
-    """Render dashboard navigation using Streamlit's native sidebar chevrons."""
+    """Render dashboard navigation and use Streamlit's native slim sidebar toggle."""
     with st.sidebar:
         logo_path = (
             Path(__file__).resolve().parent
             / "assets"
             / "jaipuria_logo.png"
         )
+
         if logo_path.exists():
             logo_base64 = base64.b64encode(logo_path.read_bytes()).decode("utf-8")
             st.markdown(
