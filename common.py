@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 from pathlib import Path
+import streamlit.components.v1 as components
 
 
 CLOSED_STATUSES = {"Completed", "Cancelled"}
@@ -48,6 +49,145 @@ def enable_auto_refresh(seconds=60):
 
     _auto_refresh_fragment()
 
+
+
+def hide_streamlit_cloud_branding():
+    """Hide Streamlit Community Cloud viewer/hosting badges and app chrome."""
+
+    # Elements rendered inside the Streamlit app DOM.
+    st.markdown(
+        """
+        <style>
+        [data-testid="stToolbar"],
+        [data-testid="stAppToolbar"],
+        [data-testid="stStatusWidget"],
+        [data-testid="stDecoration"],
+        [data-testid="stHeaderActionElements"],
+        [data-testid="stAppDeployButton"],
+        #MainMenu,
+        footer,
+        [class*="viewerBadge"],
+        [class*="ViewerBadge"],
+        a[href*="share.streamlit.io/user/"],
+        a[href*="streamlit.io/cloud"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Community Cloud can render the bottom-right badge outside the app's
+    # normal DOM. This small script also checks the parent page and removes
+    # only Streamlit Cloud controls in the bottom-right area.
+    components.html(
+        """
+        <script>
+        (() => {
+            const hideCloudBranding = () => {
+                try {
+                    const doc = window.parent.document;
+                    const win = window.parent;
+
+                    const hide = (el) => {
+                        if (!el) return;
+                        el.style.setProperty('display', 'none', 'important');
+                        el.style.setProperty('visibility', 'hidden', 'important');
+                        el.style.setProperty('opacity', '0', 'important');
+                        el.style.setProperty('pointer-events', 'none', 'important');
+                    };
+
+                    const isBottomRight = (el) => {
+                        try {
+                            const r = el.getBoundingClientRect();
+                            return r.right >= win.innerWidth - 500 &&
+                                   r.bottom >= win.innerHeight - 260;
+                        } catch (_) {
+                            return false;
+                        }
+                    };
+
+                    const hideClosestFloatingParent = (el) => {
+                        let target = el;
+                        for (let i = 0; i < 7 && target && target.parentElement; i++) {
+                            const style = win.getComputedStyle(target);
+                            const r = target.getBoundingClientRect();
+
+                            if (style.position === 'fixed' ||
+                                style.position === 'sticky' ||
+                                (r.right >= win.innerWidth - 500 &&
+                                 r.bottom >= win.innerHeight - 260 &&
+                                 r.width <= 520 && r.height <= 320)) {
+                                hide(target);
+                                return;
+                            }
+
+                            if (target.parentElement === doc.body) break;
+                            target = target.parentElement;
+                        }
+                        hide(el);
+                    };
+
+                    // Known/likely Streamlit controls.
+                    doc.querySelectorAll(`
+                        [data-testid="stToolbar"],
+                        [data-testid="stAppToolbar"],
+                        [data-testid="stStatusWidget"],
+                        [data-testid="stDecoration"],
+                        [data-testid="stHeaderActionElements"],
+                        [data-testid="stAppDeployButton"],
+                        [class*="viewerBadge"],
+                        [class*="ViewerBadge"],
+                        a[href*="share.streamlit.io/user/"],
+                        a[href*="streamlit.io/cloud"]
+                    `).forEach((el) => {
+                        if (isBottomRight(el) ||
+                            String(el.className || '').toLowerCase().includes('viewerbadge') ||
+                            (el.getAttribute('href') || '').includes('share.streamlit.io/user/')) {
+                            hideClosestFloatingParent(el);
+                        }
+                    });
+
+                    // Text fallback for current Community Cloud badge/popup.
+                    doc.querySelectorAll('a, button, div, span').forEach((el) => {
+                        const txt = (el.innerText || el.textContent || '')
+                            .replace(/\\s+/g, ' ')
+                            .trim()
+                            .toLowerCase();
+
+                        if ((txt === 'hosted with streamlit' || txt === 'manage app') &&
+                            isBottomRight(el)) {
+                            hideClosestFloatingParent(el);
+                        }
+                    });
+                } catch (_) {
+                    // If Community Cloud changes its DOM/sandbox, leave app running normally.
+                }
+            };
+
+            hideCloudBranding();
+            setTimeout(hideCloudBranding, 250);
+            setTimeout(hideCloudBranding, 750);
+            setTimeout(hideCloudBranding, 1500);
+            setTimeout(hideCloudBranding, 3000);
+
+            try {
+                const observer = new MutationObserver(hideCloudBranding);
+                observer.observe(window.parent.document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true
+                });
+            } catch (_) {}
+        })();
+        </script>
+        """,
+        height=0,
+        width=0,
+    )
 
 def inject_css():
     enable_auto_refresh(60)
@@ -330,6 +470,9 @@ def inject_css():
         """,
         unsafe_allow_html=True,
     )
+
+    # Remove Streamlit Community Cloud bottom-right branding/viewer badge.
+    hide_streamlit_cloud_branding()
 
 
 def sidebar_nav():
