@@ -1160,37 +1160,51 @@ with row1_left:
                 "Rescheduled": "#D99A32",
             }
 
+            # Grouped bars keep every status value readable even when
+            # one status has a very small count (for example 1 or 2).
             fig = px.bar(
                 status_data,
                 x="Campus",
                 y="Activities",
                 color="Status",
-                barmode="stack",
+                barmode="group",
                 text="Activities",
                 color_discrete_map=status_colors,
                 category_orders={
-                    "Campus": ["Lucknow", "Noida", "Jaipur", "Indore"]
+                    "Campus": ["Lucknow", "Noida", "Jaipur", "Indore"],
+                    "Status": [
+                        "Completed",
+                        "Confirmed",
+                        "Cancelled",
+                        "Rescheduled",
+                        "Planned",
+                    ],
                 },
             )
 
             fig.update_traces(
-                textposition="inside",
+                textposition="outside",
+                texttemplate="%{y:.0f}",
+                textangle=0,
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             status_max = int(
-                status_data.groupby("Campus")["Activities"]
-                .sum()
-                .max()
+                status_data["Activities"].max()
             )
 
-            fig.update_xaxes(title="")
+            fig.update_xaxes(
+                title="",
+                tickfont=dict(size=9),
+            )
+
             fig.update_yaxes(
                 title="Activities",
                 range=[
                     0,
-                    max(1, status_max * 1.15),
+                    max(1, status_max * 1.24),
                 ],
                 showticklabels=False,
                 ticks="",
@@ -1199,11 +1213,12 @@ with row1_left:
             )
 
             fig.update_layout(
-                bargap=0.28,
+                bargap=0.24,
+                bargroupgap=0.08,
             )
 
             st.plotly_chart(
-                professional_chart(fig, 235),
+                professional_chart(fig, 245),
                 width="stretch",
                 config=CHART_CONFIG,
             )
