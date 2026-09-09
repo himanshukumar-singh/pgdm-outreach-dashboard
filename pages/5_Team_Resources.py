@@ -576,11 +576,29 @@ def split_people(value):
     for sep in [";", "|", "\n"]:
         text = text.replace(sep, ",")
 
-    return [
-        item.strip()
-        for item in text.split(",")
-        if item.strip()
-    ]
+    missing_tokens = {
+        "na",
+        "n/a",
+        "none",
+        "null",
+        "not applicable",
+        "not available",
+        "-",
+        "--",
+    }
+
+    people = []
+
+    for item in text.split(","):
+        person = item.strip()
+
+        if (
+            person
+            and person.lower() not in missing_tokens
+        ):
+            people.append(person)
+
+    return people
 
 
 def make_people_usage(frame, column_name, role_name):
@@ -1217,10 +1235,11 @@ owner_display_cols = [
     if col in owner_scorecard.columns
 ]
 
-st.dataframe(
+owner_scorecard_view = (
     owner_scorecard[
         owner_display_cols
-    ].sort_values(
+    ]
+    .sort_values(
         [
             "Activities",
             "Activity Owner",
@@ -1229,10 +1248,23 @@ st.dataframe(
             False,
             True,
         ],
-    ),
+    )
+)
+
+owner_visible_rows = min(
+    max(len(owner_scorecard_view), 1),
+    8,
+)
+
+owner_table_height = 38 + (
+    owner_visible_rows * 30
+)
+
+st.dataframe(
+    owner_scorecard_view,
     width="stretch",
     hide_index=True,
-    height=270,
+    height=owner_table_height,
     row_height=30,
     column_config={
         "Campus": st.column_config.TextColumn(
@@ -1324,12 +1356,16 @@ with left:
             textposition="outside",
             textfont=dict(size=9),
             marker_line_width=0,
+            cliponaxis=False,
         )
 
         fig.update_xaxes(
             title="Activities",
-            dtick=1,
             rangemode="tozero",
+            showticklabels=False,
+            ticks="",
+            showgrid=False,
+            zeroline=False,
         )
 
         fig.update_yaxes(title="")
@@ -1495,12 +1531,16 @@ with c1:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Institutions",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1571,11 +1611,34 @@ with c2:
             )
         )
 
+        pressure["Total Load"] = (
+            pressure["Upcoming"]
+            + pressure["High_Priority"]
+        )
+
+        owner_order = (
+            pressure.sort_values(
+                "Total Load",
+                ascending=False,
+            )["Activity Owner"]
+            .astype(str)
+            .tolist()
+        )
+
+        pressure_height = min(
+            max(
+                245,
+                110 + len(owner_order) * 27,
+            ),
+            520,
+        )
+
         fig = px.bar(
             pressure_long,
-            x="Activity Owner",
-            y="Activities",
+            x="Activities",
+            y="Activity Owner",
             color="Load Type",
+            orientation="h",
             barmode="group",
             text="Activities",
             color_discrete_map={
@@ -1588,23 +1651,29 @@ with c2:
             textposition="outside",
             textfont=dict(size=9),
             marker_line_width=0,
+            cliponaxis=False,
         )
 
         fig.update_xaxes(
-            title="",
-            tickangle=-20,
+            title="Activities",
+            rangemode="tozero",
+            showticklabels=False,
+            ticks="",
+            showgrid=False,
+            zeroline=False,
         )
 
         fig.update_yaxes(
-            title="Activities",
-            dtick=1,
-            rangemode="tozero",
+            title="",
+            categoryorder="array",
+            categoryarray=owner_order,
+            autorange="reversed",
         )
 
         st.plotly_chart(
             clean_chart(
                 fig,
-                230,
+                pressure_height,
                 legend=True,
             ),
             width="stretch",
@@ -1635,7 +1704,7 @@ with r1:
     with st.container(border=True):
         card_header(
             "Owner Distribution by Campus",
-            "How owner activity volume is distributed across campuses.",
+            "Activity count by owner and campus. Cell numbers show actual activities.",
         )
 
         if "Campus" not in owner_base.columns:
@@ -1654,34 +1723,132 @@ with r1:
                 .reset_index(name="Activities")
             )
 
-            fig = px.bar(
-                campus_owner,
-                x="Campus",
-                y="Activities",
-                color="Activity Owner",
-                barmode="stack",
-                text="Activities",
+            owner_heatmap = (
+                campus_owner.pivot(
+                    index="Activity Owner",
+                    columns="Campus",
+                    values="Activities",
+                )
+                .fillna(0)
+            )
+
+            preferred_campus_order = [
+                "Lucknow",
+                "Noida",
+                "Jaipur",
+                "Indore",
+            ]
+
+            ordered_campuses = [
+                campus
+                for campus in preferred_campus_order
+                if campus in owner_heatmap.columns
+            ] + [
+                campus
+                for campus in owner_heatmap.columns
+                if campus not in preferred_campus_order
+            ]
+
+            owner_heatmap = owner_heatmap[
+                ordered_campuses
+            ]
+
+            owner_totals = owner_heatmap.sum(
+                axis=1
+            )
+
+            owner_heatmap = owner_heatmap.loc[
+                owner_totals.sort_values(
+                    ascending=False
+                ).index
+            ]
+
+            text_matrix = owner_heatmap.astype(
+                object
+            ).copy()
+
+            for owner_name in text_matrix.index:
+                for campus_name in text_matrix.columns:
+                    value = owner_heatmap.loc[
+                        owner_name,
+                        campus_name,
+                    ]
+
+                    text_matrix.loc[
+                        owner_name,
+                        campus_name,
+                    ] = (
+                        ""
+                        if value == 0
+                        else f"{int(value)}"
+                    )
+
+            heatmap_height = min(
+                max(
+                    280,
+                    120 + len(owner_heatmap) * 30,
+                ),
+                620,
+            )
+
+            fig = px.imshow(
+                owner_heatmap,
+                aspect="auto",
+                color_continuous_scale=[
+                    [0.0, "#F5F8FC"],
+                    [0.15, "#DCEBFA"],
+                    [0.45, "#8BBDE8"],
+                    [0.75, "#397FC1"],
+                    [1.0, "#0E4F93"],
+                ],
+                labels={
+                    "x": "Campus",
+                    "y": "Activity Owner",
+                    "color": "Activities",
+                },
             )
 
             fig.update_traces(
-                textposition="inside",
-                textfont=dict(size=8),
-                marker_line_width=0,
+                text=text_matrix.values,
+                texttemplate="%{text}",
+                hovertemplate=(
+                    "<b>%{y}</b><br>"
+                    "Campus: %{x}<br>"
+                    "Activities: %{z:.0f}"
+                    "<extra></extra>"
+                ),
+                textfont=dict(size=10),
             )
 
-            fig.update_xaxes(title="")
+            fig.update_layout(
+                height=heatmap_height,
+                margin=dict(
+                    l=8,
+                    r=8,
+                    t=8,
+                    b=8,
+                ),
+                paper_bgcolor="#FFFFFF",
+                plot_bgcolor="#FFFFFF",
+                coloraxis_showscale=False,
+            )
+
+            fig.update_xaxes(
+                title="",
+                side="top",
+                showgrid=False,
+                tickfont=dict(size=10),
+            )
+
             fig.update_yaxes(
-                title="Activities",
-                dtick=1,
-                rangemode="tozero",
+                title="",
+                showgrid=False,
+                tickfont=dict(size=9),
+                automargin=True,
             )
 
             st.plotly_chart(
-                clean_chart(
-                    fig,
-                    235,
-                    legend=True,
-                ),
+                fig,
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1749,12 +1916,16 @@ with r2:
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+                cliponaxis=False,
             )
 
             fig.update_xaxes(
                 title="Activities",
-                dtick=1,
                 rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             fig.update_yaxes(title="")
@@ -1805,17 +1976,31 @@ if resource_utilisation.empty:
         "Supporting Team Member / Resource Person assignments are not available in the selected data."
     )
 else:
-    st.dataframe(
+    resource_table_view = (
         resource_utilisation[
             [
                 "Person",
                 "Activities",
                 "Role",
             ]
-        ],
+        ]
+        .copy()
+    )
+
+    resource_visible_rows = min(
+        max(len(resource_table_view), 1),
+        8,
+    )
+
+    resource_table_height = 38 + (
+        resource_visible_rows * 30
+    )
+
+    st.dataframe(
+        resource_table_view,
         width="stretch",
         hide_index=True,
-        height=245,
+        height=resource_table_height,
         row_height=30,
         column_config={
             "Person": st.column_config.TextColumn(
