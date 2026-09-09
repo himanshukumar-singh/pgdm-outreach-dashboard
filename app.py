@@ -1168,11 +1168,8 @@ with row1_left:
 
             fig.update_traces(
                 textposition="inside",
-                texttemplate="%{text}",
                 textfont=dict(size=9),
-                insidetextorientation="horizontal",
                 marker_line_width=0,
-                cliponaxis=False,
             )
 
             status_max = int(
