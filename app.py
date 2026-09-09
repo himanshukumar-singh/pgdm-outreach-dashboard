@@ -1203,7 +1203,7 @@ with row1_left:
             )
 
             st.plotly_chart(
-                professional_chart(fig, 285),
+                professional_chart(fig, 235),
                 width="stretch",
                 config=CHART_CONFIG,
             )
