@@ -466,6 +466,20 @@ def inject_css():
             visibility: hidden !important;
         }
 
+        /* Hide image fullscreen hover control (especially the sidebar logo). */
+        [data-testid="stImage"] button[title="Fullscreen"],
+        [data-testid="stImage"] button[title="View fullscreen"],
+        [data-testid="stImage"] button[aria-label="Fullscreen"],
+        [data-testid="stImage"] button[aria-label="View fullscreen"],
+        [data-testid="stImage"] [data-testid="StyledFullScreenButton"],
+        [data-testid="stImage"] [class*="FullScreenButton"],
+        [data-testid="stImage"] [class*="fullscreen"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
         </style>
         """,
         unsafe_allow_html=True,
@@ -475,20 +489,9 @@ def inject_css():
     hide_streamlit_cloud_branding()
 
 
-SIDEBAR_STATE_KEY = "_dashboard_sidebar_hidden"
-
-
 def _apply_sidebar_visibility():
-    """
-    Custom sidebar visibility controller.
-
-    - Default: sidebar visible.
-    - Hide Menu: sidebar is removed and main dashboard expands.
-    - Show Menu: sidebar comes back.
-    - State survives Streamlit reruns / 60-sec auto refresh / page navigation
-      within the same session.
-    """
-    hidden = bool(st.session_state.get(SIDEBAR_STATE_KEY, False))
+    """Apply the current custom sidebar visibility state."""
+    hidden = st.session_state.get("_dashboard_sidebar_hidden", False)
 
     if hidden:
         st.markdown(
@@ -497,16 +500,10 @@ def _apply_sidebar_visibility():
             [data-testid="stSidebar"] {
                 display: none !important;
                 visibility: hidden !important;
-                width: 0 !important;
-                min-width: 0 !important;
-                max-width: 0 !important;
-                flex: 0 0 0 !important;
-                transform: translateX(-100%) !important;
             }
 
             [data-testid="stSidebarCollapsedControl"],
-            [data-testid="stSidebarCollapseButton"],
-            button[data-testid="stSidebarCollapseButton"] {
+            [data-testid="stSidebarCollapseButton"] {
                 display: none !important;
                 visibility: hidden !important;
             }
@@ -521,16 +518,11 @@ def _apply_sidebar_visibility():
             [data-testid="stSidebar"] {
                 display: block !important;
                 visibility: visible !important;
-                width: 280px !important;
-                min-width: 280px !important;
-                max-width: 280px !important;
-                flex: 0 0 280px !important;
                 transform: translateX(0) !important;
             }
 
             [data-testid="stSidebarCollapsedControl"],
-            [data-testid="stSidebarCollapseButton"],
-            button[data-testid="stSidebarCollapseButton"] {
+            [data-testid="stSidebarCollapseButton"] {
                 display: none !important;
                 visibility: hidden !important;
             }
@@ -541,16 +533,15 @@ def _apply_sidebar_visibility():
 
 
 def sidebar_nav():
-    """
-    Render the Jaipuria navigation with a persistent custom Hide/Show Menu.
-    """
-    if SIDEBAR_STATE_KEY not in st.session_state:
-        st.session_state[SIDEBAR_STATE_KEY] = False
+    """Custom sidebar with reliable Hide Menu / Show Menu controls."""
+    if "_dashboard_sidebar_hidden" not in st.session_state:
+        st.session_state["_dashboard_sidebar_hidden"] = False
 
     _apply_sidebar_visibility()
 
-    if st.session_state[SIDEBAR_STATE_KEY]:
-        show_col, _ = st.columns([1.15, 10.85], gap="small")
+    # When hidden, show only a compact restore button in the main area.
+    if st.session_state["_dashboard_sidebar_hidden"]:
+        show_col, _ = st.columns([1.15, 10.85])
         with show_col:
             if st.button(
                 "☰ Show Menu",
@@ -558,7 +549,7 @@ def sidebar_nav():
                 help="Show dashboard navigation",
                 use_container_width=True,
             ):
-                st.session_state[SIDEBAR_STATE_KEY] = False
+                st.session_state["_dashboard_sidebar_hidden"] = False
                 st.rerun()
         return
 
@@ -573,6 +564,16 @@ def sidebar_nav():
             st.image(str(logo_path), width=230)
         else:
             st.warning("Jaipuria logo not found.")
+
+        # Keep the custom hide control easy to find, directly below the logo.
+        if st.button(
+            "◀ Hide Menu",
+            key="_hide_dashboard_sidebar",
+            help="Hide dashboard navigation",
+            use_container_width=True,
+        ):
+            st.session_state["_dashboard_sidebar_hidden"] = True
+            st.rerun()
 
         st.markdown(
             '<div class="side-section">DASHBOARD PAGES</div>',
@@ -589,21 +590,6 @@ def sidebar_nav():
 
         st.caption("● Live Google Sheet")
         st.caption("↻ Auto-sync every 60 sec")
-
-        st.markdown(
-            "<div style='height:0.35rem'></div>",
-            unsafe_allow_html=True,
-        )
-
-        if st.button(
-            "◀ Hide Menu",
-            key="_hide_dashboard_sidebar",
-            help="Hide dashboard navigation",
-            use_container_width=True,
-        ):
-            st.session_state[SIDEBAR_STATE_KEY] = True
-            st.rerun()
-
 
 def header(title, subtitle):
     st.markdown('<div class="topbar-wrap">', unsafe_allow_html=True)
