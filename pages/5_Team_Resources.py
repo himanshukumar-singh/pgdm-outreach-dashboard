@@ -1695,8 +1695,22 @@ with c2:
 # =========================================================
 # ROW 3 — CAMPUS OWNER DISTRIBUTION + RESOURCE UTILISATION
 # =========================================================
+owner_count_for_layout = (
+    int(owner_base["Activity Owner"].nunique())
+    if "Activity Owner" in owner_base.columns
+    else 0
+)
+
+row3_chart_height = min(
+    max(
+        320,
+        130 + owner_count_for_layout * 16,
+    ),
+    390,
+)
+
 r1, r2 = st.columns(
-    2,
+    [1.05, 1.0],
     gap="medium",
 )
 
@@ -1783,13 +1797,7 @@ with r1:
                         else f"{int(value)}"
                     )
 
-            heatmap_height = min(
-                max(
-                    280,
-                    120 + len(owner_heatmap) * 30,
-                ),
-                620,
-            )
+            heatmap_height = row3_chart_height
 
             fig = px.imshow(
                 owner_heatmap,
@@ -1817,16 +1825,16 @@ with r1:
                     "Activities: %{z:.0f}"
                     "<extra></extra>"
                 ),
-                textfont=dict(size=10),
+                textfont=dict(size=9),
             )
 
             fig.update_layout(
                 height=heatmap_height,
                 margin=dict(
-                    l=8,
-                    r=8,
-                    t=8,
-                    b=8,
+                    l=4,
+                    r=4,
+                    t=4,
+                    b=4,
                 ),
                 paper_bgcolor="#FFFFFF",
                 plot_bgcolor="#FFFFFF",
@@ -1837,13 +1845,13 @@ with r1:
                 title="",
                 side="top",
                 showgrid=False,
-                tickfont=dict(size=10),
+                tickfont=dict(size=9),
             )
 
             fig.update_yaxes(
                 title="",
                 showgrid=False,
-                tickfont=dict(size=9),
+                tickfont=dict(size=8),
                 automargin=True,
             )
 
@@ -1928,12 +1936,20 @@ with r2:
                 zeroline=False,
             )
 
-            fig.update_yaxes(title="")
+            fig.update_yaxes(
+                title="",
+                tickfont=dict(size=8.5),
+                automargin=True,
+            )
+
+            fig.update_layout(
+                bargap=0.34,
+            )
 
             st.plotly_chart(
                 clean_chart(
                     fig,
-                    235,
+                    row3_chart_height,
                     legend=True,
                 ),
                 width="stretch",
