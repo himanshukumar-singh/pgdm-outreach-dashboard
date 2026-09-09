@@ -450,7 +450,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .upcoming-pro-table {
     width: 100%;
-    min-width: 960px;
+    min-width: 1040px;
     border-collapse: separate;
     border-spacing: 0;
     font-family: Arial, sans-serif;
@@ -541,21 +541,21 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .badge-high {
-    color: #B4232C;
-    background: #FFF0F1;
-    border-color: #F4CDD0;
+    color: #245E9A;
+    background: #EEF5FC;
+    border-color: #D1E2F4;
 }
 
 .badge-medium {
     color: #9B620B;
-    background: #FFF8E9;
-    border-color: #F2DFAF;
+    background: #FFF6E6;
+    border-color: #F2D6A2;
 }
 
 .badge-low {
-    color: #187348;
-    background: #EEF9F3;
-    border-color: #CDEBD9;
+    color: #B4232C;
+    background: #FFF0F1;
+    border-color: #F4CDD0;
 }
 
 .badge-confirmed,
@@ -724,6 +724,7 @@ def render_upcoming_table(frame, columns):
         "Priority": "Priority",
         "Status": "Status",
         "Planned Student Reach": "Planned Reach",
+        "Actual Student Reach": "Actual Reach",
     }
 
     header_html = "".join(
@@ -766,7 +767,10 @@ def render_upcoming_table(frame, columns):
             elif col in {"Priority", "Status"}:
                 cell = f"<td>{_badge(value)}</td>"
 
-            elif col == "Planned Student Reach":
+            elif col in {
+                "Planned Student Reach",
+                "Actual Student Reach",
+            }:
                 numeric = pd.to_numeric(
                     pd.Series([value]),
                     errors="coerce",
@@ -1544,6 +1548,7 @@ else:
         "Priority",
         "Status",
         "Planned Student Reach",
+        "Actual Student Reach",
     ]
 
     display_columns = [
