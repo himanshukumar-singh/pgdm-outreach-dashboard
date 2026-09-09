@@ -386,6 +386,10 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     line-height: 1.42;
 }
 
+.chart-insight {
+    min-height: 88px;
+}
+
 /* ---------- Mini insight cards ---------- */
 .mini-insight {
     min-height: 76px;
@@ -1363,7 +1367,7 @@ with c1:
                 )
 
                 st.plotly_chart(
-                    professional_chart(fig, 260),
+                    professional_chart(fig, 300),
                     width="stretch",
                     config=CHART_CONFIG,
                 )
@@ -1478,18 +1482,23 @@ with c2:
                     automargin=True,
                 )
 
-                activity_mix_height = min(
-                    max(
-                        255,
-                        120 + len(mix) * 34,
+                fig.update_layout(
+                    bargap=0.34,
+                )
+
+                fig.update_yaxes(
+                    title="",
+                    tickfont=dict(
+                        size=8.5,
+                        color="#5F748B",
                     ),
-                    430,
+                    automargin=True,
                 )
 
                 st.plotly_chart(
                     professional_chart(
                         fig,
-                        activity_mix_height,
+                        300,
                         legend=False,
                     ),
                     width="stretch",
