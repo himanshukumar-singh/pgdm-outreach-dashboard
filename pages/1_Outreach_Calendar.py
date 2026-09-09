@@ -31,7 +31,7 @@ st.markdown(
     padding-top: 0.10rem !important;
     padding-left: 1.35rem !important;
     padding-right: 1.35rem !important;
-    padding-bottom: 1.2rem !important;
+    padding-bottom: 5.0rem !important;
 }
 
 [data-testid="stAppViewContainer"] {
@@ -343,12 +343,13 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 /* ---------- Insight cards ---------- */
 .cal-insight {
-    padding: .70rem .76rem;
-    border-radius: 10px;
+    min-height: 96px;
+    padding: .58rem .64rem;
+    border-radius: 11px;
     border: 1px solid #DFE7F0;
     background: #FFFFFF;
     box-shadow: 0 4px 12px rgba(15,42,69,.025);
-    margin-bottom: .48rem;
+    margin-bottom: .16rem;
 }
 
 .cal-insight .label {
@@ -360,7 +361,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .cal-insight .value {
-    font-size: .95rem;
+    font-size: .88rem;
     font-weight: 900;
     color: #0F2A45;
     margin-top: .12rem;
@@ -368,7 +369,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .cal-insight .note {
     color: #7E90A6;
-    font-size: .68rem;
+    font-size: .62rem;
     line-height: 1.42;
     margin-top: .18rem;
 }
@@ -393,6 +394,11 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     font-size: .70rem;
     line-height: 1.42;
     margin-top: .18rem;
+    overflow-wrap: anywhere;
+}
+
+.calendar-bottom-safe-space {
+    height: 90px;
 }
 
 /* ---------- Table ---------- */
@@ -589,6 +595,15 @@ def show_schedule_table(frame, height=305):
         st.info("Is view ke liye koi activity available nahi hai.")
         return
 
+    visible_rows = min(
+        max(len(frame), 1),
+        8,
+    )
+
+    height = 38 + (
+        visible_rows * 30
+    )
+
     columns = [
         "Activity Date",
         "Campus",
@@ -599,6 +614,7 @@ def show_schedule_table(frame, height=305):
         "Priority",
         "Status",
         "Planned Student Reach",
+        "Actual Student Reach",
     ]
 
     columns = [
@@ -648,6 +664,11 @@ def show_schedule_table(frame, height=305):
             ),
             "Planned Student Reach": st.column_config.NumberColumn(
                 "Planned Reach",
+                format="%d",
+                width="small",
+            ),
+            "Actual Student Reach": st.column_config.NumberColumn(
+                "Actual Reach",
                 format="%d",
                 width="small",
             ),
@@ -959,7 +980,7 @@ with k5:
 # MANAGEMENT SUMMARY
 # =========================================================
 summary_left, summary_right = st.columns(
-    [2.15, 1.0],
+    [2.0, 1.15],
     gap="medium",
 )
 
@@ -993,26 +1014,41 @@ with summary_left:
             )
 
             fig.update_traces(
-                marker_color="#2D6CDF",
+                marker_color="#316FC4",
                 textposition="outside",
                 textfont=dict(size=9),
                 marker_line_width=0,
+            )
+
+            daily_max = int(
+                daily_load["Activities"].max()
             )
 
             fig.update_xaxes(
                 title="",
                 categoryorder="array",
                 categoryarray=daily_load["Date Label"].tolist(),
+                tickfont=dict(size=8.5),
             )
 
             fig.update_yaxes(
                 title="Activities",
-                rangemode="tozero",
-                dtick=1,
+                range=[
+                    0,
+                    max(1, daily_max * 1.18),
+                ],
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
+            )
+
+            fig.update_layout(
+                bargap=0.30,
             )
 
             st.plotly_chart(
-                clean_chart(fig, 235, legend=False),
+                clean_chart(fig, 205, legend=False),
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1039,24 +1075,19 @@ with summary_right:
             "Immediate management actions from the selected calendar.",
         )
 
-        # Next activity
+        # Resolve all four management metrics first.
         if upcoming.empty:
-            calendar_insight(
-                "Next activity",
-                "No upcoming open activity",
-                "No future open activity is available in the selected view.",
-            )
+            next_activity_value = "No upcoming activity"
+            next_activity_note = "No future open activity in the selected view."
         else:
             next_activity = (
                 upcoming.sort_values("Activity Date")
                 .iloc[0]
             )
 
-            institution = (
-                next_activity.get(
-                    "Institution / Event Name",
-                    "Institution not captured",
-                )
+            institution = next_activity.get(
+                "Institution / Event Name",
+                "Institution not captured",
             )
 
             campus = next_activity.get(
@@ -1064,13 +1095,14 @@ with summary_right:
                 "Campus not captured",
             )
 
-            calendar_insight(
-                "Next activity",
-                next_activity["Activity Date"].strftime("%d %b %Y"),
-                f"{campus} • {institution}",
+            next_activity_value = (
+                next_activity["Activity Date"]
+                .strftime("%d %b %Y")
+            )
+            next_activity_note = (
+                f"{campus} • {institution}"
             )
 
-        # Busiest campus next 30
         if (
             not next30.empty
             and "Campus" in next30.columns
@@ -1081,58 +1113,86 @@ with summary_right:
                 .value_counts()
             )
 
-            busiest_campus = campus_load.index[0]
-            busiest_count = int(campus_load.iloc[0])
-
-            calendar_insight(
-                "Busiest campus — next 30 days",
-                busiest_campus,
-                f"{busiest_count} scheduled open activities",
+            busiest_campus = str(
+                campus_load.index[0]
+            )
+            busiest_count = int(
+                campus_load.iloc[0]
+            )
+            busiest_note = (
+                f"{busiest_count} scheduled open activities"
             )
         else:
-            calendar_insight(
-                "Busiest campus — next 30 days",
-                "N/A",
-                "No campus activity available in this window.",
-            )
+            busiest_campus = "N/A"
+            busiest_note = "No campus activity in this window."
 
-        # Readiness
         if avg_readiness is None:
-            calendar_insight(
-                "Planning readiness",
-                "N/A",
-                "Required planning fields are not available.",
-            )
+            readiness_value = "N/A"
+            readiness_note = "Required planning fields are unavailable."
         else:
-            calendar_insight(
-                "Planning readiness",
-                f"{avg_readiness:.1f}%",
-                (
-                    f"{low_readiness_count} next-30-day activities "
-                    f"are below 75% field completeness."
-                ),
+            readiness_value = (
+                f"{avg_readiness:.1f}%"
+            )
+            readiness_note = (
+                f"{low_readiness_count} next-30 activities below 75% completeness."
             )
 
-        # Oldest overdue
         if overdue.empty:
-            calendar_insight(
-                "Oldest overdue",
-                "None",
-                "No open past-date activity in this selection.",
-            )
+            overdue_value = "None"
+            overdue_note = "No open past-date activity."
         else:
-            oldest_date = overdue["Activity Date"].min()
+            oldest_date = overdue[
+                "Activity Date"
+            ].min()
+
             overdue_days = int(
                 (today - oldest_date).days
             )
 
+            overdue_value = (
+                f"{overdue_days} days"
+            )
+            overdue_note = (
+                f'Oldest unresolved: '
+                f'{oldest_date.strftime("%d %b %Y")}'
+            )
+
+        ci1, ci2 = st.columns(
+            2,
+            gap="small",
+        )
+
+        with ci1:
+            calendar_insight(
+                "Next activity",
+                next_activity_value,
+                next_activity_note,
+            )
+
+        with ci2:
+            calendar_insight(
+                "Busiest campus — next 30 days",
+                busiest_campus,
+                busiest_note,
+            )
+
+        ci3, ci4 = st.columns(
+            2,
+            gap="small",
+        )
+
+        with ci3:
+            calendar_insight(
+                "Planning readiness",
+                readiness_value,
+                readiness_note,
+            )
+
+        with ci4:
             calendar_insight(
                 "Oldest overdue",
-                f"{overdue_days} days",
-                (
-                    f'Oldest unresolved activity date: '
-                    f'{oldest_date.strftime("%d %b %Y")}.'
-                ),
+                overdue_value,
+                overdue_note,
             )
 
 
@@ -1175,7 +1235,7 @@ with chart1:
                 )
 
                 fig.update_traces(
-                    marker_color="#1769C2",
+                    marker_color="#2C73B9",
                     textposition="outside",
                     textfont=dict(size=9),
                     marker_line_width=0,
@@ -1183,14 +1243,24 @@ with chart1:
 
                 fig.update_xaxes(
                     title="Activities",
-                    dtick=1,
                     rangemode="tozero",
+                    showticklabels=False,
+                    ticks="",
+                    showgrid=False,
+                    zeroline=False,
                 )
 
-                fig.update_yaxes(title="")
+                fig.update_yaxes(
+                    title="",
+                    tickfont=dict(size=9),
+                )
+
+                fig.update_layout(
+                    bargap=0.34,
+                )
 
                 st.plotly_chart(
-                    clean_chart(fig, 225, legend=False),
+                    clean_chart(fig, 220, legend=False),
                     width="stretch",
                     config=CHART_CONFIG,
                 )
@@ -1257,11 +1327,15 @@ with chart2:
             else:
                 fig = px.bar(
                     priority_df,
-                    x="Priority",
-                    y="Activities",
+                    x="Activities",
+                    y="Priority",
+                    orientation="h",
                     text="Activities",
                     color="Priority",
                     color_discrete_map=color_map,
+                    category_orders={
+                        "Priority": priority_order,
+                    },
                 )
 
                 fig.update_traces(
@@ -1270,15 +1344,29 @@ with chart2:
                     marker_line_width=0,
                 )
 
-                fig.update_xaxes(title="")
-                fig.update_yaxes(
+                fig.update_xaxes(
                     title="Activities",
-                    dtick=1,
                     rangemode="tozero",
+                    showticklabels=False,
+                    ticks="",
+                    showgrid=False,
+                    zeroline=False,
+                )
+
+                fig.update_yaxes(
+                    title="",
+                    categoryorder="array",
+                    categoryarray=priority_order,
+                    autorange="reversed",
+                    tickfont=dict(size=9),
+                )
+
+                fig.update_layout(
+                    bargap=0.34,
                 )
 
                 st.plotly_chart(
-                    clean_chart(fig, 225, legend=False),
+                    clean_chart(fig, 220, legend=False),
                     width="stretch",
                     config=CHART_CONFIG,
                 )
@@ -1377,4 +1465,9 @@ action_note(
         + " Prioritise overdue closure first, then validate the next 7 days "
           "for owner availability, event details and planned student reach."
     ),
+)
+
+st.markdown(
+    '<div class="calendar-bottom-safe-space"></div>',
+    unsafe_allow_html=True,
 )
