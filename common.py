@@ -189,6 +189,169 @@ def hide_streamlit_cloud_branding():
         width=0,
     )
 
+def install_sidebar_line_toggle():
+    """
+    Install a minimal sidebar hide/show control.
+
+    Visible sidebar: a thin vertical line sits on the sidebar's upper-right edge.
+    Hidden sidebar: the same thin line moves to the far-left edge.
+    No box, label, icon, or Streamlit native collapse control is shown.
+    """
+    components.html(
+        """
+        <script>
+        (() => {
+            try {
+                const doc = window.parent.document;
+                const win = window.parent;
+                const STORAGE_KEY = "jaipuria_sidebar_hidden_v1";
+                const CONTROL_ID = "jaipuria-sidebar-line-toggle";
+
+                const readState = () => {
+                    try {
+                        return win.localStorage.getItem(STORAGE_KEY) === "1";
+                    } catch (_) {
+                        return false;
+                    }
+                };
+
+                const writeState = (hidden) => {
+                    try {
+                        win.localStorage.setItem(STORAGE_KEY, hidden ? "1" : "0");
+                    } catch (_) {}
+                };
+
+                const getSidebar = () => doc.querySelector('[data-testid="stSidebar"]');
+
+                const ensureControl = () => {
+                    let control = doc.getElementById(CONTROL_ID);
+
+                    if (!control) {
+                        control = doc.createElement("button");
+                        control.id = CONTROL_ID;
+                        control.type = "button";
+
+                        control.style.setProperty("position", "fixed", "important");
+                        control.style.setProperty("top", "82px", "important");
+                        control.style.setProperty("width", "16px", "important");
+                        control.style.setProperty("height", "54px", "important");
+                        control.style.setProperty("padding", "0", "important");
+                        control.style.setProperty("margin", "0", "important");
+                        control.style.setProperty("border", "0", "important");
+                        control.style.setProperty("border-radius", "0", "important");
+                        control.style.setProperty("background", "transparent", "important");
+                        control.style.setProperty("box-shadow", "none", "important");
+                        control.style.setProperty("outline", "none", "important");
+                        control.style.setProperty("cursor", "pointer", "important");
+                        control.style.setProperty("z-index", "2147483647", "important");
+                        control.style.setProperty("display", "flex", "important");
+                        control.style.setProperty("align-items", "center", "important");
+                        control.style.setProperty("justify-content", "center", "important");
+
+                        const line = doc.createElement("span");
+                        line.setAttribute("data-jaipuria-sidebar-line", "1");
+                        line.style.setProperty("display", "block", "important");
+                        line.style.setProperty("width", "2px", "important");
+                        line.style.setProperty("height", "36px", "important");
+                        line.style.setProperty("border-radius", "999px", "important");
+                        line.style.setProperty("transition", "width .15s ease, background .15s ease", "important");
+                        control.appendChild(line);
+
+                        control.addEventListener("mouseenter", () => {
+                            line.style.setProperty("width", "3px", "important");
+                        });
+
+                        control.addEventListener("mouseleave", () => {
+                            line.style.setProperty("width", "2px", "important");
+                        });
+
+                        control.addEventListener("click", (event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            const nextHidden = !readState();
+                            writeState(nextHidden);
+                            applySidebarState();
+                        });
+
+                        doc.body.appendChild(control);
+                    }
+
+                    return control;
+                };
+
+                const applySidebarState = () => {
+                    const sidebar = getSidebar();
+                    const hidden = readState();
+                    const control = ensureControl();
+                    const line = control.querySelector('[data-jaipuria-sidebar-line="1"]');
+
+                    if (sidebar) {
+                        if (hidden) {
+                            sidebar.style.setProperty("display", "none", "important");
+                            sidebar.style.setProperty("visibility", "hidden", "important");
+                            sidebar.style.setProperty("min-width", "0", "important");
+                            sidebar.style.setProperty("max-width", "0", "important");
+                            sidebar.style.setProperty("width", "0", "important");
+                        } else {
+                            sidebar.style.removeProperty("display");
+                            sidebar.style.removeProperty("visibility");
+                            sidebar.style.removeProperty("min-width");
+                            sidebar.style.removeProperty("max-width");
+                            sidebar.style.removeProperty("width");
+                        }
+                    }
+
+                    if (hidden) {
+                        control.style.setProperty("left", "0px", "important");
+                        control.style.removeProperty("right");
+                        control.setAttribute("aria-label", "Show menu");
+                        control.setAttribute("title", "Show menu");
+                        if (line) line.style.setProperty("background", "#54789e", "important");
+                    } else {
+                        control.style.setProperty("left", "272px", "important");
+                        control.style.removeProperty("right");
+                        control.setAttribute("aria-label", "Hide menu");
+                        control.setAttribute("title", "Hide menu");
+                        if (line) line.style.setProperty("background", "rgba(255,255,255,0.78)", "important");
+                    }
+                };
+
+                // Keep one controller per Streamlit page document.
+                win.__jaipuriaApplySidebarLineToggle = applySidebarState;
+
+                if (!win.__jaipuriaSidebarLineToggleInstalled) {
+                    win.__jaipuriaSidebarLineToggleInstalled = true;
+
+                    const observer = new MutationObserver(() => {
+                        if (win.__jaipuriaApplySidebarLineToggle) {
+                            win.__jaipuriaApplySidebarLineToggle();
+                        }
+                    });
+
+                    observer.observe(doc.body, {
+                        childList: true,
+                        subtree: true,
+                    });
+
+                    win.__jaipuriaSidebarLineObserver = observer;
+                }
+
+                applySidebarState();
+                setTimeout(applySidebarState, 150);
+                setTimeout(applySidebarState, 500);
+                setTimeout(applySidebarState, 1200);
+
+            } catch (_) {
+                // Never block the dashboard if browser DOM access changes.
+            }
+        })();
+        </script>
+        """,
+        height=0,
+        width=0,
+    )
+
+
 def inject_css():
     enable_auto_refresh(60)
     st.markdown(
@@ -240,9 +403,8 @@ def inject_css():
             display: none;
         }
 
-        /* ---------------- Minimal sidebar toggle ---------------- */
-        /* Hide Streamlit's native sidebar controls. We use our own
-           slim clickable line so there is no button/box UI. */
+        /* ---------------- Sidebar toggle controls ---------------- */
+        /* Native Streamlit sidebar controls hidden; a custom slim line is injected with JS. */
         [data-testid="stSidebarCollapseButton"],
         [data-testid="stSidebarCollapsedControl"],
         [data-testid="collapsedControl"] {
@@ -250,112 +412,6 @@ def inject_css():
             visibility: hidden !important;
             opacity: 0 !important;
             pointer-events: none !important;
-        }
-
-        /* Custom line while sidebar is OPEN. */
-        .st-key-_sidebar_hide_line,
-        div[class*="st-key-_sidebar_hide_line"] {
-            position: fixed !important;
-            left: 270px !important;
-            top: 76px !important;
-            width: 16px !important;
-            height: 48px !important;
-            z-index: 999999 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        /* Custom line while sidebar is HIDDEN. */
-        .st-key-_sidebar_show_line,
-        div[class*="st-key-_sidebar_show_line"] {
-            position: fixed !important;
-            left: 2px !important;
-            top: 76px !important;
-            width: 16px !important;
-            height: 48px !important;
-            z-index: 999999 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .st-key-_sidebar_hide_line button,
-        div[class*="st-key-_sidebar_hide_line"] button,
-        .st-key-_sidebar_show_line button,
-        div[class*="st-key-_sidebar_show_line"] button {
-            position: absolute !important;
-            inset: 0 !important;
-            width: 16px !important;
-            min-width: 16px !important;
-            height: 48px !important;
-            min-height: 48px !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            background: transparent !important;
-            border: 0 !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-            outline: none !important;
-            color: transparent !important;
-            font-size: 0 !important;
-        }
-
-        .st-key-_sidebar_hide_line button:hover,
-        div[class*="st-key-_sidebar_hide_line"] button:hover,
-        .st-key-_sidebar_show_line button:hover,
-        div[class*="st-key-_sidebar_show_line"] button:hover,
-        .st-key-_sidebar_hide_line button:focus,
-        div[class*="st-key-_sidebar_hide_line"] button:focus,
-        .st-key-_sidebar_show_line button:focus,
-        div[class*="st-key-_sidebar_show_line"] button:focus {
-            background: transparent !important;
-            border: 0 !important;
-            box-shadow: none !important;
-            outline: none !important;
-        }
-
-        .st-key-_sidebar_hide_line button p,
-        div[class*="st-key-_sidebar_hide_line"] button p,
-        .st-key-_sidebar_show_line button p,
-        div[class*="st-key-_sidebar_show_line"] button p {
-            display: none !important;
-        }
-
-        .st-key-_sidebar_hide_line button::after,
-        div[class*="st-key-_sidebar_hide_line"] button::after {
-            content: "";
-            position: absolute;
-            top: 7px;
-            left: 7px;
-            width: 2px;
-            height: 34px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.62);
-            transition: width .15s ease, background .15s ease;
-        }
-
-        .st-key-_sidebar_hide_line button:hover::after,
-        div[class*="st-key-_sidebar_hide_line"] button:hover::after {
-            width: 3px;
-            background: #ffffff;
-        }
-
-        .st-key-_sidebar_show_line button::after,
-        div[class*="st-key-_sidebar_show_line"] button::after {
-            content: "";
-            position: absolute;
-            top: 7px;
-            left: 6px;
-            width: 2px;
-            height: 34px;
-            border-radius: 999px;
-            background: #6b7f97;
-            transition: width .15s ease, background .15s ease;
-        }
-
-        .st-key-_sidebar_show_line button:hover::after,
-        div[class*="st-key-_sidebar_show_line"] button:hover::after {
-            width: 3px;
-            background: #17365d;
         }
 
         .brand-wrap {
@@ -585,14 +641,13 @@ def inject_css():
             visibility: hidden !important;
         }
 
-        /* Hide image fullscreen hover control (especially the sidebar logo). */
-        [data-testid="stImage"] button[title="Fullscreen"],
-        [data-testid="stImage"] button[title="View fullscreen"],
-        [data-testid="stImage"] button[aria-label="Fullscreen"],
-        [data-testid="stImage"] button[aria-label="View fullscreen"],
-        [data-testid="stImage"] [data-testid="StyledFullScreenButton"],
-        [data-testid="stImage"] [class*="FullScreenButton"],
-        [data-testid="stImage"] [class*="fullscreen"] {
+        /* Hide Streamlit fullscreen hover controls for a cleaner dashboard. */
+        button[title="Fullscreen"],
+        button[title="View fullscreen"],
+        button[aria-label="Fullscreen"],
+        button[aria-label="View fullscreen"],
+        [data-testid="StyledFullScreenButton"],
+        [class*="FullScreenButton"] {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
@@ -607,71 +662,13 @@ def inject_css():
     # Remove Streamlit Community Cloud bottom-right branding/viewer badge.
     hide_streamlit_cloud_branding()
 
-
-def _apply_sidebar_visibility():
-    """Hide/show the sidebar while keeping the main dashboard layout clean."""
-    hidden = st.session_state.get("_dashboard_sidebar_hidden", False)
-
-    if hidden:
-        st.markdown(
-            """
-            <style>
-            [data-testid="stSidebar"] {
-                display: none !important;
-                visibility: hidden !important;
-                width: 0 !important;
-                min-width: 0 !important;
-                max-width: 0 !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            """
-            <style>
-            [data-testid="stSidebar"] {
-                display: block !important;
-                visibility: visible !important;
-                min-width: 280px !important;
-                max-width: 280px !important;
-                transform: translateX(0) !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
+    # Add the requested box-free slim line sidebar toggle.
+    install_sidebar_line_toggle()
 
 
 def sidebar_nav():
-    """Render the sidebar with only a slim line to hide/show it."""
-    if "_dashboard_sidebar_hidden" not in st.session_state:
-        st.session_state["_dashboard_sidebar_hidden"] = False
-
-    _apply_sidebar_visibility()
-
-    # Sidebar hidden: show only a slim clickable line on the far left.
-    if st.session_state["_dashboard_sidebar_hidden"]:
-        if st.button(
-            "Show navigation",
-            key="_sidebar_show_line",
-            help="Show navigation",
-        ):
-            st.session_state["_dashboard_sidebar_hidden"] = False
-            st.rerun()
-        return
-
-    # Sidebar visible: render normal content plus a slim line at its upper-right edge.
+    """Render dashboard navigation and use Streamlit's native slim sidebar toggle."""
     with st.sidebar:
-        if st.button(
-            "Hide navigation",
-            key="_sidebar_hide_line",
-            help="Hide navigation",
-        ):
-            st.session_state["_dashboard_sidebar_hidden"] = True
-            st.rerun()
-
         logo_path = (
             Path(__file__).resolve().parent
             / "assets"
