@@ -1,3 +1,4 @@
+import html
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -430,11 +431,178 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-bottom: .40rem;
 }
 
-[data-testid="stDataFrame"] {
-    border: 1px solid #DFE7F0 !important;
-    border-radius: 12px !important;
+/* Professional upcoming outreach table */
+.upcoming-table-shell {
+    border: 1px solid #DCE5EF;
+    border-radius: 14px;
+    background: #FFFFFF;
+    box-shadow: 0 7px 22px rgba(15,42,69,.045);
     overflow: hidden;
-    box-shadow: 0 5px 16px rgba(15,42,69,.03);
+}
+
+.upcoming-table-scroll {
+    width: 100%;
+    max-height: 330px;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #C7D4E2 transparent;
+}
+
+.upcoming-pro-table {
+    width: 100%;
+    min-width: 1080px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: Arial, sans-serif;
+}
+
+.upcoming-pro-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    padding: .52rem .56rem;
+    background: linear-gradient(180deg, #F4F8FD 0%, #EDF3FA 100%);
+    color: #4C6178;
+    border-bottom: 1px solid #DCE5EF;
+    border-right: 1px solid #E5ECF4;
+    font-size: .62rem;
+    font-weight: 850;
+    letter-spacing: .035em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.upcoming-pro-table tbody td {
+    padding: .43rem .56rem;
+    color: #334B63;
+    border-bottom: 1px solid #E8EEF5;
+    border-right: 1px solid #EEF2F7;
+    font-size: .66rem;
+    line-height: 1.22;
+    vertical-align: middle;
+    background: #FFFFFF;
+    white-space: nowrap;
+}
+
+.upcoming-pro-table tbody tr:nth-child(even) td {
+    background: #FBFCFE;
+}
+
+.upcoming-pro-table tbody tr:hover td {
+    background: #F2F7FD;
+}
+
+.upcoming-pro-table thead th:last-child,
+.upcoming-pro-table tbody td:last-child {
+    border-right: none;
+}
+
+.upcoming-pro-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.upcoming-pro-table .institution-cell {
+    min-width: 190px;
+    max-width: 280px;
+    white-space: normal;
+    font-weight: 700;
+    color: #173A61;
+}
+
+.upcoming-pro-table .owner-cell {
+    min-width: 125px;
+    font-weight: 650;
+}
+
+.upcoming-pro-table .numeric-cell {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+.upcoming-pro-table .date-cell {
+    font-variant-numeric: tabular-nums;
+    font-weight: 750;
+    color: #234766;
+}
+
+.table-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 46px;
+    padding: .20rem .40rem;
+    border-radius: 999px;
+    font-size: .59rem;
+    font-weight: 850;
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+
+.badge-high {
+    color: #B4232C;
+    background: #FFF0F1;
+    border-color: #F4CDD0;
+}
+
+.badge-medium {
+    color: #9B620B;
+    background: #FFF8E9;
+    border-color: #F2DFAF;
+}
+
+.badge-low {
+    color: #187348;
+    background: #EEF9F3;
+    border-color: #CDEBD9;
+}
+
+.badge-confirmed,
+.badge-completed {
+    color: #146844;
+    background: #EDF9F3;
+    border-color: #C8EBD8;
+}
+
+.badge-planned {
+    color: #245E9A;
+    background: #EEF5FC;
+    border-color: #D1E2F4;
+}
+
+.badge-cancelled {
+    color: #A8323C;
+    background: #FFF1F2;
+    border-color: #F2CFD2;
+}
+
+.badge-rescheduled {
+    color: #95610A;
+    background: #FFF7E7;
+    border-color: #F0DDAE;
+}
+
+.badge-neutral {
+    color: #53697F;
+    background: #F2F5F8;
+    border-color: #DDE5ED;
+}
+
+.upcoming-table-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: .8rem;
+    padding: .44rem .62rem;
+    background: #FAFCFE;
+    border-top: 1px solid #E3EAF2;
+    color: #7A8DA3;
+    font-size: .60rem;
+}
+
+.upcoming-table-footer strong {
+    color: #36526F;
+    font-weight: 850;
 }
 
 /* Pull sections closer */
@@ -504,6 +672,150 @@ def mini_insight(label, value, note):
             f'<div class="note">{note}</div>'
             '</div>'
         ),
+        unsafe_allow_html=True,
+    )
+
+
+def _safe_text(value):
+    if pd.isna(value):
+        return "—"
+    return html.escape(str(value).strip())
+
+
+def _badge(value):
+    label = _safe_text(value)
+
+    if label == "—":
+        return '<span class="table-badge badge-neutral">—</span>'
+
+    css_value = str(value).strip().lower()
+
+    badge_classes = {
+        "high": "badge-high",
+        "medium": "badge-medium",
+        "low": "badge-low",
+        "confirmed": "badge-confirmed",
+        "planned": "badge-planned",
+        "completed": "badge-completed",
+        "cancelled": "badge-cancelled",
+        "rescheduled": "badge-rescheduled",
+    }
+
+    css_class = badge_classes.get(
+        css_value,
+        "badge-neutral",
+    )
+
+    return (
+        f'<span class="table-badge {css_class}">'
+        f'{label}'
+        f'</span>'
+    )
+
+
+def render_upcoming_table(frame, columns):
+    labels = {
+        "Activity Date": "Date",
+        "Campus": "Campus",
+        "Institution / Event Name": "Institution / Event",
+        "City": "City",
+        "Activity Type": "Activity Type",
+        "Activity Owner": "Owner",
+        "Priority": "Priority",
+        "Status": "Status",
+        "Planned Student Reach": "Planned Reach",
+    }
+
+    header_html = "".join(
+        f"<th>{html.escape(labels.get(col, col))}</th>"
+        for col in columns
+    )
+
+    rows = []
+
+    for _, row in frame[columns].iterrows():
+        cells = []
+
+        for col in columns:
+            value = row[col]
+
+            if col == "Activity Date":
+                if pd.isna(value):
+                    cell = '<td class="date-cell">—</td>'
+                else:
+                    cell = (
+                        '<td class="date-cell">'
+                        f'{pd.Timestamp(value).strftime("%d %b %y")}'
+                        '</td>'
+                    )
+
+            elif col == "Institution / Event Name":
+                cell = (
+                    '<td class="institution-cell">'
+                    f'{_safe_text(value)}'
+                    '</td>'
+                )
+
+            elif col == "Activity Owner":
+                cell = (
+                    '<td class="owner-cell">'
+                    f'{_safe_text(value)}'
+                    '</td>'
+                )
+
+            elif col in {"Priority", "Status"}:
+                cell = f"<td>{_badge(value)}</td>"
+
+            elif col == "Planned Student Reach":
+                numeric = pd.to_numeric(
+                    pd.Series([value]),
+                    errors="coerce",
+                ).iloc[0]
+
+                display_value = (
+                    "—"
+                    if pd.isna(numeric)
+                    else f"{int(numeric):,}"
+                )
+
+                cell = (
+                    '<td class="numeric-cell">'
+                    f'{display_value}'
+                    '</td>'
+                )
+
+            else:
+                cell = f"<td>{_safe_text(value)}</td>"
+
+            cells.append(cell)
+
+        rows.append(
+            "<tr>" + "".join(cells) + "</tr>"
+        )
+
+    high_count = (
+        int(frame["Priority"].eq("High").sum())
+        if "Priority" in frame.columns
+        else 0
+    )
+
+    table_html = (
+        '<div class="upcoming-table-shell">'
+        '<div class="upcoming-table-scroll">'
+        '<table class="upcoming-pro-table">'
+        f'<thead><tr>{header_html}</tr></thead>'
+        f'<tbody>{"".join(rows)}</tbody>'
+        '</table>'
+        '</div>'
+        '<div class="upcoming-table-footer">'
+        f'<span><strong>{len(frame)}</strong> upcoming activities</span>'
+        f'<span><strong>{high_count}</strong> high priority</span>'
+        '</div>'
+        '</div>'
+    )
+
+    st.markdown(
+        table_html,
         unsafe_allow_html=True,
     )
 
@@ -1239,52 +1551,9 @@ else:
         if col in upcoming_df.columns
     ]
 
-    st.dataframe(
-        upcoming_df[display_columns],
-        use_container_width=True,
-        hide_index=True,
-        height=255,
-        row_height=31,
-        column_config={
-            "Activity Date": st.column_config.DateColumn(
-                "Date",
-                format="DD MMM YY",
-                width="small",
-            ),
-            "Campus": st.column_config.TextColumn(
-                "Campus",
-                width="small",
-            ),
-            "Institution / Event Name": st.column_config.TextColumn(
-                "Institution / Event",
-                width="medium",
-            ),
-            "City": st.column_config.TextColumn(
-                "City",
-                width="small",
-            ),
-            "Activity Type": st.column_config.TextColumn(
-                "Activity Type",
-                width="medium",
-            ),
-            "Activity Owner": st.column_config.TextColumn(
-                "Owner",
-                width="medium",
-            ),
-            "Priority": st.column_config.TextColumn(
-                "Priority",
-                width="small",
-            ),
-            "Status": st.column_config.TextColumn(
-                "Status",
-                width="small",
-            ),
-            "Planned Student Reach": st.column_config.NumberColumn(
-                "Planned Reach",
-                format="%d",
-                width="small",
-            ),
-        },
+    render_upcoming_table(
+        upcoming_df,
+        display_columns,
     )
 
     chart_insight(
