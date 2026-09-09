@@ -1083,20 +1083,24 @@ with c2:
                     orientation="h",
                     text="Activities",
                 )
-
                 fig.update_traces(
                     marker_color=colors,
                     textposition="outside",
                     textfont=dict(size=10),
                     marker_line_width=0,
+                    cliponaxis=False,
                 )
 
                 fig.update_xaxes(
                     title="Activities",
                     rangemode="tozero",
-                    dtick=1,
+                    showticklabels=False,
+                    ticks="",
+                    showgrid=False,
+                    zeroline=False,
                 )
                 fig.update_yaxes(title="")
+
 
                 st.plotly_chart(
                     professional_chart(fig, 260, legend=False),
