@@ -1146,11 +1146,11 @@ with row1_left:
 
         if not status_data.empty:
             status_colors = {
-                "Confirmed": "#1F67B5",
-                "Planned": "#83BDE8",
-                "Completed": "#2E9D67",
-                "Cancelled": "#D45B5B",
-                "Rescheduled": "#E6A23C",
+                "Confirmed": "#2F6FBC",
+                "Planned": "#8FC2E8",
+                "Completed": "#2F9B6B",
+                "Cancelled": "#D65A63",
+                "Rescheduled": "#D99A32",
             }
 
             fig = px.bar(
@@ -1168,19 +1168,35 @@ with row1_left:
 
             fig.update_traces(
                 textposition="inside",
-                textfont=dict(size=10),
+                texttemplate="%{text}",
+                textfont=dict(size=9),
+                insidetextorientation="horizontal",
                 marker_line_width=0,
+                cliponaxis=False,
             )
+
+            status_max = int(
+                status_data.groupby("Campus")["Activities"]
+                .sum()
+                .max()
+            )
+
             fig.update_xaxes(title="")
             fig.update_yaxes(
                 title="Activities",
-                rangemode="tozero",
-                dtick=1,
+                range=[
+                    0,
+                    max(1, status_max * 1.15),
+                ],
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
             )
 
             st.plotly_chart(
                 professional_chart(fig, 270),
-                use_container_width=True,
+                width="stretch",
                 config=CHART_CONFIG,
             )
 
@@ -1313,8 +1329,8 @@ with c1:
                     barmode="group",
                     text="Students",
                     color_discrete_map={
-                        "Planned": "#2D6CDF",
-                        "Actual": "#18A999",
+                        "Planned": "#3169C6",
+                        "Actual": "#22A58C",
                     },
                     category_orders={
                         "Campus": ["Lucknow", "Noida", "Jaipur", "Indore"]
@@ -1323,19 +1339,35 @@ with c1:
 
                 fig.update_traces(
                     textposition="outside",
-                    textfont=dict(size=10),
+                    texttemplate="%{y:,.0f}",
+                    textfont=dict(size=9),
                     marker_line_width=0,
+                    cliponaxis=False,
+                )
+
+                max_reach_value = float(
+                    long["Students"].max()
                 )
 
                 fig.update_xaxes(title="")
                 fig.update_yaxes(
                     title="Students",
-                    rangemode="tozero",
+                    range=[
+                        0,
+                        max(
+                            1,
+                            max_reach_value * 1.18,
+                        ),
+                    ],
+                    showticklabels=False,
+                    ticks="",
+                    showgrid=False,
+                    zeroline=False,
                 )
 
                 st.plotly_chart(
                     professional_chart(fig, 260),
-                    use_container_width=True,
+                    width="stretch",
                     config=CHART_CONFIG,
                 )
 
@@ -1384,13 +1416,31 @@ with c2:
 
             if not mix.empty:
                 professional_blues = [
-                    "#8BBBE6",
-                    "#68A4DA",
-                    "#4689CC",
-                    "#2867AE",
-                    "#174E8C",
+                    "#D7E7F4",
+                    "#C1D9ED",
+                    "#A8CAE6",
+                    "#88B6DB",
+                    "#679FCF",
+                    "#4C88C4",
+                    "#3371B4",
+                    "#245E9F",
+                    "#194B83",
+                    "#123B69",
                 ]
-                colors = professional_blues[-len(mix):]
+
+                if len(mix) == 1:
+                    colors = ["#245E9F"]
+                else:
+                    colors = [
+                        professional_blues[
+                            round(
+                                i
+                                * (len(professional_blues) - 1)
+                                / (len(mix) - 1)
+                            )
+                        ]
+                        for i in range(len(mix))
+                    ]
 
                 fig = px.bar(
                     mix,
@@ -1402,9 +1452,15 @@ with c2:
                 fig.update_traces(
                     marker_color=colors,
                     textposition="outside",
-                    textfont=dict(size=10),
+                    texttemplate="%{x:,.0f}",
+                    textfont=dict(size=9),
                     marker_line_width=0,
                     cliponaxis=False,
+                    hovertemplate=(
+                        "<b>%{y}</b><br>"
+                        "Activities: %{x:,.0f}"
+                        "<extra></extra>"
+                    ),
                 )
 
                 fig.update_xaxes(
@@ -1415,12 +1471,31 @@ with c2:
                     showgrid=False,
                     zeroline=False,
                 )
-                fig.update_yaxes(title="")
 
+                fig.update_yaxes(
+                    title="",
+                    tickfont=dict(
+                        size=9,
+                        color="#5F748B",
+                    ),
+                    automargin=True,
+                )
+
+                activity_mix_height = min(
+                    max(
+                        255,
+                        120 + len(mix) * 34,
+                    ),
+                    430,
+                )
 
                 st.plotly_chart(
-                    professional_chart(fig, 260, legend=False),
-                    use_container_width=True,
+                    professional_chart(
+                        fig,
+                        activity_mix_height,
+                        legend=False,
+                    ),
+                    width="stretch",
                     config=CHART_CONFIG,
                 )
 
