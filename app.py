@@ -1228,7 +1228,7 @@ with k6:
 row1_left, row1_right = st.columns([2.15, 1.0], gap="medium", vertical_alignment="top")
 
 with row1_left:
-    with st.container(border=True, height=372):
+    with st.container(border=True, height=452):
         chart_header(
             "Campus Activity Status",
             "Activity volume and current execution status by campus.",
@@ -1349,7 +1349,7 @@ with row1_left:
             )
 
             st.plotly_chart(
-                professional_chart(fig, 280),
+                professional_chart(fig, 245),
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1375,10 +1375,26 @@ with row1_left:
                 ].sum()
             )
 
+            st.markdown(
+                '<div style="height:8px"></div>',
+                unsafe_allow_html=True,
+            )
+
+            chart_insight(
+                "Campus Status Insight",
+                (
+                    f"{top_campus} has the highest outreach load with "
+                    f"{top_campus_count} activities. "
+                    f"{confirmed_count} activities are confirmed and "
+                    f"{planned_count} are still planned."
+                ),
+                "blue",
+            )
+
 
 
 with row1_right:
-    with st.container(border=True, height=372):
+    with st.container(border=True, height=452):
         chart_header(
             "Status Snapshot",
             "Management snapshot from the same campus-status view.",
@@ -1466,41 +1482,22 @@ with row1_right:
                 else 0
             )
 
+            st.markdown(
+                '<div style="height:8px"></div>',
+                unsafe_allow_html=True,
+            )
 
+            chart_insight(
+                "Status Snapshot Insight",
+                (
+                    f"{dominant_status} is the largest current status bucket "
+                    f"with {dominant_count} activities "
+                    f"({dominant_share}% of status-linked activities). "
+                    f"{completed_total} activities are completed."
+                ),
+                "teal",
+            )
 
-# =========================================================
-# STATUS INSIGHTS — MATCHED ROW
-# =========================================================
-if not status_data.empty:
-    insight_left, insight_right = st.columns(
-        [2.15, 1.0],
-        gap="medium",
-        vertical_alignment="top",
-    )
-
-    with insight_left:
-        status_equal_insight(
-            "Campus Status Insight",
-            (
-                f"{top_campus} has the highest outreach load with "
-                f"{top_campus_count} activities. "
-                f"{confirmed_count} activities are confirmed and "
-                f"{planned_count} are still planned."
-            ),
-            "blue",
-        )
-
-    with insight_right:
-        status_equal_insight(
-            "Status Snapshot Insight",
-            (
-                f"{dominant_status} is the largest current status bucket "
-                f"with {dominant_count} activities "
-                f"({dominant_share}% of status-linked activities). "
-                f"{completed_total} activities are completed."
-            ),
-            "teal",
-        )
 
 
 # =========================================================
