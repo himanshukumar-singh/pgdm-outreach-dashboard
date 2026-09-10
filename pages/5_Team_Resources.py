@@ -355,9 +355,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     background: #FFFFFF;
     box-shadow: 0 4px 12px rgba(15,42,69,.025);
     margin-bottom: .48rem;
-    animation: teamInsightFloat 4.0s ease-in-out infinite;
+    animation: teamInsightGlow 4.0s ease-in-out infinite;
     transition:
-        transform .22s ease,
         box-shadow .22s ease,
         border-color .22s ease;
 }
@@ -383,7 +382,6 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .team-insight:hover {
-    transform: translateY(-3px);
     box-shadow: 0 10px 24px rgba(15,42,69,.065);
     border-color: #D3E0EF;
 }
@@ -440,9 +438,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     border: 1px solid #D9E7FA;
     border-left: 4px solid #2B6DE8;
     box-shadow: 0 4px 14px rgba(15,42,69,.025);
-    animation: teamInsightFloat 4.1s ease-in-out infinite;
+    animation: teamInsightGlow 4.1s ease-in-out infinite;
     transition:
-        transform .22s ease,
         box-shadow .22s ease;
 }
 
@@ -467,7 +464,6 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .team-action:hover {
-    transform: translateY(-3px);
     box-shadow: 0 10px 24px rgba(15,42,69,.060);
 }
 
@@ -532,12 +528,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
-@keyframes teamInsightFloat {
+@keyframes teamInsightGlow {
     0%, 100% {
-        transform: translateY(0);
+        box-shadow: 0 4px 14px rgba(15,42,69,.025);
     }
     50% {
-        transform: translateY(-2px);
+        box-shadow: 0 7px 18px rgba(43,109,232,.060);
     }
 }
 
@@ -566,6 +562,67 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     100% {
         background-position: 240% 50%;
     }
+}
+
+
+/* ---------- Exact paired-card alignment — Overview/Geography style ---------- */
+.team-pair-marker {
+    display: none;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.team-pair-marker) {
+    align-items: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.team-pair-marker)
+> div[data-testid="stColumn"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.team-pair-marker)
+> div[data-testid="stColumn"]
+> div[data-testid="stVerticalBlock"] {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.team-pair-marker) {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    overflow: visible !important;
+    padding-bottom: .50rem !important;
+    box-sizing: border-box !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.team-pair-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+}
+
+/* Pin paired insight to exact bottom of each card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.team-pair-marker)
+div[data-testid="stElementContainer"]:has(.team-bottom-insight) {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Same insight height on both sides */
+.team-action.team-bottom-insight {
+    height: 92px !important;
+    min-height: 92px !important;
+    max-height: 92px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    margin-bottom: 0 !important;
 }
 
 /* ---------- Tables ---------- */
@@ -658,6 +715,20 @@ def action_note(title, body, tone="blue"):
     st.markdown(
         (
             f'<div class="team-action {tone_class}">'
+            f'<div class="title">{title}</div>'
+            f'<div class="body">{body}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def paired_action_note(title, body, tone="blue"):
+    tone_class = "" if tone == "blue" else tone
+
+    st.markdown(
+        (
+            f'<div class="team-action team-bottom-insight {tone_class}">'
             f'<div class="title">{title}</div>'
             f'<div class="body">{body}</div>'
             '</div>'
@@ -1486,6 +1557,10 @@ left, right = st.columns(
 
 with left:
     with st.container(border=True):
+        st.markdown(
+            '<span class="team-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Owner Workload",
             "Outreach activity volume handled by each owner.",
@@ -1556,7 +1631,7 @@ with left:
             else 0
         )
 
-        action_note(
+        paired_action_note(
             "Owner Workload Insight",
             (
                 f'{top_owner_row["Activity Owner"]} has the highest owner workload '
@@ -1569,6 +1644,10 @@ with left:
 
 with right:
     with st.container(border=True):
+        st.markdown(
+            '<span class="team-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Team Intelligence",
             "Management-ready workload and deployment summary.",
@@ -1649,6 +1728,22 @@ with right:
 # =========================================================
 # ROW 2 — INSTITUTION COVERAGE + EXECUTION PRESSURE
 # =========================================================
+# Exact Geography/Overview-style alignment:
+# both charts in this row use ONE shared height.
+row2_owner_count = int(
+    owner["Activity Owner"].nunique()
+    if "Activity Owner" in owner.columns
+    else 0
+)
+
+row2_chart_height = min(
+    max(
+        285,
+        120 + row2_owner_count * 18,
+    ),
+    410,
+)
+
 c1, c2 = st.columns(
     2,
     gap="medium",
@@ -1656,6 +1751,10 @@ c1, c2 = st.columns(
 
 with c1:
     with st.container(border=True):
+        st.markdown(
+            '<span class="team-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Institution Coverage by Owner",
             "Unique institutions assigned across outreach owners.",
@@ -1705,7 +1804,7 @@ with c1:
             st.plotly_chart(
                 clean_chart(
                     fig,
-                    230,
+                    row2_chart_height,
                     legend=False,
                 ),
                 width="stretch",
@@ -1720,7 +1819,7 @@ with c1:
                 .iloc[0]
             )
 
-            action_note(
+            paired_action_note(
                 "Institution Coverage Insight",
                 (
                     f'{top_inst_owner["Activity Owner"]} currently covers the '
@@ -1734,6 +1833,10 @@ with c1:
 
 with c2:
     with st.container(border=True):
+        st.markdown(
+            '<span class="team-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Upcoming vs High-Priority Load",
             "Execution pressure by owner.",
@@ -1782,13 +1885,8 @@ with c2:
             .tolist()
         )
 
-        pressure_height = min(
-            max(
-                245,
-                110 + len(owner_order) * 27,
-            ),
-            520,
-        )
+        # Same exact height as the Institution Coverage chart.
+        pressure_height = row2_chart_height
 
         fig = px.bar(
             pressure_long,
@@ -1837,7 +1935,7 @@ with c2:
             config=CHART_CONFIG,
         )
 
-        action_note(
+        paired_action_note(
             "Execution Pressure Insight",
             (
                 f'{top_upcoming["Activity Owner"]} has the highest upcoming load '
@@ -1873,6 +1971,10 @@ r1, r2 = st.columns(
 
 with r1:
     with st.container(border=True):
+        st.markdown(
+            '<span class="team-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Owner Distribution by Campus",
             "Activity count by owner and campus. Cell numbers show actual activities.",
@@ -2033,7 +2135,7 @@ with r1:
                 owner_per_campus.iloc[0]
             )
 
-            action_note(
+            paired_action_note(
                 "Campus Team Insight",
                 (
                     f'{top_campus} has the broadest owner deployment with '
@@ -2045,6 +2147,10 @@ with r1:
 
 with r2:
     with st.container(border=True):
+        st.markdown(
+            '<span class="team-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Resource Utilisation",
             "Supporting Team and Resource Person activity usage.",
@@ -2122,7 +2228,7 @@ with r2:
                 .iloc[0]
             )
 
-            action_note(
+            paired_action_note(
                 "Resource Utilisation Insight",
                 (
                     f'{top_resource["Person"]} is the most frequently deployed '
