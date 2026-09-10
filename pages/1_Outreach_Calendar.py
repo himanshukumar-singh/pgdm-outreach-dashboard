@@ -343,6 +343,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 /* ---------- Insight cards ---------- */
 .cal-insight {
+    position: relative;
+    overflow: hidden;
     min-height: 96px;
     padding: .58rem .64rem;
     border-radius: 11px;
@@ -350,17 +352,62 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     background: #FFFFFF;
     box-shadow: 0 4px 12px rgba(15,42,69,.025);
     margin-bottom: .16rem;
+    animation: calendarInsightFloat 4.0s ease-in-out infinite;
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.cal-insight::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -40%;
+    width: 30%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.14) 32%,
+        rgba(255,255,255,.72) 50%,
+        rgba(255,255,255,.14) 68%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-18deg);
+    animation: calendarInsightSheen 5.8s ease-in-out infinite;
+}
+
+.cal-insight:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.065);
 }
 
 .cal-insight .label {
+    position: relative;
+    z-index: 2;
     font-size: .64rem;
     font-weight: 850;
     text-transform: uppercase;
     letter-spacing: .04em;
     color: #74879D;
+    background: linear-gradient(
+        90deg,
+        #60758C,
+        #2563EB,
+        #0891B2,
+        #7C3AED,
+        #D98B16,
+        #60758C
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: calendarInsightTitleFlow 6.2s linear infinite;
 }
 
 .cal-insight .value {
+    position: relative;
+    z-index: 2;
     font-size: .88rem;
     font-weight: 900;
     color: #0F2A45;
@@ -368,6 +415,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .cal-insight .note {
+    position: relative;
+    z-index: 2;
     color: #7E90A6;
     font-size: .62rem;
     line-height: 1.42;
@@ -375,21 +424,69 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .cal-action {
+    position: relative;
+    overflow: hidden;
     margin-top: .25rem;
     padding: .68rem .74rem;
     border-radius: 10px;
     background: linear-gradient(90deg, #FFF7EA 0%, #FFFDFC 100%);
     border: 1px solid #F3E0BB;
     border-left: 4px solid #D98B16;
+    box-shadow: 0 4px 14px rgba(15,42,69,.025);
+    animation: calendarInsightFloat 4.2s ease-in-out infinite;
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.cal-action::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -42%;
+    width: 30%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.12) 34%,
+        rgba(255,255,255,.68) 50%,
+        rgba(255,255,255,.12) 66%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-18deg);
+    animation: calendarInsightSheen 6.2s ease-in-out infinite;
+}
+
+.cal-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.060);
 }
 
 .cal-action .title {
+    position: relative;
+    z-index: 2;
     color: #6C4A16;
+    background: linear-gradient(
+        90deg,
+        #6C4A16,
+        #D98B16,
+        #2563EB,
+        #7C3AED,
+        #0F9F8F,
+        #6C4A16
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: calendarInsightTitleFlow 6.4s linear infinite;
     font-size: .69rem;
     font-weight: 850;
 }
 
 .cal-action .body {
+    position: relative;
+    z-index: 2;
     color: #796B55;
     font-size: .70rem;
     line-height: 1.42;
@@ -402,6 +499,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
    ===================================================== */
 
 .chart-insight {
+    position: relative;
+    overflow: hidden;
     margin-top: .10rem;
     padding: .48rem .58rem;
     border-radius: 10px;
@@ -409,6 +508,38 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     border: 1px solid #DDE8F7;
     border-left: 4px solid #2B6DE8;
     min-height: 64px;
+    box-shadow: 0 4px 14px rgba(15,42,69,.025);
+    animation: calendarInsightFloat 3.8s ease-in-out infinite;
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.chart-insight::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -38%;
+    width: 28%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.18) 35%,
+        rgba(255,255,255,.72) 50%,
+        rgba(255,255,255,.18) 65%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-18deg);
+    animation: calendarInsightSheen 5.6s ease-in-out infinite;
+}
+
+.chart-insight:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.065);
+}
+
+.chart-insight.amber {
+    animation-delay: .45s;
 }
 
 .chart-insight.amber {
@@ -418,16 +549,70 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .chart-insight .ititle {
+    position: relative;
+    z-index: 2;
     color: #153A5F;
     font-size: .70rem;
     font-weight: 850;
     margin-bottom: .18rem;
+    background: linear-gradient(
+        90deg,
+        #153A5F,
+        #2563EB,
+        #0891B2,
+        #7C3AED,
+        #D98B16,
+        #153A5F
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: calendarInsightTitleFlow 6s linear infinite;
 }
 
 .chart-insight .ibody {
+    position: relative;
+    z-index: 2;
     color: #60758C;
     font-size: .64rem;
     line-height: 1.34;
+}
+
+@keyframes calendarInsightFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes calendarInsightSheen {
+    0%, 18% {
+        left: -42%;
+        opacity: 0;
+    }
+    28% {
+        opacity: .88;
+    }
+    48% {
+        left: 112%;
+        opacity: 0;
+    }
+    100% {
+        left: 112%;
+        opacity: 0;
+    }
+}
+
+@keyframes calendarInsightTitleFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 240% 50%;
+    }
 }
 
 /* Exact equal-height insight pattern from Overview */
@@ -538,6 +723,15 @@ button[data-baseweb="tab"] {
 @media (prefers-reduced-motion: reduce) {
     .calendar-title,
     .cal-kpi,
+    .cal-insight,
+    .cal-insight::after,
+    .cal-insight .label,
+    .cal-action,
+    .cal-action::after,
+    .cal-action .title,
+    .chart-insight,
+    .chart-insight::after,
+    .chart-insight .ititle,
     [data-testid="stSidebar"] .brand-name,
     [data-testid="stSidebar"] .brand-sub {
         animation: none !important;
