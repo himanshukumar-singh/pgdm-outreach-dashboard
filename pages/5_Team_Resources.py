@@ -377,55 +377,6 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
-/* Team Management Insight cards — subtle professional motion only */
-.team-insight.management-motion {
-    position: relative;
-    overflow: hidden;
-    transition:
-        transform .22s ease,
-        box-shadow .22s ease,
-        border-color .22s ease;
-    animation: teamManagementFloat 2.4s ease-in-out infinite;
-}
-
-.team-insight.management-motion::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    border-radius: 10px 0 0 10px;
-    background: linear-gradient(180deg, #2B6DE8, #60A5FA);
-}
-
-.team-insight.management-motion::after {
-    content: "";
-    position: absolute;
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    right: -30px;
-    top: -34px;
-    background: radial-gradient(
-        circle,
-        rgba(96,165,250,.15) 0%,
-        rgba(255,255,255,0) 72%
-    );
-    pointer-events: none;
-}
-
-.team-insight.management-motion:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(15,42,69,.075);
-    border-color: #CFE0F4;
-}
-
-@keyframes teamManagementFloat {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-4px); }
-}
-
 .team-action {
     margin-top: .25rem;
     padding: .68rem .74rem;
@@ -466,66 +417,6 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
-/* ---------- Exact paired-card alignment — Overview style ---------- */
-.team-pair-marker {
-    display: none;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.team-pair-marker) {
-    align-items: stretch !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.team-pair-marker)
-> div[data-testid="stColumn"] {
-    display: flex !important;
-    flex-direction: column !important;
-    align-self: stretch !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.team-pair-marker)
-> div[data-testid="stColumn"]
-> div[data-testid="stVerticalBlock"] {
-    flex: 1 1 auto !important;
-    height: 100% !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.team-pair-marker) {
-    flex: 1 1 auto !important;
-    height: 100% !important;
-    overflow: visible !important;
-    padding-bottom: .50rem !important;
-    box-sizing: border-box !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.team-pair-marker)
-> div[data-testid="stVerticalBlock"] {
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: visible !important;
-    padding-bottom: 0 !important;
-}
-
-/* Push chart insight to the bottom of the bordered card */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.team-pair-marker)
-div[data-testid="stElementContainer"]:has(.team-bottom-insight) {
-    margin-top: auto !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-}
-
-/* Same visual insight height across paired cards */
-.team-action.team-bottom-insight {
-    height: 92px !important;
-    min-height: 92px !important;
-    max-height: 92px !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    margin-bottom: 0 !important;
-}
-
 /* ---------- Tables ---------- */
 .table-heading {
     color: #0F2A45;
@@ -554,7 +445,6 @@ div[data-testid="stElementContainer"]:has(.team-bottom-insight) {
 @media (prefers-reduced-motion: reduce) {
     .team-title,
     .team-kpi,
-    .team-insight.management-motion,
     [data-testid="stSidebar"] .brand-name,
     [data-testid="stSidebar"] .brand-sub {
         animation: none !important;
@@ -605,39 +495,12 @@ def team_insight(label, value, note):
     )
 
 
-def team_management_insight(label, value, note):
-    st.markdown(
-        (
-            '<div class="team-insight management-motion">'
-            f'<div class="label">{label}</div>'
-            f'<div class="value">{value}</div>'
-            f'<div class="note">{note}</div>'
-            '</div>'
-        ),
-        unsafe_allow_html=True,
-    )
-
-
 def action_note(title, body, tone="blue"):
     tone_class = "" if tone == "blue" else tone
 
     st.markdown(
         (
             f'<div class="team-action {tone_class}">'
-            f'<div class="title">{title}</div>'
-            f'<div class="body">{body}</div>'
-            '</div>'
-        ),
-        unsafe_allow_html=True,
-    )
-
-
-def paired_action_note(title, body, tone="blue"):
-    tone_class = "" if tone == "blue" else tone
-
-    st.markdown(
-        (
-            f'<div class="team-action team-bottom-insight {tone_class}">'
             f'<div class="title">{title}</div>'
             f'<div class="body">{body}</div>'
             '</div>'
@@ -962,7 +825,7 @@ if (
 
 if f.empty:
     st.warning(
-        "Selected filters ke liye koi team/resource data available nahi hai."
+        "No data is available for the selected filters."
     )
     st.stop()
 
@@ -1466,10 +1329,6 @@ left, right = st.columns(
 
 with left:
     with st.container(border=True):
-        st.markdown(
-            '<span class="team-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
         card_header(
             "Owner Workload",
             "Outreach activity volume handled by each owner.",
@@ -1492,24 +1351,12 @@ with left:
             text="Activities",
         )
 
-        owner_max = int(owner_chart["Activities"].max())
-
-        owner_colors = [
-            "#174A7E" if int(value) == owner_max else "#5E95C9"
-            for value in owner_chart["Activities"]
-        ]
-
         fig.update_traces(
-            marker_color=owner_colors,
+            marker_color="#2468B4",
             textposition="outside",
-            textfont=dict(size=9, color="#526A84"),
+            textfont=dict(size=9),
             marker_line_width=0,
             cliponaxis=False,
-            hovertemplate=(
-                "<b>%{y}</b><br>"
-                "Activities: %{x:.0f}"
-                "<extra></extra>"
-            ),
         )
 
         fig.update_xaxes(
@@ -1552,7 +1399,7 @@ with left:
             else 0
         )
 
-        paired_action_note(
+        action_note(
             "Owner Workload Insight",
             (
                 f'{top_owner_row["Activity Owner"]} has the highest owner workload '
@@ -1565,10 +1412,6 @@ with left:
 
 with right:
     with st.container(border=True):
-        st.markdown(
-            '<span class="team-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
         card_header(
             "Team Intelligence",
             "Management-ready workload and deployment summary.",
@@ -1649,21 +1492,6 @@ with right:
 # =========================================================
 # ROW 2 — INSTITUTION COVERAGE + EXECUTION PRESSURE
 # =========================================================
-row2_owner_count = int(
-    owner["Activity Owner"].nunique()
-    if "Activity Owner" in owner.columns
-    else 0
-)
-
-# One shared height keeps both paired charts visually identical.
-row2_chart_height = min(
-    max(
-        285,
-        120 + row2_owner_count * 18,
-    ),
-    410,
-)
-
 c1, c2 = st.columns(
     2,
     gap="medium",
@@ -1671,10 +1499,6 @@ c1, c2 = st.columns(
 
 with c1:
     with st.container(border=True):
-        st.markdown(
-            '<span class="team-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
         card_header(
             "Institution Coverage by Owner",
             "Unique institutions assigned across outreach owners.",
@@ -1702,24 +1526,12 @@ with c1:
                 text="Institutions",
             )
 
-            institution_max = int(owner_inst["Institutions"].max())
-
-            institution_colors = [
-                "#6542C7" if int(value) == institution_max else "#A58BE7"
-                for value in owner_inst["Institutions"]
-            ]
-
             fig.update_traces(
-                marker_color=institution_colors,
+                marker_color="#7A56D8",
                 textposition="outside",
-                textfont=dict(size=9, color="#526A84"),
+                textfont=dict(size=9),
                 marker_line_width=0,
                 cliponaxis=False,
-                hovertemplate=(
-                    "<b>%{y}</b><br>"
-                    "Institutions: %{x:.0f}"
-                    "<extra></extra>"
-                ),
             )
 
             fig.update_xaxes(
@@ -1736,7 +1548,7 @@ with c1:
             st.plotly_chart(
                 clean_chart(
                     fig,
-                    row2_chart_height,
+                    230,
                     legend=False,
                 ),
                 width="stretch",
@@ -1751,7 +1563,7 @@ with c1:
                 .iloc[0]
             )
 
-            paired_action_note(
+            action_note(
                 "Institution Coverage Insight",
                 (
                     f'{top_inst_owner["Activity Owner"]} currently covers the '
@@ -1765,10 +1577,6 @@ with c1:
 
 with c2:
     with st.container(border=True):
-        st.markdown(
-            '<span class="team-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
         card_header(
             "Upcoming vs High-Priority Load",
             "Execution pressure by owner.",
@@ -1803,11 +1611,6 @@ with c2:
             )
         )
 
-        # Hide zero labels while preserving zero values in the chart/hover logic.
-        pressure_long["Display Label"] = pressure_long["Activities"].apply(
-            lambda value: "" if int(value) == 0 else f"{int(value)}"
-        )
-
         pressure["Total Load"] = (
             pressure["Upcoming"]
             + pressure["High_Priority"]
@@ -1822,7 +1625,13 @@ with c2:
             .tolist()
         )
 
-        pressure_height = row2_chart_height
+        pressure_height = min(
+            max(
+                245,
+                110 + len(owner_order) * 27,
+            ),
+            520,
+        )
 
         fig = px.bar(
             pressure_long,
@@ -1831,7 +1640,7 @@ with c2:
             color="Load Type",
             orientation="h",
             barmode="group",
-            text="Display Label",
+            text="Activities",
             color_discrete_map={
                 "Upcoming": "#5B8FD6",
                 "High Priority": "#D9534F",
@@ -1840,14 +1649,9 @@ with c2:
 
         fig.update_traces(
             textposition="outside",
-            textfont=dict(size=9, color="#526A84"),
+            textfont=dict(size=9),
             marker_line_width=0,
             cliponaxis=False,
-            hovertemplate=(
-                "<b>%{y}</b><br>"
-                "%{fullData.name}: %{x:.0f}"
-                "<extra></extra>"
-            ),
         )
 
         fig.update_xaxes(
@@ -1876,7 +1680,7 @@ with c2:
             config=CHART_CONFIG,
         )
 
-        paired_action_note(
+        action_note(
             "Execution Pressure Insight",
             (
                 f'{top_upcoming["Activity Owner"]} has the highest upcoming load '
@@ -1912,10 +1716,6 @@ r1, r2 = st.columns(
 
 with r1:
     with st.container(border=True):
-        st.markdown(
-            '<span class="team-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
         card_header(
             "Owner Distribution by Campus",
             "Activity count by owner and campus. Cell numbers show actual activities.",
@@ -2026,8 +1826,6 @@ with r1:
                     "<extra></extra>"
                 ),
                 textfont=dict(size=9),
-                xgap=2,
-                ygap=2,
             )
 
             fig.update_layout(
@@ -2078,7 +1876,7 @@ with r1:
                 owner_per_campus.iloc[0]
             )
 
-            paired_action_note(
+            action_note(
                 "Campus Team Insight",
                 (
                     f'{top_campus} has the broadest owner deployment with '
@@ -2090,10 +1888,6 @@ with r1:
 
 with r2:
     with st.container(border=True):
-        st.markdown(
-            '<span class="team-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
         card_header(
             "Resource Utilisation",
             "Supporting Team and Resource Person activity usage.",
@@ -2128,14 +1922,9 @@ with r2:
 
             fig.update_traces(
                 textposition="outside",
-                textfont=dict(size=9, color="#526A84"),
+                textfont=dict(size=9),
                 marker_line_width=0,
                 cliponaxis=False,
-                hovertemplate=(
-                    "<b>%{y}</b><br>"
-                    "%{fullData.name}: %{x:.0f} activities"
-                    "<extra></extra>"
-                ),
             )
 
             fig.update_xaxes(
@@ -2176,7 +1965,7 @@ with r2:
                 .iloc[0]
             )
 
-            paired_action_note(
+            action_note(
                 "Resource Utilisation Insight",
                 (
                     f'{top_resource["Person"]} is the most frequently deployed '
@@ -2302,7 +2091,7 @@ if not owner_management.empty:
 
     for idx, row in owner_management.iterrows():
         with insight_cols[idx]:
-            team_management_insight(
+            team_insight(
                 str(row["Activity Owner"]),
                 f'{int(row["Activities"])} activities',
                 (

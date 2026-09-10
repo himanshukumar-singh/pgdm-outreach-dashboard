@@ -981,7 +981,7 @@ if (
 
 if f.empty:
     st.warning(
-        "Selected filters ke liye koi outreach calendar data available nahi hai."
+        "No data is available for the selected filters."
     )
     st.stop()
 

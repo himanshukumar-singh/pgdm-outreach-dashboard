@@ -1284,7 +1284,7 @@ if (
     ]
 
 if filtered.empty:
-    st.warning("No campus outreach data is available for the selected filters.")
+    st.warning("No data is available for the selected filters.")
     st.stop()
 
 
