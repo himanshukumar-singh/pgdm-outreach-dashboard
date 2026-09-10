@@ -465,12 +465,14 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 .mini-upcoming {
     position: relative;
     overflow: hidden;
-    min-height: 108px;
-    border-radius: 16px;
-    padding: .70rem .82rem .68rem .82rem;
+    height: 94px;
+    min-height: 94px;
+    box-sizing: border-box;
+    border-radius: 14px;
+    padding: .64rem .72rem .60rem .72rem;
     background: linear-gradient(145deg, #FFFFFF 0%, var(--wash) 100%);
     border: 1px solid var(--border);
-    box-shadow: 0 8px 22px rgba(15,42,69,.045);
+    box-shadow: 0 6px 18px rgba(15,42,69,.045);
     animation: upcomingFloat 2.4s ease-in-out infinite;
     transition: transform .22s ease, box-shadow .22s ease;
 }
@@ -484,17 +486,17 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
     content: "";
     position: absolute;
     inset: 0 auto 0 0;
-    width: 5px;
+    width: 4px;
     background: linear-gradient(180deg, var(--accent), var(--accent2));
 }
 
 .mini-upcoming::after {
     content: "";
     position: absolute;
-    width: 84px;
-    height: 84px;
+    width: 82px;
+    height: 82px;
     border-radius: 50%;
-    right: -30px;
+    right: -32px;
     top: -34px;
     background: radial-gradient(circle, var(--bubble) 0%, rgba(255,255,255,0) 72%);
 }
@@ -502,18 +504,18 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 .mini-upcoming .icon {
     position: relative;
     z-index: 2;
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
+    width: 27px;
+    height: 27px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--iconbg);
     color: var(--accent);
     border: 1px solid var(--border);
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 900;
-    margin-bottom: .42rem;
+    margin-bottom: .30rem;
 }
 
 .mini-upcoming .label {
@@ -550,9 +552,9 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 
 .mini-upcoming .mini-line {
     position: absolute;
-    left: .82rem;
-    right: .82rem;
-    bottom: .42rem;
+    left: .72rem;
+    right: .72rem;
+    bottom: .36rem;
     height: 2px;
     border-radius: 999px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
