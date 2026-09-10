@@ -479,6 +479,46 @@ div[data-testid="stElementContainer"]:has(.action-bottom-insight) {
     margin-bottom: 0 !important;
 }
 
+/* ---------- Row 1 exact alignment: Priority Mix + Action Intelligence ---------- */
+.action-row1-marker {
+    display: none;
+}
+
+/* Both Row-1 cards use one exact professional height */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.action-row1-marker) {
+    height: 720px !important;
+    min-height: 720px !important;
+    max-height: 720px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    padding-bottom: .50rem !important;
+}
+
+/* Make the inside of both Row-1 cards fill the complete border */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.action-row1-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+}
+
+/* Keep Priority Insight attached to the bottom of the left card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.action-row1-marker)
+div[data-testid="stElementContainer"]:has(.action-bottom-insight) {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Right-side intelligence cards stay compact and safely inside the border */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.action-row1-marker)
+.action-insight:last-of-type {
+    margin-bottom: 0 !important;
+}
+
 /* ---------- Control cards ---------- */
 .control-card {
     min-height: 112px;
@@ -1251,7 +1291,8 @@ left, right = st.columns(
 with left:
     with st.container(border=True):
         st.markdown(
-            '<span class="action-pair-marker"></span>',
+            '<span class="action-pair-marker"></span>'
+            '<span class="action-row1-marker"></span>',
             unsafe_allow_html=True,
         )
         card_header(
@@ -1319,7 +1360,7 @@ with left:
         st.plotly_chart(
             clean_chart(
                 fig,
-                225,
+                330,
                 legend=False,
             ),
             width="stretch",
@@ -1350,7 +1391,8 @@ with left:
 with right:
     with st.container(border=True):
         st.markdown(
-            '<span class="action-pair-marker"></span>',
+            '<span class="action-pair-marker"></span>'
+            '<span class="action-row1-marker"></span>',
             unsafe_allow_html=True,
         )
         card_header(
