@@ -1046,7 +1046,7 @@ summary_left, summary_right = st.columns(
 )
 
 with summary_left:
-    with st.container(border=True, height=390):
+    with st.container(border=True):
         st.markdown(
             '<span class="calendar-pair-marker"></span>',
             unsafe_allow_html=True,
@@ -1134,7 +1134,7 @@ with summary_left:
 
 
 with summary_right:
-    with st.container(border=True, height=390):
+    with st.container(border=True):
         st.markdown(
             '<span class="calendar-pair-marker"></span>',
             unsafe_allow_html=True,
