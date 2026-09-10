@@ -401,6 +401,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 .status-insight-pin.teal {
     min-height: 54px !important;
     padding: .34rem .50rem !important;
+    margin-top: 10px !important;
 }
 
 .status-insight-pin.teal .ititle {
