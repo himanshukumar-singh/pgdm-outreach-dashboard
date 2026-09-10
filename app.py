@@ -396,6 +396,23 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin: 0 !important;
 }
 
+/* Only Status Snapshot Insight:
+   slightly smaller so a clean gap appears above it */
+.status-insight-pin.teal {
+    min-height: 54px !important;
+    padding: .34rem .50rem !important;
+}
+
+.status-insight-pin.teal .ititle {
+    font-size: .66rem !important;
+    margin-bottom: .12rem !important;
+}
+
+.status-insight-pin.teal .ibody {
+    font-size: .59rem !important;
+    line-height: 1.24 !important;
+}
+
 /* Status row: no internal scrollbar, border retained */
 div[data-testid="stHorizontalBlock"]:has(.status-card-marker) {
     align-items: stretch !important;
