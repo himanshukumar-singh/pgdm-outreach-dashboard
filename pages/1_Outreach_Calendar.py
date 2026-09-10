@@ -396,6 +396,44 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
     overflow-wrap: anywhere;
 }
+/* =====================================================
+   Lower calendar chart cards — exact equal alignment
+   ===================================================== */
+
+.calendar-lower-pair-marker {
+    display: none;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.calendar-lower-pair-marker) {
+    align-items: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.calendar-lower-pair-marker)
+> div[data-testid="stColumn"] {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker) {
+    height: 100% !important;
+    flex: 1 1 auto !important;
+    padding-bottom: .42rem !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
+div[data-testid="stElementContainer"]:has(.calendar-bottom-insight) {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
 
 /* Paired calendar cards:
    keep the insight inside the border and flush near the bottom */
@@ -1295,7 +1333,7 @@ chart1, chart2 = st.columns(2, gap="medium")
 with chart1:
     with st.container(border=True):
         st.markdown(
-            '<span class="calendar-pair-marker"></span>',
+            '<span class="calendar-lower-pair-marker"></span>',
             unsafe_allow_html=True,
         )
         card_header(
@@ -1374,7 +1412,7 @@ with chart1:
 with chart2:
     with st.container(border=True):
         st.markdown(
-            '<span class="calendar-pair-marker"></span>',
+            '<span class="calendar-lower-pair-marker"></span>',
             unsafe_allow_html=True,
         )
         card_header(
