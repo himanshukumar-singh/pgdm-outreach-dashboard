@@ -419,6 +419,66 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
+/* ---------- Exact paired-card alignment — Overview style ---------- */
+.action-pair-marker {
+    display: none;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.action-pair-marker) {
+    align-items: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.action-pair-marker)
+> div[data-testid="stColumn"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.action-pair-marker)
+> div[data-testid="stColumn"]
+> div[data-testid="stVerticalBlock"] {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.action-pair-marker) {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    overflow: visible !important;
+    padding-bottom: .50rem !important;
+    box-sizing: border-box !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.action-pair-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+}
+
+/* Push insight to the bottom of each bordered card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.action-pair-marker)
+div[data-testid="stElementContainer"]:has(.action-bottom-insight) {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Same visual height for paired insights */
+.action-note.action-bottom-insight {
+    height: 92px !important;
+    min-height: 92px !important;
+    max-height: 92px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    margin-bottom: 0 !important;
+}
+
 /* ---------- Control cards ---------- */
 .control-card {
     min-height: 112px;
@@ -539,6 +599,20 @@ def note_box(title, body, tone="blue"):
     st.markdown(
         (
             f'<div class="action-note {tone_class}">'
+            f'<div class="title">{title}</div>'
+            f'<div class="body">{body}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def paired_note_box(title, body, tone="blue"):
+    tone_class = "" if tone == "blue" else tone
+
+    st.markdown(
+        (
+            f'<div class="action-note action-bottom-insight {tone_class}">'
             f'<div class="title">{title}</div>'
             f'<div class="body">{body}</div>'
             '</div>'
@@ -1176,6 +1250,10 @@ left, right = st.columns(
 
 with left:
     with st.container(border=True):
+        st.markdown(
+            '<span class="action-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Exception Priority Mix",
             "Current Action Center exceptions by management priority.",
@@ -1218,9 +1296,14 @@ with left:
 
         fig.update_traces(
             textposition="outside",
-            textfont=dict(size=9),
+            textfont=dict(size=9, color="#526A84"),
             marker_line_width=0,
             cliponaxis=False,
+            hovertemplate=(
+                "<b>%{x}</b><br>"
+                "Exceptions: %{y:.0f}"
+                "<extra></extra>"
+            ),
         )
 
         fig.update_xaxes(title="")
@@ -1253,7 +1336,7 @@ with left:
         else:
             high_share = 0
 
-        note_box(
+        paired_note_box(
             "Priority Insight",
             (
                 f"{high_count} High-priority exceptions require immediate attention "
@@ -1266,6 +1349,10 @@ with left:
 
 with right:
     with st.container(border=True):
+        st.markdown(
+            '<span class="action-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Action Intelligence",
             "Fast management summary from the selected exception set.",
@@ -1457,6 +1544,38 @@ with right:
 # =========================================================
 # ROW 2 — ISSUE TYPE + CAMPUS
 # =========================================================
+row2_issue_count = (
+    int(exceptions["Dashboard Issue"].nunique())
+    if (
+        not exceptions.empty
+        and "Dashboard Issue" in exceptions.columns
+    )
+    else 0
+)
+
+row2_campus_count = (
+    int(exceptions["Campus"].dropna().nunique())
+    if (
+        not exceptions.empty
+        and "Campus" in exceptions.columns
+    )
+    else 0
+)
+
+row2_category_count = max(
+    row2_issue_count,
+    row2_campus_count,
+    1,
+)
+
+row2_chart_height = min(
+    max(
+        285,
+        120 + row2_category_count * 34,
+    ),
+    430,
+)
+
 c1, c2 = st.columns(
     2,
     gap="medium",
@@ -1464,6 +1583,10 @@ c1, c2 = st.columns(
 
 with c1:
     with st.container(border=True):
+        st.markdown(
+            '<span class="action-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Exceptions by Issue Type",
             "Which control failures are generating the most Action Center rows.",
@@ -1490,12 +1613,24 @@ with c1:
                 text="Exceptions",
             )
 
+            issue_max = int(issue_type_df["Exceptions"].max())
+
+            issue_colors = [
+                "#6542C7" if int(value) == issue_max else "#A58BE7"
+                for value in issue_type_df["Exceptions"]
+            ]
+
             fig.update_traces(
-                marker_color="#7A56D8",
+                marker_color=issue_colors,
                 textposition="outside",
-                textfont=dict(size=8),
+                textfont=dict(size=8.5, color="#526A84"),
                 marker_line_width=0,
                 cliponaxis=False,
+                hovertemplate=(
+                    "<b>%{y}</b><br>"
+                    "Exceptions: %{x:.0f}"
+                    "<extra></extra>"
+                ),
             )
 
             fig.update_xaxes(
@@ -1509,13 +1644,7 @@ with c1:
 
             fig.update_yaxes(title="")
 
-            issue_chart_height = min(
-                max(
-                    250,
-                    105 + len(issue_type_df) * 38,
-                ),
-                520,
-            )
+            issue_chart_height = row2_chart_height
 
             st.plotly_chart(
                 clean_chart(
@@ -1535,7 +1664,7 @@ with c1:
                 .iloc[0]
             )
 
-            note_box(
+            paired_note_box(
                 "Issue-Type Insight",
                 (
                     f'{top_issue_row["Issue"]} is currently the largest exception '
@@ -1549,6 +1678,10 @@ with c1:
 
 with c2:
     with st.container(border=True):
+        st.markdown(
+            '<span class="action-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Exceptions by Campus",
             "Exception concentration across campus teams.",
@@ -1580,12 +1713,24 @@ with c2:
                 text="Exceptions",
             )
 
+            campus_max = int(campus_issue_df["Exceptions"].max())
+
+            campus_colors = [
+                "#174A7E" if int(value) == campus_max else "#6FA4D6"
+                for value in campus_issue_df["Exceptions"]
+            ]
+
             fig.update_traces(
-                marker_color="#2468B4",
+                marker_color=campus_colors,
                 textposition="outside",
-                textfont=dict(size=9),
+                textfont=dict(size=9, color="#526A84"),
                 marker_line_width=0,
                 cliponaxis=False,
+                hovertemplate=(
+                    "<b>%{y}</b><br>"
+                    "Exceptions: %{x:.0f}"
+                    "<extra></extra>"
+                ),
             )
 
             fig.update_xaxes(
@@ -1599,13 +1744,7 @@ with c2:
 
             fig.update_yaxes(title="")
 
-            campus_chart_height = min(
-                max(
-                    235,
-                    115 + len(campus_issue_df) * 38,
-                ),
-                430,
-            )
+            campus_chart_height = row2_chart_height
 
             st.plotly_chart(
                 clean_chart(
@@ -1625,7 +1764,7 @@ with c2:
                 .iloc[0]
             )
 
-            note_box(
+            paired_note_box(
                 "Campus Exception Insight",
                 (
                     f'{top_campus_row["Campus"]} currently has the highest exception '
@@ -1640,6 +1779,41 @@ with c2:
 # =========================================================
 # ROW 3 — OWNER + PRIORITY BY CAMPUS
 # =========================================================
+row3_owner_count = (
+    min(
+        12,
+        int(exceptions["Activity Owner"].dropna().nunique()),
+    )
+    if (
+        not exceptions.empty
+        and "Activity Owner" in exceptions.columns
+    )
+    else 0
+)
+
+row3_campus_count = (
+    int(exceptions["Campus"].dropna().nunique())
+    if (
+        not exceptions.empty
+        and "Campus" in exceptions.columns
+    )
+    else 0
+)
+
+row3_category_count = max(
+    row3_owner_count,
+    row3_campus_count,
+    1,
+)
+
+row3_chart_height = min(
+    max(
+        300,
+        125 + row3_category_count * 30,
+    ),
+    450,
+)
+
 r1, r2 = st.columns(
     2,
     gap="medium",
@@ -1647,6 +1821,10 @@ r1, r2 = st.columns(
 
 with r1:
     with st.container(border=True):
+        st.markdown(
+            '<span class="action-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Exceptions by Owner",
             "Owner-level follow-up load from exception rows.",
@@ -1679,12 +1857,24 @@ with r1:
                 text="Exceptions",
             )
 
+            owner_max = int(owner_issue_df["Exceptions"].max())
+
+            owner_colors = [
+                "#0B7D70" if int(value) == owner_max else "#62BDB1"
+                for value in owner_issue_df["Exceptions"]
+            ]
+
             fig.update_traces(
-                marker_color="#159E8C",
+                marker_color=owner_colors,
                 textposition="outside",
-                textfont=dict(size=9),
+                textfont=dict(size=9, color="#526A84"),
                 marker_line_width=0,
                 cliponaxis=False,
+                hovertemplate=(
+                    "<b>%{y}</b><br>"
+                    "Exceptions: %{x:.0f}"
+                    "<extra></extra>"
+                ),
             )
 
             fig.update_xaxes(
@@ -1698,13 +1888,7 @@ with r1:
 
             fig.update_yaxes(title="")
 
-            owner_chart_height = min(
-                max(
-                    240,
-                    110 + len(owner_issue_df) * 34,
-                ),
-                520,
-            )
+            owner_chart_height = row3_chart_height
 
             st.plotly_chart(
                 clean_chart(
@@ -1724,7 +1908,7 @@ with r1:
                 .iloc[0]
             )
 
-            note_box(
+            paired_note_box(
                 "Owner Follow-up Insight",
                 (
                     f'{top_owner_row["Activity Owner"]} has the highest visible '
@@ -1736,6 +1920,10 @@ with r1:
 
 with r2:
     with st.container(border=True):
+        st.markdown(
+            '<span class="action-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Priority Mix by Campus",
             "High, Medium and Low exception pressure across campuses.",
@@ -1786,13 +1974,7 @@ with r2:
                     .tolist()
                 )
 
-                priority_chart_height = min(
-                    max(
-                        250,
-                        120 + len(campus_order) * 42,
-                    ),
-                    460,
-                )
+                priority_chart_height = row3_chart_height
 
                 fig = px.bar(
                     campus_priority,
@@ -1818,9 +2000,14 @@ with r2:
 
                 fig.update_traces(
                     textposition="outside",
-                    textfont=dict(size=9),
+                    textfont=dict(size=9, color="#526A84"),
                     marker_line_width=0,
                     cliponaxis=False,
+                    hovertemplate=(
+                        "<b>%{y}</b><br>"
+                        "%{fullData.name}: %{x:.0f} exceptions"
+                        "<extra></extra>"
+                    ),
                 )
 
                 fig.update_xaxes(
@@ -1906,7 +2093,7 @@ with r2:
                             f"exception count ({highest_high_count} each)."
                         )
 
-                note_box(
+                paired_note_box(
                     "Campus Priority Insight",
                     high_message,
                     "red",
