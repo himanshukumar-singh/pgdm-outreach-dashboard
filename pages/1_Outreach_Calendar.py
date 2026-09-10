@@ -440,24 +440,36 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     justify-content: center;
 }
 
-/* Paired calendar cards:
-   keep the insight inside the border and flush near the bottom */
+/* Upper summary row — exact Overview-style alignment */
 .calendar-pair-marker {
     display: none;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-pair-marker) {
-    padding-bottom: .42rem !important;
+/* Same row-stretch technique used by the working Overview status section */
+div[data-testid="stHorizontalBlock"]:has(.calendar-pair-marker) {
+    align-items: stretch !important;
 }
 
+/* Both outer bordered cards share the same baseline */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-pair-marker) {
+    min-height: 460px !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: .50rem !important;
+}
+
+/* Card content becomes a vertical flex column */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-pair-marker)
 > div[data-testid="stVerticalBlock"] {
+    min-height: 444px !important;
     height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
+    overflow: visible !important;
     padding-bottom: 0 !important;
 }
 
+/* Insight stays at the bottom of each bordered card */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-pair-marker)
 div[data-testid="stElementContainer"]:has(.calendar-bottom-insight) {
     margin-top: auto !important;
@@ -465,6 +477,7 @@ div[data-testid="stElementContainer"]:has(.calendar-bottom-insight) {
     padding-bottom: 0 !important;
 }
 
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-pair-marker)
 .calendar-bottom-insight {
     margin-bottom: 0 !important;
 }
@@ -1099,6 +1112,7 @@ with k5:
 summary_left, summary_right = st.columns(
     [2.0, 1.15],
     gap="medium",
+    vertical_alignment="top",
 )
 
 with summary_left:
@@ -1319,11 +1333,6 @@ with summary_right:
                 overdue_value,
                 overdue_note,
             )
-        st.markdown(
-            '<div style="height:12px;"></div>',
-            unsafe_allow_html=True,
-        )
-
         paired_action_note(
             "Calendar Intelligence Insight",
             (
