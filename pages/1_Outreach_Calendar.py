@@ -404,35 +404,43 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     display: none;
 }
 
-div[data-testid="stHorizontalBlock"]:has(.calendar-lower-pair-marker) {
-    align-items: stretch !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.calendar-lower-pair-marker)
-> div[data-testid="stColumn"] {
-    display: flex !important;
-    flex-direction: column !important;
-}
-
+/* Both lower cards use the full fixed container height */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker) {
     height: 100% !important;
-    flex: 1 1 auto !important;
     padding-bottom: .42rem !important;
+    box-sizing: border-box !important;
 }
 
+/* Make the inside of each card a vertical flex layout */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
 > div[data-testid="stVerticalBlock"] {
     height: 100% !important;
+    min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     padding-bottom: 0 !important;
 }
 
+/* Push the insight to the bottom of the card */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
 div[data-testid="stElementContainer"]:has(.calendar-bottom-insight) {
     margin-top: auto !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
+}
+
+/* Keep both lower insights exactly the same height */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
+.cal-action.calendar-bottom-insight {
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+    box-sizing: border-box !important;
+    margin-top: .45rem !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
 }
 
 /* Paired calendar cards:
@@ -1331,7 +1339,7 @@ with summary_right:
 chart1, chart2 = st.columns(2, gap="medium")
 
 with chart1:
-    with st.container(border=True):
+    with st.container(border=True, height=390):
         st.markdown(
             '<span class="calendar-lower-pair-marker"></span>',
             unsafe_allow_html=True,
@@ -1410,7 +1418,7 @@ with chart1:
 
 
 with chart2:
-    with st.container(border=True):
+    with st.container(border=True, height=390):
         st.markdown(
             '<span class="calendar-lower-pair-marker"></span>',
             unsafe_allow_html=True,
