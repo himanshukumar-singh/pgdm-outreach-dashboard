@@ -377,6 +377,55 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
+/* Campus Management Insight cards — subtle professional motion only */
+.campus-insight.management-motion {
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+    animation: managementCardFloat 2.4s ease-in-out infinite;
+}
+
+.campus-insight.management-motion::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 10px 0 0 10px;
+    background: linear-gradient(180deg, #2B6DE8, #60A5FA);
+}
+
+.campus-insight.management-motion::after {
+    content: "";
+    position: absolute;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    right: -30px;
+    top: -34px;
+    background: radial-gradient(
+        circle,
+        rgba(96,165,250,.15) 0%,
+        rgba(255,255,255,0) 72%
+    );
+    pointer-events: none;
+}
+
+.campus-insight.management-motion:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.075);
+    border-color: #CFE0F4;
+}
+
+@keyframes managementCardFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
 .campus-action {
     margin-top: .25rem;
     padding: .68rem .74rem;
@@ -445,6 +494,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 @media (prefers-reduced-motion: reduce) {
     .campus-title,
     .campus-kpi,
+    .campus-insight.management-motion,
     [data-testid="stSidebar"] .brand-name,
     [data-testid="stSidebar"] .brand-sub {
         animation: none !important;
@@ -486,6 +536,19 @@ def campus_insight(label, value, note):
     st.markdown(
         (
             '<div class="campus-insight">'
+            f'<div class="label">{label}</div>'
+            f'<div class="value">{value}</div>'
+            f'<div class="note">{note}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def campus_management_insight(label, value, note):
+    st.markdown(
+        (
+            '<div class="campus-insight management-motion">'
             f'<div class="label">{label}</div>'
             f'<div class="value">{value}</div>'
             f'<div class="note">{note}</div>'
@@ -1768,7 +1831,7 @@ if len(management_view) > 0:
                 else 0
             )
 
-            campus_insight(
+            campus_management_insight(
                 str(row["Campus"]),
                 f'{int(row["Activities"])} activities',
                 (
