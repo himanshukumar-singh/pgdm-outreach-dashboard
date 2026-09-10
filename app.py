@@ -1327,7 +1327,7 @@ with row1_left:
             )
 
             st.plotly_chart(
-                professional_chart(fig, 245),
+                professional_chart(fig, 278),
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1351,6 +1351,11 @@ with row1_left:
                     status_data["Status"].eq("Planned"),
                     "Activities",
                 ].sum()
+            )
+
+            st.markdown(
+                '<div style="height:8px"></div>',
+                unsafe_allow_html=True,
             )
 
             chart_insight(
