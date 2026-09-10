@@ -386,6 +386,29 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     line-height: 1.34;
 }
 
+/* Exact status-row layout:
+   keep insight flush near the bottom border without dead space below it */
+.status-card-marker {
+    display: none;
+}
+
+.status-insight-pin {
+    margin: 0 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
+div[data-testid="stElementContainer"]:has(.status-insight-pin) {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+}
+
 .chart-insight {
     min-height: 64px;
 }
@@ -432,7 +455,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 /* Status Snapshot: compact executive rows */
 .status-mini {
-    height: 63px;
+    height: 67px;
     box-sizing: border-box;
     background: linear-gradient(145deg, #FFFFFF 0%, #F9FBFE 100%);
     border: 1px solid #DDE6F0;
@@ -704,6 +727,19 @@ def chart_insight(title, text, tone="blue"):
     st.markdown(
         (
             f'<div class="chart-insight {tone_class}">'
+            f'<div class="ititle">{title}</div>'
+            f'<div class="ibody">{text}</div>'
+            f'</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def pinned_status_insight(title, text, tone="blue"):
+    tone_class = "" if tone == "blue" else tone
+    st.markdown(
+        (
+            f'<div class="chart-insight status-insight-pin {tone_class}">'
             f'<div class="ititle">{title}</div>'
             f'<div class="ibody">{text}</div>'
             f'</div>'
@@ -1228,7 +1264,8 @@ with k6:
 row1_left, row1_right = st.columns([2.15, 1.0], gap="medium", vertical_alignment="top")
 
 with row1_left:
-    with st.container(border=True, height=490):
+    with st.container(border=True, height=465):
+        st.markdown('<span class="status-card-marker"></span>', unsafe_allow_html=True)
         chart_header(
             "Campus Activity Status",
             "Activity volume and current execution status by campus.",
@@ -1349,7 +1386,7 @@ with row1_left:
             )
 
             st.plotly_chart(
-                professional_chart(fig, 300),
+                professional_chart(fig, 305),
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1375,12 +1412,7 @@ with row1_left:
                 ].sum()
             )
 
-            st.markdown(
-                '<div style="height:8px"></div>',
-                unsafe_allow_html=True,
-            )
-
-            chart_insight(
+            pinned_status_insight(
                 "Campus Status Insight",
                 (
                     f"{top_campus} has the highest outreach load with "
@@ -1394,7 +1426,8 @@ with row1_left:
 
 
 with row1_right:
-    with st.container(border=True, height=490):
+    with st.container(border=True, height=465):
+        st.markdown('<span class="status-card-marker"></span>', unsafe_allow_html=True)
         chart_header(
             "Status Snapshot",
             "Management snapshot from the same campus-status view.",
@@ -1482,12 +1515,7 @@ with row1_right:
                 else 0
             )
 
-            st.markdown(
-                '<div style="height:8px"></div>',
-                unsafe_allow_html=True,
-            )
-
-            chart_insight(
+            pinned_status_insight(
                 "Status Snapshot Insight",
                 (
                     f"{dominant_status} is the largest current status bucket "
