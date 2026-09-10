@@ -377,6 +377,55 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
+/* Team Management Insight cards — subtle professional motion only */
+.team-insight.management-motion {
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+    animation: teamManagementFloat 2.4s ease-in-out infinite;
+}
+
+.team-insight.management-motion::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 10px 0 0 10px;
+    background: linear-gradient(180deg, #2B6DE8, #60A5FA);
+}
+
+.team-insight.management-motion::after {
+    content: "";
+    position: absolute;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    right: -30px;
+    top: -34px;
+    background: radial-gradient(
+        circle,
+        rgba(96,165,250,.15) 0%,
+        rgba(255,255,255,0) 72%
+    );
+    pointer-events: none;
+}
+
+.team-insight.management-motion:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.075);
+    border-color: #CFE0F4;
+}
+
+@keyframes teamManagementFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
 .team-action {
     margin-top: .25rem;
     padding: .68rem .74rem;
@@ -445,6 +494,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 @media (prefers-reduced-motion: reduce) {
     .team-title,
     .team-kpi,
+    .team-insight.management-motion,
     [data-testid="stSidebar"] .brand-name,
     [data-testid="stSidebar"] .brand-sub {
         animation: none !important;
@@ -486,6 +536,19 @@ def team_insight(label, value, note):
     st.markdown(
         (
             '<div class="team-insight">'
+            f'<div class="label">{label}</div>'
+            f'<div class="value">{value}</div>'
+            f'<div class="note">{note}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def team_management_insight(label, value, note):
+    st.markdown(
+        (
+            '<div class="team-insight management-motion">'
             f'<div class="label">{label}</div>'
             f'<div class="value">{value}</div>'
             f'<div class="note">{note}</div>'
@@ -2091,7 +2154,7 @@ if not owner_management.empty:
 
     for idx, row in owner_management.iterrows():
         with insight_cols[idx]:
-            team_insight(
+            team_management_insight(
                 str(row["Activity Owner"]),
                 f'{int(row["Activities"])} activities',
                 (
