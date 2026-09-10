@@ -376,6 +376,55 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
+/* Institution Management Insight cards — subtle professional motion only */
+.inst-insight.management-motion {
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+    animation: institutionManagementFloat 2.4s ease-in-out infinite;
+}
+
+.inst-insight.management-motion::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 10px 0 0 10px;
+    background: linear-gradient(180deg, #2B6DE8, #60A5FA);
+}
+
+.inst-insight.management-motion::after {
+    content: "";
+    position: absolute;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    right: -30px;
+    top: -34px;
+    background: radial-gradient(
+        circle,
+        rgba(96,165,250,.15) 0%,
+        rgba(255,255,255,0) 72%
+    );
+    pointer-events: none;
+}
+
+.inst-insight.management-motion:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.075);
+    border-color: #CFE0F4;
+}
+
+@keyframes institutionManagementFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
 .inst-action {
     margin-top: .25rem;
     padding: .68rem .74rem;
@@ -444,6 +493,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 @media (prefers-reduced-motion: reduce) {
     .inst-title,
     .inst-kpi,
+    .inst-insight.management-motion,
     [data-testid="stSidebar"] .brand-name,
     [data-testid="stSidebar"] .brand-sub {
         animation: none !important;
@@ -485,6 +535,19 @@ def institution_insight(label, value, note):
     st.markdown(
         (
             '<div class="inst-insight">'
+            f'<div class="label">{label}</div>'
+            f'<div class="value">{value}</div>'
+            f'<div class="note">{note}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def institution_management_insight(label, value, note):
+    st.markdown(
+        (
+            '<div class="inst-insight management-motion">'
             f'<div class="label">{label}</div>'
             f'<div class="value">{value}</div>'
             f'<div class="note">{note}</div>'
@@ -1788,7 +1851,7 @@ if not top_management.empty:
                 else "Relationship N/A"
             )
 
-            institution_insight(
+            institution_management_insight(
                 str(row["Institution / Event Name"]),
                 f'{int(row["Activities"])} activities',
                 (
