@@ -343,23 +343,72 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 /* ---------- Insight ---------- */
 .action-insight {
+    position: relative;
+    overflow: hidden;
     padding: .70rem .76rem;
     border-radius: 10px;
     border: 1px solid #DFE7F0;
     background: #FFFFFF;
     box-shadow: 0 4px 12px rgba(15,42,69,.025);
     margin-bottom: .48rem;
+    animation: actionInsightGlow 4.2s ease-in-out infinite;
+    transition:
+        box-shadow .22s ease,
+        border-color .22s ease;
+}
+
+.action-insight::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -40%;
+    width: 30%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.14) 32%,
+        rgba(255,255,255,.72) 50%,
+        rgba(255,255,255,.14) 68%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-18deg);
+    animation: actionInsightSheen 5.8s ease-in-out infinite;
+}
+
+.action-insight:hover {
+    box-shadow: 0 10px 24px rgba(15,42,69,.065);
+    border-color: #D3E0EF;
 }
 
 .action-insight .label {
+    position: relative;
+    z-index: 3;
     font-size: .64rem;
     font-weight: 850;
     text-transform: uppercase;
     letter-spacing: .04em;
     color: #74879D;
+    background: linear-gradient(
+        90deg,
+        #60758C,
+        #2563EB,
+        #0891B2,
+        #7C3AED,
+        #D98B16,
+        #60758C
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: actionInsightTitleFlow 6.2s linear infinite;
 }
 
 .action-insight .value {
+    position: relative;
+    z-index: 3;
     font-size: .96rem;
     font-weight: 900;
     color: #0F2A45;
@@ -367,6 +416,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .action-insight .note {
+    position: relative;
+    z-index: 3;
     color: #7E90A6;
     font-size: .68rem;
     line-height: 1.42;
@@ -374,12 +425,57 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .action-note {
+    position: relative;
+    overflow: hidden;
     margin-top: .25rem;
     padding: .68rem .74rem;
     border-radius: 10px;
     background: linear-gradient(90deg, #EFF6FF 0%, #FBFDFF 100%);
     border: 1px solid #D9E7FA;
     border-left: 4px solid #2B6DE8;
+    box-shadow: 0 4px 14px rgba(15,42,69,.025);
+    animation: actionInsightGlow 4.4s ease-in-out infinite;
+    transition: box-shadow .22s ease;
+}
+
+.action-note::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -42%;
+    width: 30%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.14) 34%,
+        rgba(255,255,255,.70) 50%,
+        rgba(255,255,255,.14) 66%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-18deg);
+    animation: actionInsightSheen 6.0s ease-in-out infinite;
+}
+
+.action-note:hover {
+    box-shadow: 0 10px 24px rgba(15,42,69,.060);
+}
+
+.action-note.red {
+    animation-delay: .12s;
+}
+
+.action-note.amber {
+    animation-delay: .24s;
+}
+
+.action-note.green {
+    animation-delay: .36s;
+}
+
+.action-note.violet {
+    animation-delay: .48s;
 }
 
 .action-note.red {
@@ -407,16 +503,70 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .action-note .title {
+    position: relative;
+    z-index: 3;
     color: #173A61;
     font-size: .69rem;
     font-weight: 850;
+    background: linear-gradient(
+        90deg,
+        #173A61,
+        #2563EB,
+        #0891B2,
+        #7C3AED,
+        #D98B16,
+        #173A61
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: actionInsightTitleFlow 6s linear infinite;
 }
 
 .action-note .body {
+    position: relative;
+    z-index: 3;
     color: #6C7E91;
     font-size: .70rem;
     line-height: 1.42;
     margin-top: .18rem;
+}
+
+@keyframes actionInsightGlow {
+    0%, 100% {
+        box-shadow: 0 4px 14px rgba(15,42,69,.025);
+    }
+    50% {
+        box-shadow: 0 7px 18px rgba(43,109,232,.065);
+    }
+}
+
+@keyframes actionInsightSheen {
+    0%, 18% {
+        left: -42%;
+        opacity: 0;
+    }
+    28% {
+        opacity: .88;
+    }
+    48% {
+        left: 112%;
+        opacity: 0;
+    }
+    100% {
+        left: 112%;
+        opacity: 0;
+    }
+}
+
+@keyframes actionInsightTitleFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 240% 50%;
+    }
 }
 
 /* ---------- Exact paired-card alignment — Overview style ---------- */
@@ -583,6 +733,12 @@ button[data-baseweb="tab"] {
 @media (prefers-reduced-motion: reduce) {
     .action-title,
     .action-kpi,
+    .action-insight,
+    .action-insight::after,
+    .action-insight .label,
+    .action-note,
+    .action-note::after,
+    .action-note .title,
     [data-testid="stSidebar"] .brand-name,
     [data-testid="stSidebar"] .brand-sub {
         animation: none !important;
