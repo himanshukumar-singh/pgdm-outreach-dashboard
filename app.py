@@ -261,7 +261,7 @@ div[data-testid="stDateInput"] input {
     position: relative;
     z-index: 2;
     color: #60758C;
-    font-size: .55rem;
+    font-size: .52rem;
     font-weight: 850;
     white-space: nowrap;
 }
@@ -348,7 +348,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .chart-insight {
     margin-top: .10rem;
-    padding: .66rem .72rem;
+    padding: .48rem .58rem;
     border-radius: 10px;
     background: linear-gradient(90deg, #F2F7FF 0%, #F8FBFF 100%);
     border: 1px solid #DDE8F7;
@@ -382,12 +382,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .chart-insight .ibody {
     color: #60758C;
-    font-size: .72rem;
-    line-height: 1.42;
+    font-size: .64rem;
+    line-height: 1.34;
 }
 
 .chart-insight {
-    min-height: 88px;
+    min-height: 64px;
 }
 
 /* ---------- Mini insight cards ---------- */
@@ -423,13 +423,13 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 /* Status Snapshot: compact executive rows */
 .status-mini {
-    height: 82px;
+    height: 63px;
     box-sizing: border-box;
     background: linear-gradient(145deg, #FFFFFF 0%, #F9FBFE 100%);
     border: 1px solid #DDE6F0;
-    border-radius: 11px;
-    padding: .48rem .62rem;
-    box-shadow: 0 4px 12px rgba(15,42,69,.025);
+    border-radius: 10px;
+    padding: .34rem .52rem;
+    box-shadow: 0 3px 10px rgba(15,42,69,.022);
     overflow: hidden;
 }
 
@@ -443,17 +443,17 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .status-mini .value {
     color: #0F2A45;
-    font-size: 1.05rem;
+    font-size: .94rem;
     font-weight: 900;
-    margin-top: .12rem;
+    margin-top: .07rem;
     line-height: 1.05;
 }
 
 .status-mini .note {
     color: #8798AB;
-    font-size: .59rem;
-    margin-top: .10rem;
-    line-height: 1.30;
+    font-size: .54rem;
+    margin-top: .06rem;
+    line-height: 1.20;
 }
 
 
@@ -723,6 +723,29 @@ def status_mini(label, value, note):
             f'<div class="label">{label}</div>'
             f'<div class="value">{value}</div>'
             f'<div class="note">{note}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def status_snapshot_stack(items):
+    cards = "".join(
+        (
+            '<div class="status-mini">'
+            f'<div class="label">{label}</div>'
+            f'<div class="value">{value}</div>'
+            f'<div class="note">{note}</div>'
+            '</div>'
+        )
+        for label, value, note in items
+    )
+
+    st.markdown(
+        (
+            '<div style="display:grid;grid-template-columns:1fr;'
+            'gap:6px;margin-top:2px;">'
+            f'{cards}'
             '</div>'
         ),
         unsafe_allow_html=True,
@@ -1180,10 +1203,10 @@ with k6:
 # =========================================================
 # CHART 1 — CAMPUS STATUS + MATCHED INSIGHT
 # =========================================================
-row1_left, row1_right = st.columns([2.20, 1.0], gap="medium", vertical_alignment="top")
+row1_left, row1_right = st.columns([2.15, 1.0], gap="medium", vertical_alignment="top")
 
 with row1_left:
-    with st.container(border=True, height=505):
+    with st.container(border=True, height=445):
         chart_header(
             "Campus Activity Status",
             "Activity volume and current execution status by campus.",
@@ -1304,7 +1327,7 @@ with row1_left:
             )
 
             st.plotly_chart(
-                professional_chart(fig, 345),
+                professional_chart(fig, 245),
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1330,9 +1353,20 @@ with row1_left:
                 ].sum()
             )
 
+            chart_insight(
+                "Campus Status Insight",
+                (
+                    f"{top_campus} has the highest outreach load with "
+                    f"{top_campus_count} activities. "
+                    f"{confirmed_count} activities are confirmed and "
+                    f"{planned_count} are still planned."
+                ),
+                "blue",
+            )
+
 
 with row1_right:
-    with st.container(border=True, height=505):
+    with st.container(border=True, height=445):
         chart_header(
             "Status Snapshot",
             "Management-ready summary from the same campus-status view.",
@@ -1368,42 +1402,68 @@ with row1_right:
                 ].sum()
             )
 
-            status_mini(
-                "Top campus",
-                top_campus,
-                f"{top_value} outreach activities",
-            )
-            status_mini(
-                "Confirmed",
-                f"{confirmed_total}",
-                "Current confirmed activities",
-            )
-            status_mini(
-                "Still planned",
-                f"{planned_total}",
-                "Needs execution follow-through",
-            )
-            status_mini(
-                "Completed",
-                f"{completed_total}",
-                "Activities marked completed",
+            status_snapshot_stack(
+                [
+                    (
+                        "Top campus",
+                        top_campus,
+                        f"{top_value} outreach activities",
+                    ),
+                    (
+                        "Confirmed",
+                        f"{confirmed_total}",
+                        "Current confirmed activities",
+                    ),
+                    (
+                        "Still planned",
+                        f"{planned_total}",
+                        "Needs execution follow-through",
+                    ),
+                    (
+                        "Completed",
+                        f"{completed_total}",
+                        "Activities marked completed",
+                    ),
+                ]
             )
 
+            status_totals = (
+                status_data.groupby("Status")["Activities"]
+                .sum()
+                .sort_values(ascending=False)
+            )
 
-st.markdown('<div style="height:4px"></div>', unsafe_allow_html=True)
+            dominant_status = str(
+                status_totals.index[0]
+            )
+            dominant_count = int(
+                status_totals.iloc[0]
+            )
+            status_total = int(
+                status_totals.sum()
+            )
 
-if not status_data.empty:
-    chart_insight(
-        "Campus Status Insight",
-        (
-            f"{top_campus} has the highest outreach load with "
-            f"{top_campus_count} activities. In the selected view, "
-            f"{confirmed_count} activities are confirmed and "
-            f"{planned_count} are still planned. Hover over any bar "
-            f"to see the exact campus, status and activity count."
-        ),
-        "blue",
-    )
+            dominant_share = (
+                round(
+                    dominant_count
+                    / status_total
+                    * 100,
+                    1,
+                )
+                if status_total
+                else 0
+            )
+
+            chart_insight(
+                "Status Snapshot Insight",
+                (
+                    f"{dominant_status} is the largest current status bucket "
+                    f"with {dominant_count} activities "
+                    f"({dominant_share}% of status-linked activities). "
+                    f"{completed_total} activities are completed."
+                ),
+                "teal",
+            )
 
 
 # =========================================================
