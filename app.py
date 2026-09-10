@@ -390,15 +390,6 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     min-height: 64px;
 }
 
-.chart-insight.status-equal {
-    height: 86px;
-    min-height: 86px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
 /* ---------- Mini insight cards ---------- */
 .mini-insight {
     min-height: 70px;
@@ -704,19 +695,6 @@ def chart_insight(title, text, tone="blue"):
     st.markdown(
         (
             f'<div class="chart-insight {tone_class}">'
-            f'<div class="ititle">{title}</div>'
-            f'<div class="ibody">{text}</div>'
-            f'</div>'
-        ),
-        unsafe_allow_html=True,
-    )
-
-
-def status_equal_insight(title, text, tone="blue"):
-    tone_class = "" if tone == "blue" else tone
-    st.markdown(
-        (
-            f'<div class="chart-insight status-equal {tone_class}">'
             f'<div class="ititle">{title}</div>'
             f'<div class="ibody">{text}</div>'
             f'</div>'
@@ -1228,7 +1206,7 @@ with k6:
 row1_left, row1_right = st.columns([2.15, 1.0], gap="medium", vertical_alignment="top")
 
 with row1_left:
-    with st.container(border=True, height=452):
+    with st.container(border=True, height=445):
         chart_header(
             "Campus Activity Status",
             "Activity volume and current execution status by campus.",
@@ -1349,7 +1327,7 @@ with row1_left:
             )
 
             st.plotly_chart(
-                professional_chart(fig, 245),
+                professional_chart(fig, 278),
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1392,12 +1370,11 @@ with row1_left:
             )
 
 
-
 with row1_right:
-    with st.container(border=True, height=452):
+    with st.container(border=True, height=445):
         chart_header(
             "Status Snapshot",
-            "Management snapshot from the same campus-status view.",
+            "Management-ready summary from the same campus-status view.",
         )
 
         if not status_data.empty:
@@ -1482,11 +1459,6 @@ with row1_right:
                 else 0
             )
 
-            st.markdown(
-                '<div style="height:8px"></div>',
-                unsafe_allow_html=True,
-            )
-
             chart_insight(
                 "Status Snapshot Insight",
                 (
@@ -1497,7 +1469,6 @@ with row1_right:
                 ),
                 "teal",
             )
-
 
 
 # =========================================================
