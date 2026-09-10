@@ -478,6 +478,62 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-bottom: 0 !important;
 }
 
+/* ---------- Row 1: Activity Volume + Management Intelligence exact alignment ---------- */
+.campus-management-row-marker {
+    display: none;
+}
+
+/* The two columns stretch to the tallest card in this row */
+div[data-testid="stHorizontalBlock"]:has(.campus-management-row-marker) {
+    align-items: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.campus-management-row-marker)
+> div[data-testid="stColumn"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: stretch !important;
+}
+
+/* Make the Streamlit column body fill the row height */
+div[data-testid="stHorizontalBlock"]:has(.campus-management-row-marker)
+> div[data-testid="stColumn"]
+> div[data-testid="stVerticalBlock"] {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+}
+
+/* Both bordered cards fill the same row height */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.campus-management-row-marker) {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    overflow: visible !important;
+    padding-bottom: .50rem !important;
+    box-sizing: border-box !important;
+}
+
+/* Card content uses a vertical flex layout */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.campus-management-row-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+}
+
+/* Keep Activity Volume Insight at the bottom of the left card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.campus-management-row-marker)
+div[data-testid="stElementContainer"]:has(.row1-bottom-insight) {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.campus-action.row1-bottom-insight {
+    margin-bottom: 0 !important;
+}
+
 /* ---------- Table ---------- */
 .table-heading {
     color: #0F2A45;
@@ -588,6 +644,19 @@ def paired_action_note(title, body, tone="blue"):
     st.markdown(
         (
             f'<div class="campus-action pair-equal {tone_class}">'
+            f'<div class="title">{title}</div>'
+            f'<div class="body">{body}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def row1_action_note(title, body, tone="blue"):
+    tone_class = "" if tone == "blue" else tone
+    st.markdown(
+        (
+            f'<div class="campus-action pair-equal row1-bottom-insight {tone_class}">'
             f'<div class="title">{title}</div>'
             f'<div class="body">{body}</div>'
             '</div>'
@@ -1229,6 +1298,10 @@ left, right = st.columns(
 
 with left:
     with st.container(border=True):
+        st.markdown(
+            '<span class="campus-management-row-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Activity Volume by Campus",
             "Compare the number of outreach activities handled by each campus.",
@@ -1303,7 +1376,7 @@ with left:
             else 0
         )
 
-        action_note(
+        row1_action_note(
             "Activity Volume Insight",
             (
                 f'{top_volume["Campus"]} has the highest outreach load with '
@@ -1316,6 +1389,10 @@ with left:
 
 with right:
     with st.container(border=True):
+        st.markdown(
+            '<span class="campus-management-row-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Campus Management Intelligence",
             "Fast comparison points for the selected view.",
