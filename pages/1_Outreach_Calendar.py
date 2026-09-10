@@ -397,6 +397,35 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     overflow-wrap: anywhere;
 }
 
+/* Paired calendar cards:
+   keep the insight inside the border and flush near the bottom */
+.calendar-pair-marker {
+    display: none;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-pair-marker) {
+    padding-bottom: .42rem !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-pair-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-pair-marker)
+div[data-testid="stElementContainer"]:has(.calendar-bottom-insight) {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.calendar-bottom-insight {
+    margin-bottom: 0 !important;
+}
+
 .calendar-bottom-safe-space {
     height: 8px;
 }
@@ -507,6 +536,18 @@ def action_note(title, body):
     st.markdown(
         (
             '<div class="cal-action">'
+            f'<div class="title">{title}</div>'
+            f'<div class="body">{body}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def paired_action_note(title, body):
+    st.markdown(
+        (
+            '<div class="cal-action calendar-bottom-insight">'
             f'<div class="title">{title}</div>'
             f'<div class="body">{body}</div>'
             '</div>'
@@ -1006,6 +1047,10 @@ summary_left, summary_right = st.columns(
 
 with summary_left:
     with st.container(border=True, height=390):
+        st.markdown(
+            '<span class="calendar-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "30-Day Outreach Load",
             "Open outreach activities scheduled during the next 30 calendar days.",
@@ -1077,7 +1122,7 @@ with summary_left:
                 daily_load["Activities"].idxmax()
             ]
 
-            action_note(
+            paired_action_note(
                 "30-Day Load Insight",
                 (
                     f'Peak scheduled day is {peak_row["Date Label"]} with '
@@ -1090,6 +1135,10 @@ with summary_left:
 
 with summary_right:
     with st.container(border=True, height=390):
+        st.markdown(
+            '<span class="calendar-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Calendar Intelligence",
             "Immediate management actions from the selected calendar.",
@@ -1215,7 +1264,7 @@ with summary_right:
                 overdue_note,
             )
 
-        action_note(
+        paired_action_note(
             "Calendar Intelligence Insight",
             (
                 f"Next activity: {next_activity_value}. "
@@ -1241,6 +1290,10 @@ chart1, chart2 = st.columns(2, gap="medium")
 
 with chart1:
     with st.container(border=True, height=385):
+        st.markdown(
+            '<span class="calendar-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Campus Load — Next 30 Days",
             "Upcoming open activity volume by campus.",
@@ -1305,7 +1358,7 @@ with chart1:
 
                 top_row = campus_load_df.iloc[-1]
 
-                action_note(
+                paired_action_note(
                     "Campus Load Insight",
                     (
                         f'{top_row["Campus"]} carries the highest next-30-day '
@@ -1316,6 +1369,10 @@ with chart1:
 
 with chart2:
     with st.container(border=True, height=385):
+        st.markdown(
+            '<span class="calendar-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Priority Mix — Upcoming",
             "Upcoming open activities by priority.",
@@ -1415,7 +1472,7 @@ with chart2:
                     .sum()
                 )
 
-                action_note(
+                paired_action_note(
                     "Priority Insight",
                     (
                         f"{high_count} upcoming activities are marked High priority. "
