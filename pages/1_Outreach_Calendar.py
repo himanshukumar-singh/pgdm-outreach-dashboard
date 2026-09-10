@@ -398,7 +398,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .calendar-bottom-safe-space {
-    height: 90px;
+    height: 8px;
 }
 
 /* ---------- Table ---------- */
@@ -416,40 +416,25 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 [data-testid="stDataFrame"] {
-    border: 1px solid #D9E3EE !important;
+    border: 1px solid #D8E2EE !important;
     border-radius: 12px !important;
     overflow: hidden;
     background: #FFFFFF !important;
-    box-shadow: 0 6px 18px rgba(15,42,69,.045);
+    box-shadow: 0 6px 18px rgba(15,42,69,.04);
 }
 
-/* Compact, management-ready schedule table */
+/* Compact professional Activity Schedule table */
 [data-testid="stDataFrame"] [role="columnheader"] {
     background: #F3F7FC !important;
-    color: #3D5874 !important;
-    font-size: .68rem !important;
+    color: #405B77 !important;
+    font-size: .67rem !important;
     font-weight: 800 !important;
-    letter-spacing: .02em !important;
+    letter-spacing: .015em !important;
 }
 
 [data-testid="stDataFrame"] [role="gridcell"] {
-    color: #29435F !important;
-    font-size: .66rem !important;
-}
-
-/* Exact paired-card alignment without introducing internal scrollbars */
-.pair-align-marker {
-    display: none;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.summary-pair-marker) {
-    min-height: 390px !important;
-    height: auto !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.chart-pair-marker) {
-    min-height: 365px !important;
-    height: auto !important;
+    color: #29445F !important;
+    font-size: .65rem !important;
 }
 
 /* ---------- Tabs ---------- */
@@ -627,11 +612,16 @@ def show_schedule_table(frame, height=305):
 
     visible_rows = min(
         max(len(frame), 1),
-        8,
+        10,
     )
 
-    height = 36 + (
-        visible_rows * 27
+    calculated_height = 40 + (
+        visible_rows * 28
+    )
+
+    height = max(
+        height,
+        calculated_height,
     )
 
     columns = [
@@ -657,7 +647,7 @@ def show_schedule_table(frame, height=305):
         width="stretch",
         hide_index=True,
         height=height,
-        row_height=27,
+        row_height=28,
         column_config={
             "Activity Date": st.column_config.DateColumn(
                 "Date",
@@ -1015,11 +1005,7 @@ summary_left, summary_right = st.columns(
 )
 
 with summary_left:
-    with st.container(border=True):
-        st.markdown(
-            '<span class="pair-align-marker summary-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
+    with st.container(border=True, height=390):
         card_header(
             "30-Day Outreach Load",
             "Open outreach activities scheduled during the next 30 calendar days.",
@@ -1103,11 +1089,7 @@ with summary_left:
 
 
 with summary_right:
-    with st.container(border=True):
-        st.markdown(
-            '<span class="pair-align-marker summary-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
+    with st.container(border=True, height=390):
         card_header(
             "Calendar Intelligence",
             "Immediate management actions from the selected calendar.",
@@ -1233,6 +1215,24 @@ with summary_right:
                 overdue_note,
             )
 
+        action_note(
+            "Calendar Intelligence Insight",
+            (
+                f"Next activity: {next_activity_value}. "
+                f"{busiest_campus} carries the highest next-30-day open load. "
+                + (
+                    f"Planning readiness is {avg_readiness:.1f}%. "
+                    if avg_readiness is not None
+                    else ""
+                )
+                + (
+                    f"Oldest unresolved activity is {overdue_value} overdue."
+                    if not overdue.empty
+                    else "There is currently no overdue open activity."
+                )
+            ),
+        )
+
 
 # =========================================================
 # CAMPUS LOAD + PRIORITY MIX
@@ -1240,11 +1240,7 @@ with summary_right:
 chart1, chart2 = st.columns(2, gap="medium")
 
 with chart1:
-    with st.container(border=True):
-        st.markdown(
-            '<span class="pair-align-marker chart-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
+    with st.container(border=True, height=385):
         card_header(
             "Campus Load — Next 30 Days",
             "Upcoming open activity volume by campus.",
@@ -1319,11 +1315,7 @@ with chart1:
 
 
 with chart2:
-    with st.container(border=True):
-        st.markdown(
-            '<span class="pair-align-marker chart-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
+    with st.container(border=True, height=385):
         card_header(
             "Priority Mix — Upcoming",
             "Upcoming open activities by priority.",
@@ -1467,19 +1459,19 @@ tab_upcoming, tab_overdue, tab_all = st.tabs(
 with tab_upcoming:
     show_schedule_table(
         upcoming_sorted,
-        height=300,
+        height=330,
     )
 
 with tab_overdue:
     show_schedule_table(
         overdue_sorted,
-        height=300,
+        height=330,
     )
 
 with tab_all:
     show_schedule_table(
         full_sorted,
-        height=300,
+        height=330,
     )
 
 
