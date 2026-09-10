@@ -1263,6 +1263,10 @@ with summary_right:
                 overdue_value,
                 overdue_note,
             )
+        st.markdown(
+            '<div style="height:12px;"></div>',
+            unsafe_allow_html=True,
+        )
 
         paired_action_note(
             "Calendar Intelligence Insight",
