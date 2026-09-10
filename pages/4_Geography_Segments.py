@@ -1452,6 +1452,25 @@ with c2:
 # =========================================================
 # ROW 3 — PARTICIPATION + CAMPUS GEOGRAPHY
 # =========================================================
+# Exact Overview-style alignment:
+# both side-by-side visual cards use the SAME chart height.
+# The shared height is driven by the number of valid states so
+# the heatmap can still expand when new states are added.
+if {"Campus", "State"}.issubset(f.columns):
+    row3_state_count = int(
+        f.dropna(subset=["Campus", "State"])["State"].nunique()
+    )
+else:
+    row3_state_count = 0
+
+row3_chart_height = min(
+    max(
+        280,
+        125 + row3_state_count * 34,
+    ),
+    650,
+)
+
 r1, r2 = st.columns(
     2,
     gap="medium",
@@ -1519,7 +1538,7 @@ with r1:
             st.plotly_chart(
                 clean_chart(
                     fig,
-                    225,
+                    row3_chart_height,
                     legend=False,
                 ),
                 width="stretch",
@@ -1636,13 +1655,8 @@ with r2:
                 # Future-proof height:
                 # more states automatically create a taller chart,
                 # capped to avoid an excessively long dashboard.
-                dynamic_height = min(
-                    max(
-                        280,
-                        125 + len(heatmap_df) * 34,
-                    ),
-                    650,
-                )
+                # Use the exact same height as the Participation chart.
+                dynamic_height = row3_chart_height
 
                 # Display only actual counts inside cells.
                 # Zero values are kept in the heatmap for layout, but their labels are hidden.
