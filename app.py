@@ -396,17 +396,23 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin: 0 !important;
 }
 
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker) {
+    padding-bottom: 0.18rem !important;
+}
+
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 > div[data-testid="stVerticalBlock"] {
     height: 100%;
     display: flex;
     flex-direction: column;
+    padding-bottom: 0 !important;
 }
 
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 div[data-testid="stElementContainer"]:has(.status-insight-pin) {
     margin-top: auto !important;
     margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .chart-insight {
