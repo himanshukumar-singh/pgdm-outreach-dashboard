@@ -354,10 +354,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     background: #FFFFFF;
     box-shadow: 0 4px 12px rgba(15,42,69,.025);
     margin-bottom: .48rem;
-    animation: geoInsightGlow 4.0s ease-in-out infinite;
-    transition:
-        box-shadow .22s ease,
-        border-color .22s ease;
+    animation: geoInsightGlow 4.2s ease-in-out infinite;
+    transition: box-shadow .22s ease, border-color .22s ease;
 }
 
 .geo-insight::after {
@@ -437,9 +435,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     border: 1px solid #D9E7FA;
     border-left: 4px solid #2B6DE8;
     box-shadow: 0 4px 14px rgba(15,42,69,.025);
-    animation: geoInsightGlow 4.1s ease-in-out infinite;
-    transition:
-        box-shadow .22s ease;
+    animation: geoInsightGlow 4.4s ease-in-out infinite;
+    transition: box-shadow .22s ease;
 }
 
 .geo-action::after {
@@ -466,17 +463,9 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     box-shadow: 0 10px 24px rgba(15,42,69,.060);
 }
 
-.geo-action.teal {
-    animation-delay: .22s;
-}
-
-.geo-action.violet {
-    animation-delay: .44s;
-}
-
-.geo-action.amber {
-    animation-delay: .66s;
-}
+.geo-action.teal { animation-delay: .22s; }
+.geo-action.violet { animation-delay: .44s; }
+.geo-action.amber { animation-delay: .66s; }
 
 .geo-action.teal {
     background: linear-gradient(90deg, #EFFBF8 0%, #FBFEFD 100%);
@@ -527,6 +516,41 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
+@keyframes geoInsightGlow {
+    0%, 100% {
+        box-shadow: 0 4px 14px rgba(15,42,69,.025);
+    }
+    50% {
+        box-shadow: 0 7px 18px rgba(43,109,232,.060);
+    }
+}
+
+@keyframes geoInsightSheen {
+    0%, 18% {
+        left: -42%;
+        opacity: 0;
+    }
+    28% {
+        opacity: .88;
+    }
+    48% {
+        left: 112%;
+        opacity: 0;
+    }
+    100% {
+        left: 112%;
+        opacity: 0;
+    }
+}
+
+@keyframes geoInsightTitleFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 240% 50%;
+    }
+}
 
 /* ---------- Exact paired-card alignment — Overview style ---------- */
 .geo-pair-marker {
@@ -584,42 +608,6 @@ div[data-testid="stElementContainer"]:has(.geo-bottom-insight) {
     flex-direction: column !important;
     justify-content: center !important;
     margin-bottom: 0 !important;
-}
-
-@keyframes geoInsightGlow {
-    0%, 100% {
-        box-shadow: 0 4px 14px rgba(15,42,69,.025);
-    }
-    50% {
-        box-shadow: 0 7px 18px rgba(43,109,232,.060);
-    }
-}
-
-@keyframes geoInsightSheen {
-    0%, 18% {
-        left: -42%;
-        opacity: 0;
-    }
-    28% {
-        opacity: .88;
-    }
-    48% {
-        left: 112%;
-        opacity: 0;
-    }
-    100% {
-        left: 112%;
-        opacity: 0;
-    }
-}
-
-@keyframes geoInsightTitleFlow {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 240% 50%;
-    }
 }
 
 /* ---------- Table ---------- */
@@ -963,7 +951,7 @@ if (
 
 if f.empty:
     st.warning(
-        "No data is available for the selected filters."
+        "Selected filters ke liye koi geography/segment data available nahi hai."
     )
     st.stop()
 
