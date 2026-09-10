@@ -465,7 +465,6 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 .mini-upcoming {
     position: relative;
     overflow: hidden;
-    height: 94px;
     min-height: 94px;
     box-sizing: border-box;
     border-radius: 14px;
@@ -522,7 +521,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
     position: relative;
     z-index: 2;
     color: #60758C;
-    font-size: .68rem;
+    font-size: .52rem;
     font-weight: 850;
     text-transform: uppercase;
     letter-spacing: .04em;
@@ -533,7 +532,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
     position: relative;
     z-index: 2;
     color: #0F2A45;
-    font-size: 1.12rem;
+    font-size: 1.42rem;
     font-weight: 900;
     line-height: 1.05;
     margin-bottom: .18rem;
@@ -545,9 +544,10 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 .mini-upcoming .note {
     position: relative;
     z-index: 2;
-    color: #8092A8;
-    font-size: .70rem;
-    line-height: 1.25;
+    color: #8293A8;
+    font-size: .55rem;
+    line-height: 1.20;
+    margin-top: .17rem;
 }
 
 .mini-upcoming .mini-line {
