@@ -421,6 +421,41 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .10rem;
 }
 
+/* Status Snapshot: compact executive rows */
+.status-mini {
+    height: 82px;
+    box-sizing: border-box;
+    background: linear-gradient(145deg, #FFFFFF 0%, #F9FBFE 100%);
+    border: 1px solid #DDE6F0;
+    border-radius: 11px;
+    padding: .48rem .62rem;
+    box-shadow: 0 4px 12px rgba(15,42,69,.025);
+    overflow: hidden;
+}
+
+.status-mini .label {
+    color: #74879D;
+    font-size: .55rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+}
+
+.status-mini .value {
+    color: #0F2A45;
+    font-size: 1.05rem;
+    font-weight: 900;
+    margin-top: .12rem;
+    line-height: 1.05;
+}
+
+.status-mini .note {
+    color: #8798AB;
+    font-size: .59rem;
+    margin-top: .10rem;
+    line-height: 1.30;
+}
+
 
 /* ---------- Table ---------- */
 .table-title {
@@ -672,6 +707,19 @@ def mini_insight(label, value, note):
     st.markdown(
         (
             '<div class="mini-insight">'
+            f'<div class="label">{label}</div>'
+            f'<div class="value">{value}</div>'
+            f'<div class="note">{note}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def status_mini(label, value, note):
+    st.markdown(
+        (
+            '<div class="status-mini">'
             f'<div class="label">{label}</div>'
             f'<div class="value">{value}</div>'
             f'<div class="note">{note}</div>'
@@ -1132,10 +1180,10 @@ with k6:
 # =========================================================
 # CHART 1 — CAMPUS STATUS + MATCHED INSIGHT
 # =========================================================
-row1_left, row1_right = st.columns([2.35, 1.0], gap="medium")
+row1_left, row1_right = st.columns([2.20, 1.0], gap="medium", vertical_alignment="top")
 
 with row1_left:
-    with st.container(border=True):
+    with st.container(border=True, height=505):
         chart_header(
             "Campus Activity Status",
             "Activity volume and current execution status by campus.",
@@ -1160,35 +1208,53 @@ with row1_left:
                 "Rescheduled": "#D99A32",
             }
 
-            # Grouped bars keep every status value readable even when
-            # one status has a very small count (for example 1 or 2).
+            # Horizontal grouped bars are easier to scan and keep small
+            # status counts readable as the dataset grows.
+            campus_order = [
+                campus
+                for campus in ["Lucknow", "Noida", "Jaipur", "Indore"]
+                if campus in status_data["Campus"].astype(str).unique()
+            ]
+
+            status_order = [
+                status
+                for status in [
+                    "Completed",
+                    "Confirmed",
+                    "Cancelled",
+                    "Rescheduled",
+                    "Planned",
+                ]
+                if status in status_data["Status"].astype(str).unique()
+            ]
+
             fig = px.bar(
                 status_data,
-                x="Campus",
-                y="Activities",
+                x="Activities",
+                y="Campus",
                 color="Status",
+                orientation="h",
                 barmode="group",
                 text="Activities",
                 color_discrete_map=status_colors,
                 category_orders={
-                    "Campus": ["Lucknow", "Noida", "Jaipur", "Indore"],
-                    "Status": [
-                        "Completed",
-                        "Confirmed",
-                        "Cancelled",
-                        "Rescheduled",
-                        "Planned",
-                    ],
+                    "Campus": campus_order,
+                    "Status": status_order,
                 },
             )
 
             fig.update_traces(
                 textposition="outside",
-                texttemplate="%{y:.0f}",
-                textangle=0,
+                texttemplate="%{x:.0f}",
                 textfont=dict(size=9),
                 marker_line_width=0,
                 cliponaxis=False,
+                hovertemplate=(
+                    "<b>%{y}</b><br>"
+                    "Status: %{fullData.name}<br>"
+                    "Activities: %{x:.0f}"
+                    "<extra></extra>"
+                ),
             )
 
             status_max = int(
@@ -1196,15 +1262,10 @@ with row1_left:
             )
 
             fig.update_xaxes(
-                title="",
-                tickfont=dict(size=9),
-            )
-
-            fig.update_yaxes(
                 title="Activities",
                 range=[
                     0,
-                    max(1, status_max * 1.24),
+                    max(1, status_max * 1.20),
                 ],
                 showticklabels=False,
                 ticks="",
@@ -1212,13 +1273,38 @@ with row1_left:
                 zeroline=False,
             )
 
+            fig.update_yaxes(
+                title="",
+                categoryorder="array",
+                categoryarray=campus_order,
+                autorange="reversed",
+                tickfont=dict(size=9),
+                automargin=True,
+            )
+
             fig.update_layout(
-                bargap=0.24,
-                bargroupgap=0.08,
+                bargap=0.30,
+                bargroupgap=0.10,
+                hoverlabel=dict(
+                    bgcolor="#FFFFFF",
+                    bordercolor="#D8E2EE",
+                    font=dict(
+                        size=11,
+                        color="#17324D",
+                    ),
+                ),
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.02,
+                    xanchor="right",
+                    x=1,
+                    font=dict(size=9),
+                ),
             )
 
             st.plotly_chart(
-                professional_chart(fig, 245),
+                professional_chart(fig, 345),
                 width="stretch",
                 config=CHART_CONFIG,
             )
@@ -1244,19 +1330,9 @@ with row1_left:
                 ].sum()
             )
 
-            chart_insight(
-                "Campus Status Insight",
-                (
-                    f"{top_campus} has the highest outreach load with "
-                    f"{top_campus_count} activities. In the selected view, "
-                    f"{confirmed_count} activities are confirmed and "
-                    f"{planned_count} are still planned."
-                ),
-                "blue",
-            )
 
 with row1_right:
-    with st.container(border=True):
+    with st.container(border=True, height=505):
         chart_header(
             "Status Snapshot",
             "Management-ready summary from the same campus-status view.",
@@ -1292,29 +1368,42 @@ with row1_right:
                 ].sum()
             )
 
-            mini_insight(
+            status_mini(
                 "Top campus",
                 top_campus,
                 f"{top_value} outreach activities",
             )
-
-            mini_insight(
+            status_mini(
                 "Confirmed",
                 f"{confirmed_total}",
                 "Current confirmed activities",
             )
-
-            mini_insight(
+            status_mini(
                 "Still planned",
                 f"{planned_total}",
                 "Needs execution follow-through",
             )
-
-            mini_insight(
+            status_mini(
                 "Completed",
                 f"{completed_total}",
                 "Activities marked completed",
             )
+
+
+st.markdown('<div style="height:4px"></div>', unsafe_allow_html=True)
+
+if not status_data.empty:
+    chart_insight(
+        "Campus Status Insight",
+        (
+            f"{top_campus} has the highest outreach load with "
+            f"{top_campus_count} activities. In the selected view, "
+            f"{confirmed_count} activities are confirmed and "
+            f"{planned_count} are still planned. Hover over any bar "
+            f"to see the exact campus, status and activity count."
+        ),
+        "blue",
+    )
 
 
 # =========================================================
