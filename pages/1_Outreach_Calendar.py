@@ -397,56 +397,47 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     overflow-wrap: anywhere;
 }
 /* =====================================================
-   Lower calendar chart cards — Overview-style exact alignment
+   Overview-style equal chart insights
+   Same pattern used on the working Overview page
    ===================================================== */
 
-.calendar-lower-pair-marker {
-    display: none;
+.chart-insight {
+    margin-top: .10rem;
+    padding: .48rem .58rem;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #F2F7FF 0%, #F8FBFF 100%);
+    border: 1px solid #DDE8F7;
+    border-left: 4px solid #2B6DE8;
+    min-height: 64px;
 }
 
-/* Same technique used by the working Overview status row */
-div[data-testid="stHorizontalBlock"]:has(.calendar-lower-pair-marker) {
-    align-items: stretch !important;
+.chart-insight.amber {
+    background: linear-gradient(90deg, #FFF8EB 0%, #FFFDFC 100%);
+    border-color: #F4E2BF;
+    border-left-color: #D98B16;
 }
 
-/* Equal outer bordered-card baseline, but allow natural expansion */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker) {
-    min-height: 400px !important;
-    height: auto !important;
-    overflow: visible !important;
-    padding-bottom: .50rem !important;
+.chart-insight .ititle {
+    color: #153A5F;
+    font-size: .70rem;
+    font-weight: 850;
+    margin-bottom: .18rem;
 }
 
-/* Turn each card body into a vertical flex column */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
-> div[data-testid="stVerticalBlock"] {
-    min-height: 384px !important;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: visible !important;
-    padding-bottom: 0 !important;
+.chart-insight .ibody {
+    color: #60758C;
+    font-size: .64rem;
+    line-height: 1.34;
 }
 
-/* Push both insights to the bottom, exactly like Overview */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
-div[data-testid="stElementContainer"]:has(.calendar-bottom-insight) {
-    margin-top: auto !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-}
-
-/* Both insight boxes get the same visual height */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
-.cal-action.calendar-bottom-insight {
-    height: 88px !important;
-    min-height: 88px !important;
-    box-sizing: border-box !important;
-    margin-top: .45rem !important;
-    margin-bottom: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
+/* Exact equal-height insight pattern from Overview */
+.chart-insight.status-equal {
+    height: 86px;
+    min-height: 86px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* Paired calendar cards:
@@ -603,6 +594,19 @@ def paired_action_note(title, body):
             f'<div class="title">{title}</div>'
             f'<div class="body">{body}</div>'
             '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def status_equal_insight(title, text, tone="blue"):
+    tone_class = "" if tone == "blue" else tone
+    st.markdown(
+        (
+            f'<div class="chart-insight status-equal {tone_class}">'
+            f'<div class="ititle">{title}</div>'
+            f'<div class="ibody">{text}</div>'
+            f'</div>'
         ),
         unsafe_allow_html=True,
     )
@@ -1342,14 +1346,10 @@ with summary_right:
 # =========================================================
 # CAMPUS LOAD + PRIORITY MIX
 # =========================================================
-chart1, chart2 = st.columns(2, gap="medium", vertical_alignment="top")
+chart1, chart2 = st.columns(2, gap="medium")
 
 with chart1:
     with st.container(border=True):
-        st.markdown(
-            '<span class="calendar-lower-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
         card_header(
             "Campus Load — Next 30 Days",
             "Upcoming open activity volume by campus.",
@@ -1414,21 +1414,18 @@ with chart1:
 
                 top_row = campus_load_df.iloc[-1]
 
-                paired_action_note(
+                status_equal_insight(
                     "Campus Load Insight",
                     (
                         f'{top_row["Campus"]} carries the highest next-30-day '
                         f'field load with {int(top_row["Activities"])} activities.'
                     ),
+                    "amber",
                 )
 
 
 with chart2:
     with st.container(border=True):
-        st.markdown(
-            '<span class="calendar-lower-pair-marker"></span>',
-            unsafe_allow_html=True,
-        )
         card_header(
             "Priority Mix — Upcoming",
             "Upcoming open activities by priority.",
@@ -1528,13 +1525,14 @@ with chart2:
                     .sum()
                 )
 
-                paired_action_note(
+                status_equal_insight(
                     "Priority Insight",
                     (
                         f"{high_count} upcoming activities are marked High priority. "
                         f"These should be checked first for owner, institution, "
                         f"planned reach and execution readiness."
                     ),
+                    "amber",
                 )
 
 
