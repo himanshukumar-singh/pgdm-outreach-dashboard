@@ -347,12 +347,120 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .chart-insight {
+    position: relative;
+    overflow: hidden;
     margin-top: .10rem;
     padding: .48rem .58rem;
     border-radius: 10px;
     background: linear-gradient(90deg, #F2F7FF 0%, #F8FBFF 100%);
     border: 1px solid #DDE8F7;
     border-left: 4px solid #2B6DE8;
+    box-shadow: 0 4px 14px rgba(15,42,69,.025);
+    animation: insightFloat 3.8s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease;
+}
+
+/* Soft professional light sweep; does not change card size/alignment */
+.chart-insight::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -38%;
+    width: 28%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.18) 35%,
+        rgba(255,255,255,.72) 50%,
+        rgba(255,255,255,.18) 65%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-18deg);
+    animation: insightSheen 5.6s ease-in-out infinite;
+}
+
+.chart-insight:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.065);
+}
+
+/* Slightly stagger each tone so all cards do not move together */
+.chart-insight.teal {
+    animation-delay: .28s;
+}
+
+.chart-insight.violet {
+    animation-delay: .56s;
+}
+
+.chart-insight.amber {
+    animation-delay: .84s;
+}
+
+/* Insight title gets a subtle moving brand-color treatment */
+.chart-insight .ititle {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(
+        90deg,
+        #153A5F,
+        #2563EB,
+        #0F9F8F,
+        #7C3AED,
+        #D98B16,
+        #153A5F
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #153A5F;
+    animation: insightTitleFlow 6s linear infinite;
+}
+
+.chart-insight .ibody {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes insightFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes insightSheen {
+    0%, 18% {
+        left: -38%;
+        opacity: 0;
+    }
+    28% {
+        opacity: .88;
+    }
+    48% {
+        left: 112%;
+        opacity: 0;
+    }
+    100% {
+        left: 112%;
+        opacity: 0;
+    }
+}
+
+@keyframes insightTitleFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 240% 50%;
+    }
 }
 
 .chart-insight.teal {
@@ -815,6 +923,9 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 @media (prefers-reduced-motion: reduce) {
     .overview-title,
     .pro-kpi,
+    .chart-insight,
+    .chart-insight::after,
+    .chart-insight .ititle,
     [data-testid="stSidebar"] .brand-name,
     [data-testid="stSidebar"] .brand-sub {
         animation: none !important;
