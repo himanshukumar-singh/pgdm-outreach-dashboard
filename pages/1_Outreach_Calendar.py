@@ -1293,7 +1293,7 @@ with summary_right:
 chart1, chart2 = st.columns(2, gap="medium")
 
 with chart1:
-    with st.container(border=True, height=385):
+    with st.container(border=True):
         st.markdown(
             '<span class="calendar-pair-marker"></span>',
             unsafe_allow_html=True,
@@ -1372,7 +1372,7 @@ with chart1:
 
 
 with chart2:
-    with st.container(border=True, height=385):
+    with st.container(border=True):
         st.markdown(
             '<span class="calendar-pair-marker"></span>',
             unsafe_allow_html=True,
