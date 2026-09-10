@@ -354,9 +354,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     background: #FFFFFF;
     box-shadow: 0 4px 12px rgba(15,42,69,.025);
     margin-bottom: .48rem;
-    animation: geoInsightFloat 4.0s ease-in-out infinite;
+    animation: geoInsightGlow 4.0s ease-in-out infinite;
     transition:
-        transform .22s ease,
         box-shadow .22s ease,
         border-color .22s ease;
 }
@@ -382,7 +381,6 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .geo-insight:hover {
-    transform: translateY(-3px);
     box-shadow: 0 10px 24px rgba(15,42,69,.065);
     border-color: #D3E0EF;
 }
@@ -439,9 +437,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     border: 1px solid #D9E7FA;
     border-left: 4px solid #2B6DE8;
     box-shadow: 0 4px 14px rgba(15,42,69,.025);
-    animation: geoInsightFloat 4.1s ease-in-out infinite;
+    animation: geoInsightGlow 4.1s ease-in-out infinite;
     transition:
-        transform .22s ease,
         box-shadow .22s ease;
 }
 
@@ -466,7 +463,6 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .geo-action:hover {
-    transform: translateY(-3px);
     box-shadow: 0 10px 24px rgba(15,42,69,.060);
 }
 
@@ -531,12 +527,71 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
-@keyframes geoInsightFloat {
+
+/* ---------- Exact paired-card alignment — Overview style ---------- */
+.geo-pair-marker {
+    display: none;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.geo-pair-marker) {
+    align-items: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.geo-pair-marker)
+> div[data-testid="stColumn"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.geo-pair-marker)
+> div[data-testid="stColumn"]
+> div[data-testid="stVerticalBlock"] {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.geo-pair-marker) {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    overflow: visible !important;
+    padding-bottom: .50rem !important;
+    box-sizing: border-box !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.geo-pair-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.geo-pair-marker)
+div[data-testid="stElementContainer"]:has(.geo-bottom-insight) {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.geo-action.geo-bottom-insight {
+    height: 92px !important;
+    min-height: 92px !important;
+    max-height: 92px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    margin-bottom: 0 !important;
+}
+
+@keyframes geoInsightGlow {
     0%, 100% {
-        transform: translateY(0);
+        box-shadow: 0 4px 14px rgba(15,42,69,.025);
     }
     50% {
-        transform: translateY(-2px);
+        box-shadow: 0 7px 18px rgba(43,109,232,.060);
     }
 }
 
@@ -656,6 +711,19 @@ def action_note(title, body, tone="blue"):
     st.markdown(
         (
             f'<div class="geo-action {tone_class}">'
+            f'<div class="title">{title}</div>'
+            f'<div class="body">{body}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def paired_action_note(title, body, tone="blue"):
+    tone_class = "" if tone == "blue" else tone
+    st.markdown(
+        (
+            f'<div class="geo-action geo-bottom-insight {tone_class}">'
             f'<div class="title">{title}</div>'
             f'<div class="body">{body}</div>'
             '</div>'
@@ -1026,6 +1094,10 @@ if "State" in f.columns:
 
 with left:
     with st.container(border=True):
+        st.markdown(
+            '<span class="geo-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Activities by State",
             "Outreach activity concentration across states.",
@@ -1098,7 +1170,7 @@ with left:
                 else 0
             )
 
-            action_note(
+            paired_action_note(
                 "State Coverage Insight",
                 (
                     f'{top_state_row["State"]} has the highest outreach '
@@ -1111,6 +1183,10 @@ with left:
 
 with right:
     with st.container(border=True):
+        st.markdown(
+            '<span class="geo-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Geography Intelligence",
             "Management-ready coverage summary.",
@@ -1198,6 +1274,10 @@ c1, c2 = st.columns(
 
 with c1:
     with st.container(border=True):
+        st.markdown(
+            '<span class="geo-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Activities by City",
             "City-level activity concentration.",
@@ -1275,7 +1355,7 @@ with c1:
                 else 0
             )
 
-            action_note(
+            paired_action_note(
                 "City Coverage Insight",
                 (
                     f'{top_city["City"]} has the highest current activity '
@@ -1288,6 +1368,10 @@ with c1:
 
 with c2:
     with st.container(border=True):
+        st.markdown(
+            '<span class="geo-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Target Segment Mix",
             "Audience categories reached through outreach activities.",
@@ -1365,7 +1449,7 @@ with c2:
                 else 0
             )
 
-            action_note(
+            paired_action_note(
                 "Segment Insight",
                 (
                     f'{dominant_segment["Target Segment"]} is the dominant '
@@ -1387,6 +1471,10 @@ r1, r2 = st.columns(
 
 with r1:
     with st.container(border=True):
+        st.markdown(
+            '<span class="geo-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Participation Type",
             "Participation format captured for outreach activities.",
@@ -1464,7 +1552,7 @@ with r1:
                 .iloc[0]
             )
 
-            action_note(
+            paired_action_note(
                 "Participation Insight",
                 (
                     f'{dominant_participation["Participation Type"]} is the most '
@@ -1478,6 +1566,10 @@ with r1:
 
 with r2:
     with st.container(border=True):
+        st.markdown(
+            '<span class="geo-pair-marker"></span>',
+            unsafe_allow_html=True,
+        )
         card_header(
             "Campus × State Coverage",
             "Activity count by campus and state. Cell numbers show actual activities.",
@@ -1669,7 +1761,7 @@ with r2:
                     heatmap_df.index.nunique()
                 )
 
-                action_note(
+                paired_action_note(
                     "Campus Geography Insight",
                     (
                         f'{top_geo_campus} currently has the broadest state '
