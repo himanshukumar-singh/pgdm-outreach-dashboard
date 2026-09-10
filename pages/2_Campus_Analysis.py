@@ -466,6 +466,18 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin-top: .18rem;
 }
 
+/* ---------- Paired chart insights — exact Overview-style alignment ---------- */
+.campus-action.pair-equal {
+    height: 92px;
+    min-height: 92px;
+    max-height: 92px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 0 !important;
+}
+
 /* ---------- Table ---------- */
 .table-heading {
     color: #0F2A45;
@@ -563,6 +575,19 @@ def action_note(title, body, tone="blue"):
     st.markdown(
         (
             f'<div class="campus-action {tone_class}">'
+            f'<div class="title">{title}</div>'
+            f'<div class="body">{body}</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def paired_action_note(title, body, tone="blue"):
+    tone_class = "" if tone == "blue" else tone
+    st.markdown(
+        (
+            f'<div class="campus-action pair-equal {tone_class}">'
             f'<div class="title">{title}</div>'
             f'<div class="body">{body}</div>'
             '</div>'
@@ -1429,7 +1454,7 @@ with c1:
                 .iloc[0]
             )
 
-            action_note(
+            paired_action_note(
                 "Institution Coverage Insight",
                 (
                     f'{top_inst["Campus"]} currently leads institution coverage '
@@ -1511,7 +1536,7 @@ with c2:
                 .iloc[0]
             )
 
-            action_note(
+            paired_action_note(
                 "Geographic Coverage Insight",
                 (
                     f'{top_city["Campus"]} has the widest current footprint with '
@@ -1660,7 +1685,7 @@ with r1:
                         f'{float(best_realization["Reach_Realization_%"]):.1f}%.'
                     )
 
-                action_note(
+                paired_action_note(
                     "Reach Insight",
                     (
                         realization_text
@@ -1768,7 +1793,7 @@ with r2:
             .iloc[0]
         )
 
-        action_note(
+        paired_action_note(
             "Execution Pressure Insight",
             (
                 f'{highest_open["Campus"]} has the highest open activity load '
