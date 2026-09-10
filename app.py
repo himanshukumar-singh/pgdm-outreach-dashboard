@@ -396,20 +396,25 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     margin: 0 !important;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker) {
-    padding-bottom: 0 !important;
+/* Status row: no internal scrollbar, border retained */
+div[data-testid="stHorizontalBlock"]:has(.status-card-marker) {
+    align-items: stretch !important;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
-> div {
-    padding-bottom: 0 !important;
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker) {
+    min-height: 460px !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: .50rem !important;
 }
 
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 > div[data-testid="stVerticalBlock"] {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    min-height: 444px !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
     padding-bottom: 0 !important;
 }
 
@@ -471,7 +476,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 
 /* Status Snapshot: compact executive rows */
 .status-mini {
-    height: 67px;
+    height: 69px;
     box-sizing: border-box;
     background: linear-gradient(145deg, #FFFFFF 0%, #F9FBFE 100%);
     border: 1px solid #DDE6F0;
@@ -1280,7 +1285,7 @@ with k6:
 row1_left, row1_right = st.columns([2.15, 1.0], gap="medium", vertical_alignment="top")
 
 with row1_left:
-    with st.container(border=True, height=440):
+    with st.container(border=True):
         st.markdown('<span class="status-card-marker"></span>', unsafe_allow_html=True)
         chart_header(
             "Campus Activity Status",
@@ -1442,7 +1447,7 @@ with row1_left:
 
 
 with row1_right:
-    with st.container(border=True, height=440):
+    with st.container(border=True):
         st.markdown('<span class="status-card-marker"></span>', unsafe_allow_html=True)
         chart_header(
             "Status Snapshot",
