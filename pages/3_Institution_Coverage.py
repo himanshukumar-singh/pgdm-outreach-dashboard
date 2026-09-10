@@ -346,23 +346,74 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 /* ---------- Insight ---------- */
 .inst-insight {
+    position: relative;
+    overflow: hidden;
     padding: .70rem .76rem;
     border-radius: 10px;
     border: 1px solid #DFE7F0;
     background: #FFFFFF;
     box-shadow: 0 4px 12px rgba(15,42,69,.025);
     margin-bottom: .48rem;
+    animation: institutionInsightFloat 4.0s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+}
+
+.inst-insight::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -40%;
+    width: 30%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.14) 32%,
+        rgba(255,255,255,.72) 50%,
+        rgba(255,255,255,.14) 68%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-18deg);
+    animation: institutionInsightSheen 5.8s ease-in-out infinite;
+}
+
+.inst-insight:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.065);
+    border-color: #D3E0EF;
 }
 
 .inst-insight .label {
+    position: relative;
+    z-index: 3;
     font-size: .64rem;
     font-weight: 850;
     text-transform: uppercase;
     letter-spacing: .04em;
     color: #74879D;
+    background: linear-gradient(
+        90deg,
+        #60758C,
+        #2563EB,
+        #0891B2,
+        #7C3AED,
+        #D98B16,
+        #60758C
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: institutionInsightTitleFlow 6.2s linear infinite;
 }
 
 .inst-insight .value {
+    position: relative;
+    z-index: 3;
     font-size: .96rem;
     font-weight: 900;
     color: #0F2A45;
@@ -370,6 +421,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .inst-insight .note {
+    position: relative;
+    z-index: 3;
     color: #7E90A6;
     font-size: .68rem;
     line-height: 1.42;
@@ -396,6 +449,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     width: 4px;
     border-radius: 10px 0 0 10px;
     background: linear-gradient(180deg, #2B6DE8, #60A5FA);
+    transform: none;
+    animation: none;
 }
 
 .inst-insight.management-motion::after {
@@ -426,12 +481,56 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .inst-action {
+    position: relative;
+    overflow: hidden;
     margin-top: .25rem;
     padding: .68rem .74rem;
     border-radius: 10px;
     background: linear-gradient(90deg, #EFF6FF 0%, #FBFDFF 100%);
     border: 1px solid #D9E7FA;
     border-left: 4px solid #2B6DE8;
+    box-shadow: 0 4px 14px rgba(15,42,69,.025);
+    animation: institutionInsightFloat 4.1s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease;
+}
+
+.inst-action::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -42%;
+    width: 30%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.14) 34%,
+        rgba(255,255,255,.70) 50%,
+        rgba(255,255,255,.14) 66%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-18deg);
+    animation: institutionInsightSheen 6.0s ease-in-out infinite;
+}
+
+.inst-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15,42,69,.060);
+}
+
+.inst-action.teal {
+    animation-delay: .22s;
+}
+
+.inst-action.violet {
+    animation-delay: .44s;
+}
+
+.inst-action.amber {
+    animation-delay: .66s;
 }
 
 .inst-action.teal {
@@ -453,16 +552,70 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .inst-action .title {
+    position: relative;
+    z-index: 3;
     color: #173A61;
     font-size: .69rem;
     font-weight: 850;
+    background: linear-gradient(
+        90deg,
+        #173A61,
+        #2563EB,
+        #0891B2,
+        #7C3AED,
+        #D98B16,
+        #173A61
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: institutionInsightTitleFlow 6s linear infinite;
 }
 
 .inst-action .body {
+    position: relative;
+    z-index: 3;
     color: #6C7E91;
     font-size: .70rem;
     line-height: 1.42;
     margin-top: .18rem;
+}
+
+@keyframes institutionInsightFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes institutionInsightSheen {
+    0%, 18% {
+        left: -42%;
+        opacity: 0;
+    }
+    28% {
+        opacity: .88;
+    }
+    48% {
+        left: 112%;
+        opacity: 0;
+    }
+    100% {
+        left: 112%;
+        opacity: 0;
+    }
+}
+
+@keyframes institutionInsightTitleFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 240% 50%;
+    }
 }
 
 /* ---------- Table ---------- */
@@ -493,7 +646,13 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 @media (prefers-reduced-motion: reduce) {
     .inst-title,
     .inst-kpi,
+    .inst-insight,
+    .inst-insight::before,
+    .inst-insight .label,
     .inst-insight.management-motion,
+    .inst-action,
+    .inst-action::after,
+    .inst-action .title,
     [data-testid="stSidebar"] .brand-name,
     [data-testid="stSidebar"] .brand-sub {
         animation: none !important;
