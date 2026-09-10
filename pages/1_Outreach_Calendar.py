@@ -397,31 +397,38 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     overflow-wrap: anywhere;
 }
 /* =====================================================
-   Lower calendar chart cards — exact equal alignment
+   Lower calendar chart cards — Overview-style exact alignment
    ===================================================== */
 
 .calendar-lower-pair-marker {
     display: none;
 }
 
-/* Both lower cards use the full fixed container height */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker) {
-    height: 100% !important;
-    padding-bottom: .42rem !important;
-    box-sizing: border-box !important;
+/* Same technique used by the working Overview status row */
+div[data-testid="stHorizontalBlock"]:has(.calendar-lower-pair-marker) {
+    align-items: stretch !important;
 }
 
-/* Make the inside of each card a vertical flex layout */
+/* Equal outer bordered-card baseline, but allow natural expansion */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker) {
+    min-height: 400px !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: .50rem !important;
+}
+
+/* Turn each card body into a vertical flex column */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
 > div[data-testid="stVerticalBlock"] {
+    min-height: 384px !important;
     height: 100% !important;
-    min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
+    overflow: visible !important;
     padding-bottom: 0 !important;
 }
 
-/* Push the insight to the bottom of the card */
+/* Push both insights to the bottom, exactly like Overview */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
 div[data-testid="stElementContainer"]:has(.calendar-bottom-insight) {
     margin-top: auto !important;
@@ -429,12 +436,11 @@ div[data-testid="stElementContainer"]:has(.calendar-bottom-insight) {
     padding-bottom: 0 !important;
 }
 
-/* Keep both lower insights exactly the same height */
+/* Both insight boxes get the same visual height */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.calendar-lower-pair-marker)
 .cal-action.calendar-bottom-insight {
-    height: 82px !important;
-    min-height: 82px !important;
-    max-height: 82px !important;
+    height: 88px !important;
+    min-height: 88px !important;
     box-sizing: border-box !important;
     margin-top: .45rem !important;
     margin-bottom: 0 !important;
@@ -1336,10 +1342,10 @@ with summary_right:
 # =========================================================
 # CAMPUS LOAD + PRIORITY MIX
 # =========================================================
-chart1, chart2 = st.columns(2, gap="medium")
+chart1, chart2 = st.columns(2, gap="medium", vertical_alignment="top")
 
 with chart1:
-    with st.container(border=True, height=390):
+    with st.container(border=True):
         st.markdown(
             '<span class="calendar-lower-pair-marker"></span>',
             unsafe_allow_html=True,
@@ -1418,7 +1424,7 @@ with chart1:
 
 
 with chart2:
-    with st.container(border=True, height=390):
+    with st.container(border=True):
         st.markdown(
             '<span class="calendar-lower-pair-marker"></span>',
             unsafe_allow_html=True,
