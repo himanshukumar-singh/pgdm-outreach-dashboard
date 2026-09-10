@@ -397,7 +397,12 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker) {
-    padding-bottom: 0.18rem !important;
+    padding-bottom: 0 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
+> div {
+    padding-bottom: 0 !important;
 }
 
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
@@ -413,6 +418,11 @@ div[data-testid="stElementContainer"]:has(.status-insight-pin) {
     margin-top: auto !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
+.status-insight-pin {
+    margin-bottom: 0 !important;
 }
 
 .chart-insight {
@@ -1270,7 +1280,7 @@ with k6:
 row1_left, row1_right = st.columns([2.15, 1.0], gap="medium", vertical_alignment="top")
 
 with row1_left:
-    with st.container(border=True, height=465):
+    with st.container(border=True, height=440):
         st.markdown('<span class="status-card-marker"></span>', unsafe_allow_html=True)
         chart_header(
             "Campus Activity Status",
@@ -1432,7 +1442,7 @@ with row1_left:
 
 
 with row1_right:
-    with st.container(border=True, height=465):
+    with st.container(border=True, height=440):
         st.markdown('<span class="status-card-marker"></span>', unsafe_allow_html=True)
         chart_header(
             "Status Snapshot",
