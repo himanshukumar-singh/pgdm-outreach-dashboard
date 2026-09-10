@@ -461,35 +461,124 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
     justify-content: center;
 }
 
-/* ---------- Mini insight cards ---------- */
-.mini-insight {
-    min-height: 70px;
-    background: #FFFFFF;
-    border: 1px solid #DFE7F0;
-    border-radius: 11px;
-    padding: .54rem .64rem;
-    box-shadow: 0 4px 12px rgba(15,42,69,.025);
+/* ---------- Upcoming activity mini cards ---------- */
+.mini-upcoming {
+    position: relative;
+    overflow: hidden;
+    min-height: 108px;
+    border-radius: 16px;
+    padding: .70rem .82rem .68rem .82rem;
+    background: linear-gradient(145deg, #FFFFFF 0%, var(--wash) 100%);
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 22px rgba(15,42,69,.045);
+    animation: upcomingFloat 2.4s ease-in-out infinite;
+    transition: transform .22s ease, box-shadow .22s ease;
 }
 
-.mini-insight .label {
-    color: #74879D;
-    font-size: .56rem;
-    font-weight: 800;
+.mini-upcoming:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(15,42,69,.08);
+}
+
+.mini-upcoming::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+}
+
+.mini-upcoming::after {
+    content: "";
+    position: absolute;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    right: -30px;
+    top: -34px;
+    background: radial-gradient(circle, var(--bubble) 0%, rgba(255,255,255,0) 72%);
+}
+
+.mini-upcoming .icon {
+    position: relative;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--iconbg);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    font-size: 15px;
+    font-weight: 900;
+    margin-bottom: .42rem;
+}
+
+.mini-upcoming .label {
+    position: relative;
+    z-index: 2;
+    color: #60758C;
+    font-size: .68rem;
+    font-weight: 850;
     text-transform: uppercase;
     letter-spacing: .04em;
+    margin-bottom: .18rem;
 }
 
-.mini-insight .value {
+.mini-upcoming .value {
+    position: relative;
+    z-index: 2;
     color: #0F2A45;
-    font-size: 1.06rem;
+    font-size: 1.12rem;
     font-weight: 900;
-    margin-top: .14rem;
+    line-height: 1.05;
+    margin-bottom: .18rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.mini-insight .note {
-    color: #8A9AAD;
-    font-size: .61rem;
-    margin-top: .10rem;
+.mini-upcoming .note {
+    position: relative;
+    z-index: 2;
+    color: #8092A8;
+    font-size: .70rem;
+    line-height: 1.25;
+}
+
+.mini-upcoming .mini-line {
+    position: absolute;
+    left: .82rem;
+    right: .82rem;
+    bottom: .42rem;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: .20;
+}
+
+@keyframes upcomingFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
+.mini-blue {
+    --accent:#2563EB; --accent2:#60A5FA; --wash:#F2F7FF;
+    --border:#D7E5FF; --bubble:#DCE9FF; --iconbg:#EAF2FF;
+}
+.mini-cyan {
+    --accent:#0891B2; --accent2:#22D3EE; --wash:#F0FBFD;
+    --border:#D2F0F6; --bubble:#D8F5FA; --iconbg:#E6F9FC;
+}
+.mini-amber {
+    --accent:#D98B16; --accent2:#FBBF24; --wash:#FFF9EE;
+    --border:#F6E6C4; --bubble:#FFF0CF; --iconbg:#FFF5DF;
+}
+.mini-violet {
+    --accent:#7C3AED; --accent2:#A78BFA; --wash:#F7F3FF;
+    --border:#E6DBFF; --bubble:#E9DEFF; --iconbg:#F0E9FF;
 }
 
 /* Status Snapshot: compact executive rows */
@@ -800,13 +889,15 @@ def status_equal_insight(title, text, tone="blue"):
     )
 
 
-def mini_insight(label, value, note):
+def mini_insight(label, value, note, icon, css_class):
     st.markdown(
         (
-            '<div class="mini-insight">'
+            f'<div class="mini-upcoming {css_class}">'
+            f'<div class="icon">{icon}</div>'
             f'<div class="label">{label}</div>'
             f'<div class="value">{value}</div>'
             f'<div class="note">{note}</div>'
+            f'<div class="mini-line"></div>'
             '</div>'
         ),
         unsafe_allow_html=True,
@@ -1877,6 +1968,8 @@ if not upcoming_df.empty:
             "Next activity",
             next_date.strftime("%d %b"),
             next_date.strftime("%Y"),
+            "🗓",
+            "mini-blue",
         )
 
     with t2:
@@ -1884,6 +1977,8 @@ if not upcoming_df.empty:
             "Next 7 days",
             f"{next7_count}",
             "Scheduled outreach activities",
+            "↗",
+            "mini-cyan",
         )
 
     with t3:
@@ -1891,6 +1986,8 @@ if not upcoming_df.empty:
             "High priority",
             f"{high_priority_count}",
             "Upcoming high-priority actions",
+            "◎",
+            "mini-amber",
         )
 
     with t4:
@@ -1898,8 +1995,9 @@ if not upcoming_df.empty:
             "Most loaded owner",
             top_owner,
             "Based on upcoming activity count",
+            "👤",
+            "mini-violet",
         )
-
 
 if upcoming_df.empty:
     st.info(
