@@ -28,16 +28,16 @@ st.markdown(
 <style>
 /* ---------- Main canvas ---------- */
 .block-container {
-    /* Slightly narrower, centered management-dashboard canvas */
-    width: calc(100% - 3.0rem) !important;
-    max-width: 1360px !important;
+    /* Compact executive dashboard canvas */
+    width: calc(100% - 2.2rem) !important;
+    max-width: 1440px !important;
     margin-left: auto !important;
     margin-right: auto !important;
 
     padding-top: 0.05rem !important;
-    padding-left: 1.05rem !important;
-    padding-right: 1.05rem !important;
-    padding-bottom: 1.30rem !important;
+    padding-left: .88rem !important;
+    padding-right: .88rem !important;
+    padding-bottom: 1.25rem !important;
     box-sizing: border-box !important;
 }
 
@@ -53,19 +53,19 @@ header[data-testid="stHeader"] {
 
 /* ---------- Narrower sidebar ---------- */
 [data-testid="stSidebar"] {
-    width: 240px !important;
-    min-width: 240px !important;
-    max-width: 240px !important;
+    width: 205px !important;
+    min-width: 205px !important;
+    max-width: 205px !important;
 }
 
 [data-testid="stSidebar"] > div:first-child {
-    width: 240px !important;
-    min-width: 240px !important;
-    max-width: 240px !important;
+    width: 205px !important;
+    min-width: 205px !important;
+    max-width: 205px !important;
 }
 
 [data-testid="stSidebarUserContent"] {
-    padding: 0 .90rem 0 .90rem !important;
+    padding: 0 .62rem 0 .62rem !important;
     margin-top: -26px !important;
 }
 
@@ -74,7 +74,7 @@ header[data-testid="stHeader"] {
     overflow: hidden;
     transform: translateY(-10px);
     margin-bottom: .45rem !important;
-    padding: .05rem 0 .16rem .68rem !important;
+    padding: .05rem 0 .16rem .48rem !important;
     border-left: 4px solid #F0B44D;
 }
 
@@ -100,9 +100,21 @@ header[data-testid="stHeader"] {
 }
 
 [data-testid="stSidebar"] .stPageLink a {
-    padding: .56rem .62rem !important;
-    margin-bottom: .14rem !important;
-    font-size: .90rem !important;
+    padding: .50rem .50rem !important;
+    margin-bottom: .10rem !important;
+    font-size: .82rem !important;
+    border-radius: 10px !important;
+}
+
+[data-testid="stSidebar"] .stPageLink a p {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+[data-testid="stSidebar"] img {
+    max-width: 164px !important;
+    height: auto !important;
 }
 
 /* ---------- Header ---------- */
@@ -290,9 +302,10 @@ header[data-testid="stHeader"] {
 /* ---------- Filters ---------- */
 .filter-panel-title {
     color: #0F2A45;
-    font-size: 1.0rem;
+    font-size: .92rem;
     font-weight: 850;
-    margin: 0 0 .18rem 0;
+    margin: 0 0 .12rem 0;
+    letter-spacing: -.01em;
 }
 
 div[data-testid="stSelectbox"] label,
@@ -304,7 +317,7 @@ div[data-testid="stDateInput"] label {
 
 div[data-baseweb="select"] > div,
 div[data-testid="stDateInput"] input {
-    min-height: 2.60rem !important;
+    min-height: 2.38rem !important;
     background: #FFFFFF !important;
     border: 1px solid #DFE7F0 !important;
     border-radius: 10px !important;
@@ -315,10 +328,10 @@ div[data-testid="stDateInput"] input {
 div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"]) {
     background: rgba(255,255,255,.86);
     border: 1px solid #DFE7F0;
-    border-radius: 14px;
-    padding: .56rem .68rem .48rem .68rem;
-    box-shadow: 0 5px 16px rgba(15,42,69,.030);
-    margin-bottom: .18rem;
+    border-radius: 12px;
+    padding: .46rem .56rem .40rem .56rem;
+    box-shadow: 0 4px 14px rgba(15,42,69,.028);
+    margin-bottom: .12rem;
 }
 
 div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
@@ -341,9 +354,9 @@ div[data-testid="stDateInput"] input:hover {
 .pro-kpi {
     position: relative;
     overflow: hidden;
-    min-height: 94px;
+    min-height: 88px;
     border-radius: 12px;
-    padding: .60rem .68rem .56rem .68rem;
+    padding: .52rem .62rem .50rem .62rem;
     background: linear-gradient(145deg, #FFF 0%, var(--wash) 100%);
     border: 1px solid var(--border);
     box-shadow: 0 6px 18px rgba(15,42,69,.045);
@@ -399,7 +412,7 @@ div[data-testid="stDateInput"] input:hover {
     position: relative;
     z-index: 2;
     color: #0F2A45;
-    font-size: 1.72rem;
+    font-size: 1.58rem;
     font-weight: 900;
     line-height: 1;
     margin-top: .18rem;
@@ -466,15 +479,16 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 .chart-title {
     color: #0F2A45;
-    font-size: 1.02rem;
+    font-size: .98rem;
     font-weight: 850;
-    margin-bottom: .05rem;
+    margin-bottom: .04rem;
+    letter-spacing: -.01em;
 }
 
 .chart-subtitle {
     color: #7D8FA5;
-    font-size: .74rem;
-    margin-bottom: .28rem;
+    font-size: .70rem;
+    margin-bottom: .24rem;
 }
 
 .chart-insight {
@@ -1048,10 +1062,17 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 
 /* Pull sections closer */
 [data-testid="stVerticalBlock"] {
-    gap: .48rem;
+    gap: .42rem;
 }
 
 @media (max-width: 1200px) {
+    [data-testid="stSidebar"],
+    [data-testid="stSidebar"] > div:first-child {
+        width: 195px !important;
+        min-width: 195px !important;
+        max-width: 195px !important;
+    }
+
     .block-container {
         width: calc(100% - 1.6rem) !important;
         padding-left: .75rem !important;
