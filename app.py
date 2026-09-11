@@ -168,6 +168,9 @@ header[data-testid="stHeader"] {
     align-items: center;
     gap: 7px;
     white-space: nowrap;
+
+    /* LIVE GOOGLE SHEET text color changes in sync with the dot */
+    animation: liveTextColors 5s linear infinite;
 }
 
 /* ---------- Animated live status dot ---------- */
@@ -233,6 +236,20 @@ header[data-testid="stHeader"] {
         background: #22C55E;
         box-shadow: 0 0 8px rgba(34, 197, 94, .75);
     }
+}
+
+@keyframes liveTextColors {
+    0%   { color: #15803D; }
+    10%  { color: #2563EB; }
+    20%  { color: #7C3AED; }
+    30%  { color: #DB2777; }
+    40%  { color: #DC2626; }
+    50%  { color: #EA580C; }
+    60%  { color: #A16207; }
+    70%  { color: #0F766E; }
+    80%  { color: #0891B2; }
+    90%  { color: #4F46E5; }
+    100% { color: #15803D; }
 }
 
 @keyframes liveDotPulse {
@@ -1001,6 +1018,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 
 @media (prefers-reduced-motion: reduce) {
     .overview-title,
+    .live-badge-custom,
     .live-dot,
     .pro-kpi,
     .chart-insight,
