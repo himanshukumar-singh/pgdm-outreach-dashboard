@@ -163,6 +163,85 @@ header[data-testid="stHeader"] {
     border: 1px solid #C6EBD6;
     font-size: .69rem;
     font-weight: 800;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+/* ---------- Animated live status dot ---------- */
+.live-dot {
+    width: 11px;
+    height: 11px;
+    min-width: 11px;
+    min-height: 11px;
+    display: inline-block;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    background: #22C55E;
+    box-shadow: 0 0 8px rgba(34, 197, 94, .70);
+
+    animation:
+        liveDotColors 5s linear infinite,
+        liveDotPulse 1.25s ease-in-out infinite;
+}
+
+@keyframes liveDotColors {
+    0% {
+        background: #22C55E;
+        box-shadow: 0 0 8px rgba(34, 197, 94, .75);
+    }
+    10% {
+        background: #3B82F6;
+        box-shadow: 0 0 8px rgba(59, 130, 246, .75);
+    }
+    20% {
+        background: #8B5CF6;
+        box-shadow: 0 0 8px rgba(139, 92, 246, .75);
+    }
+    30% {
+        background: #EC4899;
+        box-shadow: 0 0 8px rgba(236, 72, 153, .75);
+    }
+    40% {
+        background: #EF4444;
+        box-shadow: 0 0 8px rgba(239, 68, 68, .75);
+    }
+    50% {
+        background: #F97316;
+        box-shadow: 0 0 8px rgba(249, 115, 22, .75);
+    }
+    60% {
+        background: #EAB308;
+        box-shadow: 0 0 8px rgba(234, 179, 8, .75);
+    }
+    70% {
+        background: #14B8A6;
+        box-shadow: 0 0 8px rgba(20, 184, 166, .75);
+    }
+    80% {
+        background: #06B6D4;
+        box-shadow: 0 0 8px rgba(6, 182, 212, .75);
+    }
+    90% {
+        background: #6366F1;
+        box-shadow: 0 0 8px rgba(99, 102, 241, .75);
+    }
+    100% {
+        background: #22C55E;
+        box-shadow: 0 0 8px rgba(34, 197, 94, .75);
+    }
+}
+
+@keyframes liveDotPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.22);
+    }
 }
 
 .overview-subtitle {
@@ -922,6 +1001,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 
 @media (prefers-reduced-motion: reduce) {
     .overview-title,
+    .live-dot,
     .pro-kpi,
     .chart-insight,
     .chart-insight::after,
@@ -953,7 +1033,6 @@ def professional_kpi(label, value, subtitle, icon, css_class):
         ),
         unsafe_allow_html=True,
     )
-
 
 def chart_header(title, subtitle):
     st.markdown(
@@ -1275,7 +1354,7 @@ header_html = (
     '<div class="overview-title-wrap">'
     '<div class="overview-title">Outreach Overview</div>'
     '</div>'
-    '<div class="live-badge-custom">● LIVE GOOGLE SHEET</div>'
+    '<div class="live-badge-custom"><span class="live-dot"></span> LIVE GOOGLE SHEET</div>'
     '</div>'
     '<div class="overview-subtitle">'
     'Campus outreach planning, execution, coverage and student-reach intelligence.'
