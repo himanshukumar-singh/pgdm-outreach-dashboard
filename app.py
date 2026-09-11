@@ -28,11 +28,17 @@ st.markdown(
 <style>
 /* ---------- Main canvas ---------- */
 .block-container {
-    max-width: none !important;
+    /* Slightly narrower, centered management-dashboard canvas */
+    width: calc(100% - 3.0rem) !important;
+    max-width: 1360px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+
     padding-top: 0.05rem !important;
-    padding-left: 1.35rem !important;
-    padding-right: 1.35rem !important;
-    padding-bottom: 1.2rem !important;
+    padding-left: 1.05rem !important;
+    padding-right: 1.05rem !important;
+    padding-bottom: 1.30rem !important;
+    box-sizing: border-box !important;
 }
 
 [data-testid="stAppViewContainer"] {
@@ -103,6 +109,7 @@ header[data-testid="stHeader"] {
 .overview-header {
     transform: translateY(-14px);
     margin-bottom: -8px;
+    padding: .10rem .08rem .08rem .08rem;
 }
 
 .overview-eyebrow {
@@ -304,13 +311,39 @@ div[data-testid="stDateInput"] input {
     box-shadow: 0 2px 8px rgba(15,42,69,.025);
 }
 
+/* ---------- Professional filter shell ---------- */
+div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"]) {
+    background: rgba(255,255,255,.86);
+    border: 1px solid #DFE7F0;
+    border-radius: 14px;
+    padding: .56rem .68rem .48rem .68rem;
+    box-shadow: 0 5px 16px rgba(15,42,69,.030);
+    margin-bottom: .18rem;
+}
+
+div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
+div[data-baseweb="select"] > div,
+div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
+div[data-testid="stDateInput"] input {
+    background: #FBFDFF !important;
+    border-color: #DCE5EF !important;
+    box-shadow: none !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
+div[data-baseweb="select"] > div:hover,
+div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
+div[data-testid="stDateInput"] input:hover {
+    border-color: #BFD1E4 !important;
+}
+
 /* ---------- KPI cards ---------- */
 .pro-kpi {
     position: relative;
     overflow: hidden;
     min-height: 94px;
-    border-radius: 14px;
-    padding: .64rem .72rem .60rem .72rem;
+    border-radius: 12px;
+    padding: .60rem .68rem .56rem .68rem;
     background: linear-gradient(145deg, #FFF 0%, var(--wash) 100%);
     border: 1px solid var(--border);
     box-shadow: 0 6px 18px rgba(15,42,69,.045);
@@ -424,9 +457,11 @@ div[data-testid="stDateInput"] input {
 /* ---------- Professional chart cards ---------- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     background: #FFFFFF;
-    border: 1px solid #DFE7F0 !important;
-    border-radius: 14px !important;
-    box-shadow: 0 6px 20px rgba(15,42,69,.035);
+    border: 1px solid #DDE6F0 !important;
+    border-radius: 12px !important;
+    box-shadow:
+        0 1px 2px rgba(15,42,69,.018),
+        0 7px 22px rgba(15,42,69,.032);
 }
 
 .chart-title {
@@ -1013,7 +1048,20 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 
 /* Pull sections closer */
 [data-testid="stVerticalBlock"] {
-    gap: .55rem;
+    gap: .48rem;
+}
+
+@media (max-width: 1200px) {
+    .block-container {
+        width: calc(100% - 1.6rem) !important;
+        padding-left: .75rem !important;
+        padding-right: .75rem !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"]) {
+        padding-left: .48rem;
+        padding-right: .48rem;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
