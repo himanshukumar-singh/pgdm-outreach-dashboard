@@ -28,17 +28,11 @@ st.markdown(
 <style>
 /* ---------- Main canvas ---------- */
 .block-container {
-    /* Compact executive dashboard canvas */
-    width: calc(100% - 2.2rem) !important;
-    max-width: 1440px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-
+    max-width: none !important;
     padding-top: 0.05rem !important;
-    padding-left: .88rem !important;
-    padding-right: .88rem !important;
-    padding-bottom: 1.25rem !important;
-    box-sizing: border-box !important;
+    padding-left: 1.35rem !important;
+    padding-right: 1.35rem !important;
+    padding-bottom: 1.2rem !important;
 }
 
 [data-testid="stAppViewContainer"] {
@@ -53,19 +47,19 @@ header[data-testid="stHeader"] {
 
 /* ---------- Narrower sidebar ---------- */
 [data-testid="stSidebar"] {
-    width: 205px !important;
-    min-width: 205px !important;
-    max-width: 205px !important;
+    width: 240px !important;
+    min-width: 240px !important;
+    max-width: 240px !important;
 }
 
 [data-testid="stSidebar"] > div:first-child {
-    width: 205px !important;
-    min-width: 205px !important;
-    max-width: 205px !important;
+    width: 240px !important;
+    min-width: 240px !important;
+    max-width: 240px !important;
 }
 
 [data-testid="stSidebarUserContent"] {
-    padding: 0 .62rem 0 .62rem !important;
+    padding: 0 .90rem 0 .90rem !important;
     margin-top: -26px !important;
 }
 
@@ -74,7 +68,7 @@ header[data-testid="stHeader"] {
     overflow: hidden;
     transform: translateY(-10px);
     margin-bottom: .45rem !important;
-    padding: .05rem 0 .16rem .48rem !important;
+    padding: .05rem 0 .16rem .68rem !important;
     border-left: 4px solid #F0B44D;
 }
 
@@ -100,28 +94,15 @@ header[data-testid="stHeader"] {
 }
 
 [data-testid="stSidebar"] .stPageLink a {
-    padding: .50rem .50rem !important;
-    margin-bottom: .10rem !important;
-    font-size: .82rem !important;
-    border-radius: 10px !important;
-}
-
-[data-testid="stSidebar"] .stPageLink a p {
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
-
-[data-testid="stSidebar"] img {
-    max-width: 164px !important;
-    height: auto !important;
+    padding: .56rem .62rem !important;
+    margin-bottom: .14rem !important;
+    font-size: .90rem !important;
 }
 
 /* ---------- Header ---------- */
 .overview-header {
     transform: translateY(-14px);
     margin-bottom: -8px;
-    padding: .10rem .08rem .08rem .08rem;
 }
 
 .overview-eyebrow {
@@ -302,10 +283,9 @@ header[data-testid="stHeader"] {
 /* ---------- Filters ---------- */
 .filter-panel-title {
     color: #0F2A45;
-    font-size: .92rem;
+    font-size: 1.0rem;
     font-weight: 850;
-    margin: 0 0 .12rem 0;
-    letter-spacing: -.01em;
+    margin: 0 0 .18rem 0;
 }
 
 div[data-testid="stSelectbox"] label,
@@ -317,46 +297,20 @@ div[data-testid="stDateInput"] label {
 
 div[data-baseweb="select"] > div,
 div[data-testid="stDateInput"] input {
-    min-height: 2.38rem !important;
+    min-height: 2.60rem !important;
     background: #FFFFFF !important;
     border: 1px solid #DFE7F0 !important;
     border-radius: 10px !important;
     box-shadow: 0 2px 8px rgba(15,42,69,.025);
 }
 
-/* ---------- Professional filter shell ---------- */
-div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"]) {
-    background: rgba(255,255,255,.86);
-    border: 1px solid #DFE7F0;
-    border-radius: 12px;
-    padding: .46rem .56rem .40rem .56rem;
-    box-shadow: 0 4px 14px rgba(15,42,69,.028);
-    margin-bottom: .12rem;
-}
-
-div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
-div[data-baseweb="select"] > div,
-div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
-div[data-testid="stDateInput"] input {
-    background: #FBFDFF !important;
-    border-color: #DCE5EF !important;
-    box-shadow: none !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
-div[data-baseweb="select"] > div:hover,
-div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"])
-div[data-testid="stDateInput"] input:hover {
-    border-color: #BFD1E4 !important;
-}
-
 /* ---------- KPI cards ---------- */
 .pro-kpi {
     position: relative;
     overflow: hidden;
-    min-height: 88px;
-    border-radius: 12px;
-    padding: .52rem .62rem .50rem .62rem;
+    min-height: 94px;
+    border-radius: 14px;
+    padding: .64rem .72rem .60rem .72rem;
     background: linear-gradient(145deg, #FFF 0%, var(--wash) 100%);
     border: 1px solid var(--border);
     box-shadow: 0 6px 18px rgba(15,42,69,.045);
@@ -412,7 +366,7 @@ div[data-testid="stDateInput"] input:hover {
     position: relative;
     z-index: 2;
     color: #0F2A45;
-    font-size: 1.58rem;
+    font-size: 1.72rem;
     font-weight: 900;
     line-height: 1;
     margin-top: .18rem;
@@ -470,25 +424,22 @@ div[data-testid="stDateInput"] input:hover {
 /* ---------- Professional chart cards ---------- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     background: #FFFFFF;
-    border: 1px solid #DDE6F0 !important;
-    border-radius: 12px !important;
-    box-shadow:
-        0 1px 2px rgba(15,42,69,.018),
-        0 7px 22px rgba(15,42,69,.032);
+    border: 1px solid #DFE7F0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 6px 20px rgba(15,42,69,.035);
 }
 
 .chart-title {
     color: #0F2A45;
-    font-size: .98rem;
+    font-size: 1.02rem;
     font-weight: 850;
-    margin-bottom: .04rem;
-    letter-spacing: -.01em;
+    margin-bottom: .05rem;
 }
 
 .chart-subtitle {
     color: #7D8FA5;
-    font-size: .70rem;
-    margin-bottom: .24rem;
+    font-size: .74rem;
+    margin-bottom: .28rem;
 }
 
 .chart-insight {
@@ -1062,27 +1013,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 
 /* Pull sections closer */
 [data-testid="stVerticalBlock"] {
-    gap: .42rem;
-}
-
-@media (max-width: 1200px) {
-    [data-testid="stSidebar"],
-    [data-testid="stSidebar"] > div:first-child {
-        width: 195px !important;
-        min-width: 195px !important;
-        max-width: 195px !important;
-    }
-
-    .block-container {
-        width: calc(100% - 1.6rem) !important;
-        padding-left: .75rem !important;
-        padding-right: .75rem !important;
-    }
-
-    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stSelectbox"]) {
-        padding-left: .48rem;
-        padding-right: .48rem;
-    }
+    gap: .55rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
