@@ -375,6 +375,109 @@ def logout_button():
         st.rerun()
 
 
+
+def global_live_badge():
+    """
+    Render one compact LIVE GOOGLE SHEET badge in a fixed top-right position
+    on every authenticated dashboard page.
+    """
+    st.markdown(
+        """
+        <style>
+        .pgdm-global-live-badge {
+            position: fixed !important;
+            top: 42px !important;
+            right: 0.42rem !important;
+            z-index: 999998 !important;
+
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+
+            padding: 0.16rem 0.34rem !important;
+            border-radius: 999px !important;
+
+            background: #EAF8F0 !important;
+            border: 1px solid #C6EBD6 !important;
+
+            color: #17784A !important;
+            font-size: 0.50rem !important;
+            font-weight: 800 !important;
+            line-height: 1 !important;
+            white-space: nowrap !important;
+
+            box-shadow: 0 2px 7px rgba(16, 42, 67, 0.04) !important;
+            animation: pgdmLiveTextColors 5s linear infinite !important;
+        }
+
+        .pgdm-global-live-dot {
+            width: 6px !important;
+            height: 6px !important;
+            min-width: 6px !important;
+            min-height: 6px !important;
+            border-radius: 50% !important;
+            flex-shrink: 0 !important;
+
+            background: #22C55E;
+            box-shadow: 0 0 5px rgba(34,197,94,.70);
+
+            animation:
+                pgdmLiveDotColors 5s linear infinite,
+                pgdmLiveDotPulse 1.25s ease-in-out infinite;
+        }
+
+        @keyframes pgdmLiveDotColors {
+            0%   { background:#22C55E; box-shadow:0 0 5px rgba(34,197,94,.72); }
+            10%  { background:#3B82F6; box-shadow:0 0 5px rgba(59,130,246,.72); }
+            20%  { background:#8B5CF6; box-shadow:0 0 5px rgba(139,92,246,.72); }
+            30%  { background:#EC4899; box-shadow:0 0 5px rgba(236,72,153,.72); }
+            40%  { background:#EF4444; box-shadow:0 0 5px rgba(239,68,68,.72); }
+            50%  { background:#F97316; box-shadow:0 0 5px rgba(249,115,22,.72); }
+            60%  { background:#EAB308; box-shadow:0 0 5px rgba(234,179,8,.72); }
+            70%  { background:#14B8A6; box-shadow:0 0 5px rgba(20,184,166,.72); }
+            80%  { background:#06B6D4; box-shadow:0 0 5px rgba(6,182,212,.72); }
+            90%  { background:#6366F1; box-shadow:0 0 5px rgba(99,102,241,.72); }
+            100% { background:#22C55E; box-shadow:0 0 5px rgba(34,197,94,.72); }
+        }
+
+        @keyframes pgdmLiveTextColors {
+            0%   { color:#15803D; }
+            10%  { color:#2563EB; }
+            20%  { color:#7C3AED; }
+            30%  { color:#DB2777; }
+            40%  { color:#DC2626; }
+            50%  { color:#EA580C; }
+            60%  { color:#A16207; }
+            70%  { color:#0F766E; }
+            80%  { color:#0891B2; }
+            90%  { color:#4F46E5; }
+            100% { color:#15803D; }
+        }
+
+        @keyframes pgdmLiveDotPulse {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.18); }
+        }
+
+        @media (max-width: 760px) {
+            .pgdm-global-live-badge {
+                top: 39px !important;
+                right: 0.28rem !important;
+                font-size: 0.47rem !important;
+                padding: 0.14rem 0.30rem !important;
+            }
+        }
+        </style>
+
+        <div class="pgdm-global-live-badge">
+            <span class="pgdm-global-live-dot"></span>
+            <span>LIVE GOOGLE SHEET</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def page_config(title):
     st.set_page_config(
         page_title=f"{title} | PGDM Outreach",
@@ -388,8 +491,9 @@ def page_config(title):
     if not login_required():
         st.stop()
 
-    # One global logout icon on every authenticated dashboard page.
+    # Global controls on every authenticated dashboard page.
     logout_button()
+    global_live_badge()
 
 
 def enable_auto_refresh(seconds=60):
@@ -700,74 +804,16 @@ def inject_css():
             margin-bottom: 0;
         }
 
-        /* ---------------- Compact LIVE GOOGLE SHEET badge ----------------
-           Same visual treatment as the Overview page on every dashboard page.
-        */
         .live-badge {
-            padding: .20rem .40rem;
-            border-radius: 999px;
-            background: #EAF8F0;
-            color: #17784A;
-            border: 1px solid #C6EBD6;
-            font-size: .55rem;
-            font-weight: 800;
-
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-
-            animation: liveTextColorsCommon 5s linear infinite;
-        }
-
-        .live-dot-common {
-            width: 7px;
-            height: 7px;
-            min-width: 7px;
-            min-height: 7px;
             display: inline-block;
-            border-radius: 50%;
-            flex-shrink: 0;
-
-            background: #22C55E;
-            box-shadow: 0 0 7px rgba(34, 197, 94, .70);
-
-            animation:
-                liveDotColorsCommon 5s linear infinite,
-                liveDotPulseCommon 1.25s ease-in-out infinite;
-        }
-
-        @keyframes liveDotColorsCommon {
-            0%   { background:#22C55E; box-shadow:0 0 7px rgba(34,197,94,.75); }
-            10%  { background:#3B82F6; box-shadow:0 0 7px rgba(59,130,246,.75); }
-            20%  { background:#8B5CF6; box-shadow:0 0 7px rgba(139,92,246,.75); }
-            30%  { background:#EC4899; box-shadow:0 0 7px rgba(236,72,153,.75); }
-            40%  { background:#EF4444; box-shadow:0 0 7px rgba(239,68,68,.75); }
-            50%  { background:#F97316; box-shadow:0 0 7px rgba(249,115,22,.75); }
-            60%  { background:#EAB308; box-shadow:0 0 7px rgba(234,179,8,.75); }
-            70%  { background:#14B8A6; box-shadow:0 0 7px rgba(20,184,166,.75); }
-            80%  { background:#06B6D4; box-shadow:0 0 7px rgba(6,182,212,.75); }
-            90%  { background:#6366F1; box-shadow:0 0 7px rgba(99,102,241,.75); }
-            100% { background:#22C55E; box-shadow:0 0 7px rgba(34,197,94,.75); }
-        }
-
-        @keyframes liveTextColorsCommon {
-            0%   { color:#15803D; }
-            10%  { color:#2563EB; }
-            20%  { color:#7C3AED; }
-            30%  { color:#DB2777; }
-            40%  { color:#DC2626; }
-            50%  { color:#EA580C; }
-            60%  { color:#A16207; }
-            70%  { color:#0F766E; }
-            80%  { color:#0891B2; }
-            90%  { color:#4F46E5; }
-            100% { color:#15803D; }
-        }
-
-        @keyframes liveDotPulseCommon {
-            0%, 100% { transform: scale(1); }
-            50%      { transform: scale(1.22); }
+            padding: .22rem .42rem;
+            border-radius: 999px;
+            background: #e8f7ee;
+            color: #16794c;
+            font-weight: 800;
+            font-size: .56rem;
+            border: 1px solid #cbeed9;
+            margin-top: 0.04rem;
         }
 
         /* ---------------- Filter region ---------------- */
@@ -979,37 +1025,22 @@ def sidebar_nav():
 def header(title, subtitle):
     """
     Standard dashboard header.
-
-    The logout control is global and is already rendered by page_config(),
-    so this header only renders the page title/subtitle and live badge.
+    Logout and LIVE GOOGLE SHEET are rendered globally by page_config().
     """
     st.markdown('<div class="topbar-wrap">', unsafe_allow_html=True)
-    c1, c2 = st.columns([8.4, 1.2])
 
-    with c1:
-        st.markdown(
-            '<div class="page-kicker">PGDM Outreach Intelligence</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f'<div class="page-title">{html.escape(title)}</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f'<div class="page-subtitle">{html.escape(subtitle)}</div>',
-            unsafe_allow_html=True,
-        )
-
-    with c2:
-        st.markdown(
-            '<div style="text-align:right; margin-top:-0.55rem;">'
-            '<span class="live-badge">'
-            '<span class="live-dot-common"></span>'
-            'LIVE GOOGLE SHEET'
-            '</span>'
-            '</div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown(
+        '<div class="page-kicker">PGDM Outreach Intelligence</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f'<div class="page-title">{html.escape(title)}</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f'<div class="page-subtitle">{html.escape(subtitle)}</div>',
+        unsafe_allow_html=True,
+    )
 
     st.markdown('</div>', unsafe_allow_html=True)
 

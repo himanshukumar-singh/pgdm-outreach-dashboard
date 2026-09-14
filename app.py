@@ -117,8 +117,7 @@ header[data-testid="stHeader"] {
 .overview-title-row {
     position: relative;
     width: 100%;
-    /* Space for LIVE GOOGLE SHEET badge; logout is fixed above it globally. */
-    padding-right: 8.0rem;
+    padding-right: 0;
 }
 
 .overview-title-wrap {
@@ -156,7 +155,7 @@ header[data-testid="stHeader"] {
 .live-badge-custom {
     position: absolute;
     right: 0;
-    top: -3.05rem;
+    top: -0.95rem;
     padding: .20rem .40rem;
     border-radius: 999px;
     background: #EAF8F0;
@@ -1373,7 +1372,7 @@ header_html = (
     '<div class="overview-title-wrap">'
     '<div class="overview-title">Outreach Overview</div>'
     '</div>'
-    '<div class="live-badge-custom"><span class="live-dot"></span> LIVE GOOGLE SHEET</div>'
+    ''
     '</div>'
     '<div class="overview-subtitle">'
     'Campus outreach planning, execution, coverage and student-reach intelligence.'
