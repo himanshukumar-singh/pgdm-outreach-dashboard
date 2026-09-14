@@ -156,7 +156,7 @@ header[data-testid="stHeader"] {
 .live-badge-custom {
     position: absolute;
     right: 0;
-    top: -0.95rem;
+    top: -3.05rem;
     padding: .20rem .40rem;
     border-radius: 999px;
     background: #EAF8F0;
