@@ -59,27 +59,38 @@ def _auth_credentials():
 
 
 def _authenticator():
-    """Create the cookie-backed authenticator used on every dashboard page."""
-    username, password, cookie_key, cookie_expiry_days = _auth_credentials()
+    """Return one authenticator instance per Streamlit session/rerun cycle.
 
-    credentials = {
-        "usernames": {
-            username: {
-                "email": "dashboard@jaipuria.local",
-                "first_name": "Dashboard",
-                "last_name": "User",
-                "password": password,
+    Reusing the same object prevents extra_streamlit_components.CookieManager
+    from being created twice in one run (which causes
+    StreamlitDuplicateElementKey). A full browser refresh creates a new
+    Streamlit session, and the persistent auth cookie restores the login.
+    """
+    state_key = "_pgdm_authenticator_instance"
+
+    if state_key not in st.session_state:
+        username, password, cookie_key, cookie_expiry_days = _auth_credentials()
+
+        credentials = {
+            "usernames": {
+                username: {
+                    "email": "dashboard@jaipuria.local",
+                    "first_name": "Dashboard",
+                    "last_name": "User",
+                    "password": password,
+                }
             }
         }
-    }
 
-    return stauth.Authenticate(
-        credentials,
-        cookie_name="pgdm_outreach_login",
-        cookie_key=cookie_key,
-        cookie_expiry_days=cookie_expiry_days,
-        auto_hash=True,
-    )
+        st.session_state[state_key] = stauth.Authenticate(
+            credentials,
+            cookie_name="pgdm_outreach_login",
+            cookie_key=cookie_key,
+            cookie_expiry_days=cookie_expiry_days,
+            auto_hash=True,
+        )
+
+    return st.session_state[state_key]
 
 
 def login_required():
