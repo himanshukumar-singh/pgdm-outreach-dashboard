@@ -257,16 +257,16 @@ def logout_button():
            --------------------------------------------------------- */
         .st-key-global_logout_control {
             position: fixed !important;
-            top: 10px !important;
-            right: 2.0rem !important;
+            top: 4px !important;
+            right: 0.35rem !important;
             z-index: 999999 !important;
 
-            width: 38px !important;
-            min-width: 38px !important;
-            max-width: 38px !important;
-            height: 38px !important;
-            min-height: 38px !important;
-            max-height: 38px !important;
+            width: 26px !important;
+            min-width: 26px !important;
+            max-width: 26px !important;
+            height: 26px !important;
+            min-height: 26px !important;
+            max-height: 26px !important;
 
             margin: 0 !important;
             padding: 0 !important;
@@ -276,23 +276,23 @@ def logout_button():
         .st-key-global_logout_control [data-testid="stVerticalBlock"],
         .st-key-global_logout_control [data-testid="stElementContainer"],
         .st-key-global_logout_control [data-testid="stButton"] {
-            width: 38px !important;
-            min-width: 38px !important;
-            max-width: 38px !important;
-            height: 38px !important;
-            min-height: 38px !important;
-            max-height: 38px !important;
+            width: 26px !important;
+            min-width: 26px !important;
+            max-width: 26px !important;
+            height: 26px !important;
+            min-height: 26px !important;
+            max-height: 26px !important;
             margin: 0 !important;
             padding: 0 !important;
         }
 
         .st-key-global_logout_control button {
-            width: 38px !important;
-            min-width: 38px !important;
-            max-width: 38px !important;
-            height: 38px !important;
-            min-height: 38px !important;
-            max-height: 38px !important;
+            width: 26px !important;
+            min-width: 26px !important;
+            max-width: 26px !important;
+            height: 26px !important;
+            min-height: 26px !important;
+            max-height: 26px !important;
 
             padding: 0 !important;
             margin: 0 !important;
@@ -302,11 +302,11 @@ def logout_button():
             background: #ffffff !important;
             color: #e05252 !important;
 
-            font-size: 1.05rem !important;
+            font-size: 0.72rem !important;
             font-weight: 900 !important;
             line-height: 1 !important;
 
-            box-shadow: 0 4px 14px rgba(16, 42, 67, 0.09) !important;
+            box-shadow: 0 2px 8px rgba(16, 42, 67, 0.07) !important;
             transition:
                 transform .16s ease,
                 background .16s ease,
@@ -332,15 +332,15 @@ def logout_button():
         /* Slightly tighter placement on narrower screens. */
         @media (max-width: 1100px) {
             .st-key-global_logout_control {
-                right: 1.6rem !important;
-                top: 10px !important;
+                right: 0.35rem !important;
+                top: 4px !important;
             }
         }
 
         @media (max-width: 760px) {
             .st-key-global_logout_control {
-                right: 0.85rem !important;
-                top: 8px !important;
+                right: 0.30rem !important;
+                top: 4px !important;
             }
         }
         </style>
@@ -702,14 +702,14 @@ def inject_css():
 
         .live-badge {
             display: inline-block;
-            padding: .42rem .72rem;
+            padding: .22rem .42rem;
             border-radius: 999px;
             background: #e8f7ee;
             color: #16794c;
             font-weight: 800;
-            font-size: .72rem;
+            font-size: .56rem;
             border: 1px solid #cbeed9;
-            margin-top: 0.30rem;
+            margin-top: 0.04rem;
         }
 
         /* ---------------- Filter region ---------------- */
@@ -719,7 +719,7 @@ def inject_css():
             border-radius: 14px;
             padding: 0.95rem 1rem 0.10rem 1rem;
             box-shadow: 0 6px 20px rgba(15, 23, 42, 0.035);
-            margin-top: 0.30rem;
+            margin-top: 0.04rem;
             margin-bottom: 0.90rem;
         }
 
@@ -944,7 +944,7 @@ def header(title, subtitle):
 
     with c2:
         st.markdown(
-            '<div style="text-align:right; margin-top:0.30rem;">'
+            '<div style="text-align:right; margin-top:0.02rem;">'
             '<span class="live-badge">● LIVE GOOGLE SHEET</span>'
             '</div>',
             unsafe_allow_html=True,

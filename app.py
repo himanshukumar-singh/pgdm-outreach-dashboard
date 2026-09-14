@@ -118,7 +118,7 @@ header[data-testid="stHeader"] {
     position: relative;
     width: 100%;
     /* Space for LIVE GOOGLE SHEET badge; logout is fixed above it globally. */
-    padding-right: 9.4rem;
+    padding-right: 8.0rem;
 }
 
 .overview-title-wrap {
@@ -156,18 +156,18 @@ header[data-testid="stHeader"] {
 .live-badge-custom {
     position: absolute;
     right: 0;
-    top: -0.78rem;
-    padding: .28rem .52rem;
+    top: -0.95rem;
+    padding: .20rem .40rem;
     border-radius: 999px;
     background: #EAF8F0;
     color: #17784A;
     border: 1px solid #C6EBD6;
-    font-size: .62rem;
+    font-size: .55rem;
     font-weight: 800;
 
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     white-space: nowrap;
 
     /* LIVE GOOGLE SHEET text color changes in sync with the dot */
@@ -176,10 +176,10 @@ header[data-testid="stHeader"] {
 
 /* ---------- Animated live status dot ---------- */
 .live-dot {
-    width: 9px;
-    height: 9px;
-    min-width: 9px;
-    min-height: 9px;
+    width: 7px;
+    height: 7px;
+    min-width: 7px;
+    min-height: 7px;
     display: inline-block;
     border-radius: 50%;
     flex-shrink: 0;
