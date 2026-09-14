@@ -237,13 +237,13 @@ def login_required():
 
 
 def logout_button():
-    """Render the persistent-auth logout button in the sidebar."""
+    """Render a compact persistent-auth logout icon in the current main container."""
     authenticator = _authenticator()
     authenticator.logout(
-        button_name="🚪 Logout",
-        location="sidebar",
-        key="sidebar_logout",
-        use_container_width=True,
+        button_name="⏻",
+        location="main",
+        key="top_header_logout",
+        use_container_width=False,
     )
 
 def page_config(title):
@@ -768,18 +768,6 @@ def sidebar_nav():
         else:
             st.warning("Jaipuria logo not found.")
 
-        # Keep account/logout near the top so it is always visible even on
-        # smaller laptop screens.
-        st.markdown(
-            '<div class="side-section">ACCOUNT</div>',
-            unsafe_allow_html=True,
-        )
-        logged_in_user = st.session_state.get("username") or st.session_state.get("logged_in_user", "User")
-        st.caption(f"Signed in as: {logged_in_user}")
-
-    # The authenticator renders this directly into the sidebar.
-    logout_button()
-
     with st.sidebar:
         st.markdown(
             '<div class="side-section">DASHBOARD PAGES</div>',
@@ -799,14 +787,56 @@ def sidebar_nav():
 
 
 def header(title, subtitle):
+    # Compact logout icon above the Live Google Sheet badge.
+    st.markdown(
+        """
+        <style>
+        .st-key-top_header_logout {
+            display: flex !important;
+            justify-content: flex-end !important;
+            margin-bottom: -0.10rem !important;
+        }
+        .st-key-top_header_logout button {
+            width: 34px !important;
+            min-width: 34px !important;
+            height: 34px !important;
+            min-height: 34px !important;
+            padding: 0 !important;
+            border-radius: 50% !important;
+            border: 1px solid #dbe5ef !important;
+            background: #ffffff !important;
+            color: #d64545 !important;
+            font-size: 1rem !important;
+            font-weight: 800 !important;
+            box-shadow: 0 3px 10px rgba(16,42,67,.07) !important;
+        }
+        .st-key-top_header_logout button:hover {
+            background: #fff3f3 !important;
+            border-color: #efb6b6 !important;
+            color: #b42318 !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.markdown('<div class="topbar-wrap">', unsafe_allow_html=True)
     c1, c2 = st.columns([8.4, 1.2])
+
     with c1:
         st.markdown('<div class="page-kicker">PGDM Outreach Intelligence</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="page-title">{html.escape(title)}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="page-subtitle">{html.escape(subtitle)}</div>', unsafe_allow_html=True)
+
     with c2:
-        st.markdown('<div style="text-align:right;"><span class="live-badge">● LIVE</span></div>', unsafe_allow_html=True)
+        logout_button()
+        st.markdown(
+            '<div style="text-align:right; margin-top:0.10rem;">'
+            '<span class="live-badge">● LIVE GOOGLE SHEET</span>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
     st.markdown('</div>', unsafe_allow_html=True)
 
 
