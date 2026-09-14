@@ -1,10 +1,11 @@
 import html
 import time
 import base64
-import hmac
+import hashlib
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import streamlit_authenticator as stauth
 from pathlib import Path
 import streamlit.components.v1 as components
 
@@ -27,20 +28,83 @@ PAGE_LINKS = [
 def _auth_credentials():
     """Read dashboard credentials securely from Streamlit Secrets."""
     try:
-        username = str(st.secrets["auth"]["username"])
-        password = str(st.secrets["auth"]["password"])
+        auth = st.secrets["auth"]
+        username = str(auth["username"]).strip()
+        password = str(auth["password"])
     except (KeyError, TypeError):
         st.error(
             "Login configuration is missing. Add [auth] username and password in Streamlit Secrets."
         )
         st.stop()
 
-    return username, password
+    # Optional values. If not present, safe defaults are generated.
+    try:
+        cookie_key = str(auth["cookie_key"]).strip()
+    except (KeyError, TypeError):
+        cookie_key = ""
+
+    if not cookie_key:
+        # Stable signing key so the login cookie survives browser refreshes.
+        # The actual password is never stored in the browser cookie.
+        cookie_key = hashlib.sha256(
+            f"pgdm-outreach|{username}|{password}".encode("utf-8")
+        ).hexdigest()
+
+    try:
+        cookie_expiry_days = float(auth["cookie_expiry_days"])
+    except (KeyError, TypeError, ValueError):
+        cookie_expiry_days = 3650.0
+
+    return username, password, cookie_key, cookie_expiry_days
+
+
+def _authenticator():
+    """Create the cookie-backed authenticator used on every dashboard page."""
+    username, password, cookie_key, cookie_expiry_days = _auth_credentials()
+
+    credentials = {
+        "usernames": {
+            username: {
+                "email": "dashboard@jaipuria.local",
+                "first_name": "Dashboard",
+                "last_name": "User",
+                "password": password,
+            }
+        }
+    }
+
+    return stauth.Authenticate(
+        credentials,
+        cookie_name="pgdm_outreach_login",
+        cookie_key=cookie_key,
+        cookie_expiry_days=cookie_expiry_days,
+        auto_hash=True,
+    )
 
 
 def login_required():
-    """Block every dashboard page until the user signs in."""
-    if st.session_state.get("authenticated", False):
+    """
+    Protect every dashboard page.
+
+    Login is cookie-backed, so a normal browser refresh or closing/reopening
+    the same browser will not ask for credentials again. Logout clears the
+    authentication cookie.
+    """
+    authenticator = _authenticator()
+
+    # First silently check the browser cookie. This is what keeps the user
+    # logged in after Ctrl+R/F5 or reopening the app in the same browser.
+    try:
+        authenticator.login(location="unrendered", key="pgdm_cookie_check")
+    except Exception:
+        # If there is no usable cookie, simply continue to the login form.
+        pass
+
+    if st.session_state.get("authentication_status") is True:
+        st.session_state["authenticated"] = True
+        st.session_state["logged_in_user"] = st.session_state.get(
+            "username", "User"
+        )
         return True
 
     # Hide all dashboard navigation/content before authentication.
@@ -136,49 +200,40 @@ def login_required():
 
     left, centre, right = st.columns([1.1, 1.0, 1.1])
     with centre:
-        with st.form("dashboard_login_form", clear_on_submit=False):
-            username = st.text_input(
-                "Username",
-                placeholder="Enter username",
-                autocomplete="username",
-            )
-            password = st.text_input(
-                "Password",
-                type="password",
-                placeholder="Enter password",
-                autocomplete="current-password",
-            )
-            submitted = st.form_submit_button(
-                "Login",
-                use_container_width=True,
-            )
+        authenticator.login(
+            location="main",
+            fields={
+                "Form name": "Login",
+                "Username": "Username",
+                "Password": "Password",
+                "Login": "Login",
+            },
+            clear_on_submit=False,
+            key="dashboard_login_form",
+        )
 
-        if submitted:
-            correct_username, correct_password = _auth_credentials()
-
-            username_ok = hmac.compare_digest(
-                str(username).strip(), correct_username
-            )
-            password_ok = hmac.compare_digest(
-                str(password), correct_password
-            )
-
-            if username_ok and password_ok:
-                st.session_state["authenticated"] = True
-                st.session_state["logged_in_user"] = correct_username
-                st.rerun()
-
+        if st.session_state.get("authentication_status") is False:
             st.error("Invalid username or password.")
+
+    if st.session_state.get("authentication_status") is True:
+        st.session_state["authenticated"] = True
+        st.session_state["logged_in_user"] = st.session_state.get(
+            "username", "User"
+        )
+        st.rerun()
 
     return False
 
 
-def logout():
-    """End the current dashboard session and return to the login page."""
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
-    st.rerun()
-
+def logout_button():
+    """Render the persistent-auth logout button in the sidebar."""
+    authenticator = _authenticator()
+    authenticator.logout(
+        button_name="🚪 Logout",
+        location="sidebar",
+        key="sidebar_logout",
+        use_container_width=True,
+    )
 
 def page_config(title):
     st.set_page_config(
@@ -702,6 +757,19 @@ def sidebar_nav():
         else:
             st.warning("Jaipuria logo not found.")
 
+        # Keep account/logout near the top so it is always visible even on
+        # smaller laptop screens.
+        st.markdown(
+            '<div class="side-section">ACCOUNT</div>',
+            unsafe_allow_html=True,
+        )
+        logged_in_user = st.session_state.get("username") or st.session_state.get("logged_in_user", "User")
+        st.caption(f"Signed in as: {logged_in_user}")
+
+    # The authenticator renders this directly into the sidebar.
+    logout_button()
+
+    with st.sidebar:
         st.markdown(
             '<div class="side-section">DASHBOARD PAGES</div>',
             unsafe_allow_html=True,
@@ -717,15 +785,6 @@ def sidebar_nav():
 
         st.caption("● Live Google Sheet")
         st.caption("↻ Auto-sync every 60 sec")
-
-        st.markdown(
-            '<div class="side-section">ACCOUNT</div>',
-            unsafe_allow_html=True,
-        )
-        logged_in_user = st.session_state.get("logged_in_user", "User")
-        st.caption(f"Signed in as: {logged_in_user}")
-        if st.button("🚪 Logout", use_container_width=True, key="sidebar_logout"):
-            logout()
 
 
 def header(title, subtitle):
