@@ -236,23 +236,144 @@ def login_required():
     return False
 
 
+
 def logout_button():
-    """Render a small visible logout icon and clear the persistent auth cookie."""
+    """
+    Global compact logout icon.
+
+    It is rendered as a fixed circular power icon in the top-right area of
+    every authenticated dashboard page. The browser tooltip says "Logout".
+    Clicking it clears the persistent authentication cookie and returns the
+    user to the login screen.
+    """
     authenticator = _authenticator()
 
-    # Render the button ourselves so its position/style is fully controlled.
-    # streamlit-authenticator is still used to perform the actual logout and
-    # delete the persistent authentication cookie.
-    if st.button(
-        "⏻",
-        key="top_header_logout",
-        help="Logout",
-        use_container_width=False,
-    ):
+    st.markdown(
+        """
+        <style>
+        /* ---------------------------------------------------------
+           GLOBAL LOGOUT CONTROL
+           Same position on Overview and every Streamlit page.
+           --------------------------------------------------------- */
+        .st-key-global_logout_control {
+            position: fixed !important;
+            top: 56px !important;
+            right: 7.35rem !important;
+            z-index: 999999 !important;
+
+            width: 38px !important;
+            min-width: 38px !important;
+            max-width: 38px !important;
+            height: 38px !important;
+            min-height: 38px !important;
+            max-height: 38px !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .st-key-global_logout_control > div,
+        .st-key-global_logout_control [data-testid="stVerticalBlock"],
+        .st-key-global_logout_control [data-testid="stElementContainer"],
+        .st-key-global_logout_control [data-testid="stButton"] {
+            width: 38px !important;
+            min-width: 38px !important;
+            max-width: 38px !important;
+            height: 38px !important;
+            min-height: 38px !important;
+            max-height: 38px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .st-key-global_logout_control button {
+            width: 38px !important;
+            min-width: 38px !important;
+            max-width: 38px !important;
+            height: 38px !important;
+            min-height: 38px !important;
+            max-height: 38px !important;
+
+            padding: 0 !important;
+            margin: 0 !important;
+
+            border-radius: 50% !important;
+            border: 1px solid #dbe5ef !important;
+            background: #ffffff !important;
+            color: #e05252 !important;
+
+            font-size: 1.05rem !important;
+            font-weight: 900 !important;
+            line-height: 1 !important;
+
+            box-shadow: 0 4px 14px rgba(16, 42, 67, 0.09) !important;
+            transition:
+                transform .16s ease,
+                background .16s ease,
+                border-color .16s ease,
+                box-shadow .16s ease !important;
+        }
+
+        .st-key-global_logout_control button:hover {
+            background: #fff4f4 !important;
+            border-color: #efb4b4 !important;
+            color: #b42318 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 7px 18px rgba(180, 35, 24, 0.14) !important;
+        }
+
+        .st-key-global_logout_control button:focus {
+            outline: none !important;
+            box-shadow:
+                0 0 0 3px rgba(224, 82, 82, 0.12),
+                0 4px 14px rgba(16, 42, 67, 0.09) !important;
+        }
+
+        /* Slightly tighter placement on narrower screens. */
+        @media (max-width: 1100px) {
+            .st-key-global_logout_control {
+                right: 5.8rem !important;
+                top: 54px !important;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .st-key-global_logout_control {
+                right: 1.20rem !important;
+                top: 50px !important;
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # A keyed container gives us a stable CSS hook:
+    # .st-key-global_logout_control
+    with st.container(key="global_logout_control"):
+        clicked = st.button(
+            "⏻",
+            key="global_logout_button",
+            help="Logout",
+            use_container_width=False,
+        )
+
+    if clicked:
+        # Clear the streamlit-authenticator persistent cookie.
         authenticator.logout(location="unrendered")
-        st.session_state.pop("authenticated", None)
-        st.session_state.pop("logged_in_user", None)
+
+        # Clear our own helper state as well.
+        for key in (
+            "authenticated",
+            "logged_in_user",
+            "authentication_status",
+            "username",
+            "name",
+        ):
+            st.session_state.pop(key, None)
+
         st.rerun()
+
 
 def page_config(title):
     st.set_page_config(
@@ -266,6 +387,9 @@ def page_config(title):
     # page_config(), direct links to any page are protected as well.
     if not login_required():
         st.stop()
+
+    # One global logout icon on every authenticated dashboard page.
+    logout_button()
 
 
 def enable_auto_refresh(seconds=60):
@@ -795,60 +919,38 @@ def sidebar_nav():
 
 
 def header(title, subtitle):
-    # Compact logout icon above the Live Google Sheet badge.
-    st.markdown(
-        """
-        <style>
-        .st-key-top_header_logout {
-            display: flex !important;
-            justify-content: flex-end !important;
-            align-items: center !important;
-            margin: 0 0 0.10rem 0 !important;
-            padding: 0 !important;
-        }
-        .st-key-top_header_logout button {
-            width: 34px !important;
-            min-width: 34px !important;
-            height: 34px !important;
-            min-height: 34px !important;
-            padding: 0 !important;
-            border-radius: 50% !important;
-            border: 1px solid #dbe5ef !important;
-            background: #ffffff !important;
-            color: #d64545 !important;
-            font-size: 1rem !important;
-            font-weight: 800 !important;
-            box-shadow: 0 3px 10px rgba(16,42,67,.07) !important;
-        }
-        .st-key-top_header_logout button:hover {
-            background: #fff3f3 !important;
-            border-color: #efb6b6 !important;
-            color: #b42318 !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    """
+    Standard dashboard header.
 
+    The logout control is global and is already rendered by page_config(),
+    so this header only renders the page title/subtitle and live badge.
+    """
     st.markdown('<div class="topbar-wrap">', unsafe_allow_html=True)
     c1, c2 = st.columns([8.4, 1.2])
 
     with c1:
-        st.markdown('<div class="page-kicker">PGDM Outreach Intelligence</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="page-title">{html.escape(title)}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="page-subtitle">{html.escape(subtitle)}</div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="page-kicker">PGDM Outreach Intelligence</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f'<div class="page-title">{html.escape(title)}</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f'<div class="page-subtitle">{html.escape(subtitle)}</div>',
+            unsafe_allow_html=True,
+        )
 
     with c2:
-        logout_button()
         st.markdown(
-            '<div style="text-align:right; margin-top:0.10rem;">'
+            '<div style="text-align:right; margin-top:0.30rem;">'
             '<span class="live-badge">● LIVE GOOGLE SHEET</span>'
             '</div>',
             unsafe_allow_html=True,
         )
 
     st.markdown('</div>', unsafe_allow_html=True)
-
 
 def section(title, subtitle=None):
     st.markdown(f'<div class="section-title">{html.escape(title)}</div>', unsafe_allow_html=True)
