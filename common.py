@@ -212,6 +212,145 @@ def login_required():
             to   { transform: translate3d(-180px, -95px, 0) scale(1.12); }
         }
 
+
+        /* ===== Premium motion layer: visible moving aurora + floating glass orbs ===== */
+        .login-motion-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .login-motion-layer::before {
+            content: "";
+            position: absolute;
+            inset: -18%;
+            opacity: .34;
+            background:
+                linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px);
+            background-size: 70px 70px;
+            mask-image: radial-gradient(circle at 50% 42%, #000 0 34%, transparent 74%);
+            -webkit-mask-image: radial-gradient(circle at 50% 42%, #000 0 34%, transparent 74%);
+            animation: pgdmGridDrift 28s linear infinite;
+        }
+
+        .login-motion-layer::after {
+            content: "";
+            position: absolute;
+            width: 74vw;
+            height: 30vw;
+            min-width: 760px;
+            min-height: 300px;
+            left: 13vw;
+            top: 8vh;
+            border-radius: 50%;
+            background: linear-gradient(
+                115deg,
+                rgba(59,130,246,0) 4%,
+                rgba(59,130,246,.16) 28%,
+                rgba(139,92,246,.20) 49%,
+                rgba(6,182,212,.15) 70%,
+                rgba(236,72,153,0) 95%
+            );
+            filter: blur(34px);
+            transform: rotate(-9deg);
+            animation: pgdmAuroraSweep 12s ease-in-out infinite alternate;
+        }
+
+        .login-motion-layer .motion-orb {
+            position: absolute;
+            display: block;
+            border-radius: 50%;
+            opacity: .36;
+            filter: blur(4px);
+            box-shadow: inset 0 0 70px rgba(255,255,255,.22), 0 0 70px rgba(46,96,190,.08);
+            will-change: transform, border-radius;
+        }
+
+        .login-motion-layer .orb-1 {
+            width: 190px;
+            height: 190px;
+            left: 8%;
+            top: 13%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.88), rgba(59,130,246,.34) 35%, rgba(99,102,241,.08) 72%);
+            animation: pgdmBlobOne 10s ease-in-out infinite alternate;
+        }
+
+        .login-motion-layer .orb-2 {
+            width: 250px;
+            height: 250px;
+            right: 8%;
+            top: 10%;
+            background: radial-gradient(circle at 38% 32%, rgba(255,255,255,.84), rgba(139,92,246,.31) 36%, rgba(236,72,153,.07) 74%);
+            animation: pgdmBlobTwo 13s ease-in-out infinite alternate;
+        }
+
+        .login-motion-layer .orb-3 {
+            width: 225px;
+            height: 225px;
+            left: 11%;
+            bottom: 8%;
+            background: radial-gradient(circle at 36% 34%, rgba(255,255,255,.82), rgba(6,182,212,.30) 38%, rgba(20,184,166,.06) 74%);
+            animation: pgdmBlobThree 11s ease-in-out infinite alternate;
+        }
+
+        .login-motion-layer .orb-4 {
+            width: 210px;
+            height: 210px;
+            right: 12%;
+            bottom: 8%;
+            background: radial-gradient(circle at 34% 28%, rgba(255,255,255,.82), rgba(244,114,182,.23) 40%, rgba(249,115,22,.06) 76%);
+            animation: pgdmBlobFour 14s ease-in-out infinite alternate;
+        }
+
+        .login-motion-layer .orb-5 {
+            width: 120px;
+            height: 120px;
+            left: 50%;
+            top: 7%;
+            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.90), rgba(56,189,248,.22) 42%, rgba(59,130,246,.03) 78%);
+            opacity: .32;
+            animation: pgdmBlobFive 9s ease-in-out infinite alternate;
+        }
+
+        @keyframes pgdmGridDrift {
+            from { transform: translate3d(-22px, -18px, 0) rotate(.001deg); }
+            to   { transform: translate3d(48px, 36px, 0) rotate(.001deg); }
+        }
+
+        @keyframes pgdmAuroraSweep {
+            0%   { transform: translate3d(-7vw, -2vh, 0) rotate(-10deg) scale(.92); opacity: .52; }
+            50%  { transform: translate3d(3vw, 4vh, 0) rotate(-3deg) scale(1.07); opacity: .82; }
+            100% { transform: translate3d(8vw, -1vh, 0) rotate(5deg) scale(.96); opacity: .58; }
+        }
+
+        @keyframes pgdmBlobOne {
+            0%   { transform: translate3d(0,0,0) scale(1) rotate(0deg); border-radius: 50% 42% 58% 46%; }
+            100% { transform: translate3d(130px,95px,0) scale(1.14) rotate(28deg); border-radius: 42% 58% 45% 55%; }
+        }
+
+        @keyframes pgdmBlobTwo {
+            0%   { transform: translate3d(0,0,0) scale(1.05) rotate(0deg); border-radius: 46% 54% 42% 58%; }
+            100% { transform: translate3d(-150px,100px,0) scale(.92) rotate(-24deg); border-radius: 58% 42% 56% 44%; }
+        }
+
+        @keyframes pgdmBlobThree {
+            0%   { transform: translate3d(0,0,0) scale(.94) rotate(0deg); border-radius: 54% 46% 60% 40%; }
+            100% { transform: translate3d(150px,-95px,0) scale(1.12) rotate(22deg); border-radius: 42% 58% 43% 57%; }
+        }
+
+        @keyframes pgdmBlobFour {
+            0%   { transform: translate3d(0,0,0) scale(1) rotate(0deg); border-radius: 48% 52% 41% 59%; }
+            100% { transform: translate3d(-135px,-92px,0) scale(1.10) rotate(-28deg); border-radius: 59% 41% 57% 43%; }
+        }
+
+        @keyframes pgdmBlobFive {
+            0%   { transform: translate3d(-40px,0,0) scale(.90); }
+            100% { transform: translate3d(70px,90px,0) scale(1.14); }
+        }
+
         /* Keep the actual login content above the animation */
         [data-testid="stMain"],
         [data-testid="stMainBlockContainer"] {
@@ -263,15 +402,42 @@ def login_required():
             max-width: 330px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
-            background: rgba(255,255,255,.76) !important;
-            border: 1px solid rgba(255,255,255,.80) !important;
-            border-radius: 18px !important;
+            position: relative !important;
+            isolation: isolate !important;
+            border: 1px solid transparent !important;
+            border-radius: 20px !important;
             padding: 1.00rem 1.08rem .95rem 1.08rem !important;
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.82), rgba(248,251,255,.70)) padding-box,
+                linear-gradient(120deg, rgba(255,255,255,.96), rgba(96,165,250,.62), rgba(167,139,250,.56), rgba(34,211,238,.46), rgba(255,255,255,.96)) border-box !important;
+            background-size: 100% 100%, 300% 300% !important;
             box-shadow:
-                0 18px 44px rgba(16,42,67,.11),
-                inset 0 1px 0 rgba(255,255,255,.75) !important;
-            backdrop-filter: blur(18px) saturate(125%) !important;
-            -webkit-backdrop-filter: blur(18px) saturate(125%) !important;
+                0 26px 70px rgba(30,64,175,.15),
+                0 8px 24px rgba(15,42,69,.08),
+                inset 0 1px 0 rgba(255,255,255,.88) !important;
+            backdrop-filter: blur(24px) saturate(145%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(145%) !important;
+            animation:
+                pgdmCardFloat 6s ease-in-out infinite,
+                pgdmCardBorder 9s linear infinite !important;
+            transition: box-shadow .30s ease, transform .30s ease !important;
+        }
+
+        div[data-testid="stForm"]:hover {
+            box-shadow:
+                0 30px 78px rgba(30,64,175,.18),
+                0 10px 28px rgba(15,42,69,.10),
+                inset 0 1px 0 rgba(255,255,255,.92) !important;
+        }
+
+        @keyframes pgdmCardFloat {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-4px); }
+        }
+
+        @keyframes pgdmCardBorder {
+            0%   { background-position: 0 0, 0% 50%; }
+            100% { background-position: 0 0, 300% 50%; }
         }
 
         div[data-testid="stForm"] h1,
@@ -317,18 +483,27 @@ def login_required():
 
         div[data-testid="stFormSubmitButton"] button {
             width: auto !important;
-            min-width: 88px !important;
+            min-width: 92px !important;
             min-height: 2.30rem !important;
             height: 2.30rem !important;
-            padding: 0 .95rem !important;
-            border-radius: 10px !important;
+            padding: 0 1.05rem !important;
+            position: relative !important;
+            overflow: hidden !important;
+            border-radius: 11px !important;
             border: 0 !important;
             color: #ffffff !important;
             font-size: .80rem !important;
             font-weight: 800 !important;
-            background: linear-gradient(135deg, #1f67d7 0%, #477eea 52%, #6d4be8 100%) !important;
-            box-shadow: 0 8px 18px rgba(37,99,235,.20) !important;
+            background: linear-gradient(115deg, #1d4ed8, #2563eb, #7c3aed, #0891b2, #2563eb) !important;
+            background-size: 240% 100% !important;
+            box-shadow: 0 10px 22px rgba(37,99,235,.24) !important;
+            animation: pgdmButtonFlow 5s ease-in-out infinite !important;
             transition: transform .18s ease, box-shadow .18s ease !important;
+        }
+
+        @keyframes pgdmButtonFlow {
+            0%,100% { background-position: 0% 50%; }
+            50%     { background-position: 100% 50%; }
         }
 
         div[data-testid="stFormSubmitButton"] button:hover {
@@ -373,11 +548,31 @@ def login_required():
         @media (prefers-reduced-motion: reduce) {
             [data-testid="stAppViewContainer"],
             [data-testid="stAppViewContainer"]::before,
-            [data-testid="stAppViewContainer"]::after {
+            [data-testid="stAppViewContainer"]::after,
+            .login-motion-layer,
+            .login-motion-layer::before,
+            .login-motion-layer::after,
+            .login-motion-layer .motion-orb,
+            div[data-testid="stForm"],
+            div[data-testid="stFormSubmitButton"] button {
                 animation: none !important;
             }
         }
         </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Decorative login-only animation layer. It never captures mouse/keyboard events.
+    st.markdown(
+        """
+        <div class="login-motion-layer" aria-hidden="true">
+            <span class="motion-orb orb-1"></span>
+            <span class="motion-orb orb-2"></span>
+            <span class="motion-orb orb-3"></span>
+            <span class="motion-orb orb-4"></span>
+            <span class="motion-orb orb-5"></span>
+        </div>
         """,
         unsafe_allow_html=True,
     )
