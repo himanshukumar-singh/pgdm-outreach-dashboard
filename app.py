@@ -8,6 +8,7 @@ from common import (
     inject_css,
     sidebar_nav,
     load_data,
+    logout_button,
     CLOSED_STATUSES,
 )
 
@@ -171,6 +172,64 @@ header[data-testid="stHeader"] {
 
     /* LIVE GOOGLE SHEET text color changes in sync with the dot */
     animation: liveTextColors 5s linear infinite;
+}
+
+/* ---------- Header actions: logout + live badge ---------- */
+.header-action-spacer {
+    height: 2px;
+}
+
+.live-badge-top-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: .05rem;
+}
+
+.live-badge-top {
+    padding: .38rem .64rem;
+    border-radius: 999px;
+    background: #EAF8F0;
+    color: #17784A;
+    border: 1px solid #C6EBD6;
+    font-size: .69rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    animation: liveTextColors 5s linear infinite;
+}
+
+/* Keep the Streamlit logout button compact and right-aligned in Overview. */
+.st-key-top_header_logout {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    margin: 0 0 .10rem 0 !important;
+    padding: 0 !important;
+}
+
+.st-key-top_header_logout button {
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    border: 1px solid #D7E2ED !important;
+    background: #FFFFFF !important;
+    color: #D64545 !important;
+    font-size: .95rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    box-shadow: 0 3px 10px rgba(16,42,67,.07) !important;
+}
+
+.st-key-top_header_logout button:hover {
+    background: #FFF3F3 !important;
+    border-color: #EFB6B6 !important;
+    color: #B42318 !important;
 }
 
 /* ---------- Animated live status dot ---------- */
@@ -1365,23 +1424,35 @@ df = load_data()
 # =========================================================
 # HEADER
 # =========================================================
-header_html = (
-    '<div class="overview-header">'
-    '<div class="overview-eyebrow">PGDM Outreach Intelligence</div>'
-    '<div class="overview-title-row">'
-    '<div class="overview-title-wrap">'
-    '<div class="overview-title">Outreach Overview</div>'
-    '</div>'
-    '<div class="live-badge-custom"><span class="live-dot"></span> LIVE GOOGLE SHEET</div>'
-    '</div>'
-    '<div class="overview-subtitle">'
-    'Campus outreach planning, execution, coverage and student-reach intelligence.'
-    '</div>'
-    '<div class="overview-accent"></div>'
-    '</div>'
-)
+# The Overview page uses its own custom header instead of common.header().
+# Therefore the logout control must be rendered here explicitly.
+header_left, header_right = st.columns([8.7, 1.3], gap="small", vertical_alignment="top")
 
-st.markdown(header_html, unsafe_allow_html=True)
+with header_left:
+    header_html = (
+        '<div class="overview-header">'
+        '<div class="overview-eyebrow">PGDM Outreach Intelligence</div>'
+        '<div class="overview-title-row">'
+        '<div class="overview-title-wrap">'
+        '<div class="overview-title">Outreach Overview</div>'
+        '</div>'
+        '</div>'
+        '<div class="overview-subtitle">'
+        'Campus outreach planning, execution, coverage and student-reach intelligence.'
+        '</div>'
+        '<div class="overview-accent"></div>'
+        '</div>'
+    )
+    st.markdown(header_html, unsafe_allow_html=True)
+
+with header_right:
+    logout_button()
+    st.markdown(
+        '<div class="live-badge-top-wrap">'
+        '<span class="live-badge-top"><span class="live-dot"></span> LIVE GOOGLE SHEET</span>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
 
 # =========================================================
