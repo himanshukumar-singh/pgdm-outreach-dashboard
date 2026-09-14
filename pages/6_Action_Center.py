@@ -972,7 +972,7 @@ header_html = (
     '<div class="action-title-wrap">'
     '<div class="action-title">Action Center</div>'
     '</div>'
-    '<div class="action-live">● LIVE GOOGLE SHEET</div>'
+    #'<div class="action-live">● LIVE GOOGLE SHEET</div>'
     '</div>'
     '<div class="action-subtitle">'
     'Execution exceptions, missing planning information and follow-up actions.'
