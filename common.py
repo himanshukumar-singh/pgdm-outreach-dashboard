@@ -1,6 +1,7 @@
 import html
 import time
 import base64
+import hmac
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -23,6 +24,162 @@ PAGE_LINKS = [
 ]
 
 
+def _auth_credentials():
+    """Read dashboard credentials securely from Streamlit Secrets."""
+    try:
+        username = str(st.secrets["auth"]["username"])
+        password = str(st.secrets["auth"]["password"])
+    except (KeyError, TypeError):
+        st.error(
+            "Login configuration is missing. Add [auth] username and password in Streamlit Secrets."
+        )
+        st.stop()
+
+    return username, password
+
+
+def login_required():
+    """Block every dashboard page until the user signs in."""
+    if st.session_state.get("authenticated", False):
+        return True
+
+    # Hide all dashboard navigation/content before authentication.
+    st.markdown(
+        """
+        <style>
+        [data-testid="stSidebar"],
+        [data-testid="stSidebarCollapsedControl"],
+        [data-testid="collapsedControl"],
+        [data-testid="stExpandSidebarButton"],
+        [data-testid="stSidebarCollapseButton"] {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        header[data-testid="stHeader"] {
+            height: 0 !important;
+            min-height: 0 !important;
+            background: transparent !important;
+        }
+
+        .block-container {
+            max-width: 1120px !important;
+            padding-top: 3.2rem !important;
+        }
+
+        .login-heading {
+            text-align: center;
+            color: #102a43;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0.35rem 0 0.25rem 0;
+        }
+
+        .login-subheading {
+            text-align: center;
+            color: #73849b;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+        }
+
+        div[data-testid="stForm"] {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 1.45rem 1.45rem 1.20rem 1.45rem;
+            box-shadow: 0 14px 42px rgba(16, 42, 67, 0.09);
+        }
+
+        div[data-testid="stTextInput"] label {
+            color: #17365d !important;
+            font-weight: 700 !important;
+        }
+
+        div[data-testid="stTextInput"] input {
+            border-radius: 10px !important;
+            min-height: 2.8rem !important;
+        }
+
+        div[data-testid="stFormSubmitButton"] button {
+            width: 100% !important;
+            border-radius: 10px !important;
+            min-height: 2.85rem !important;
+            font-weight: 800 !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    logo_path = Path(__file__).resolve().parent / "assets" / "jaipuria_logo.png"
+    if logo_path.exists():
+        logo_base64 = base64.b64encode(logo_path.read_bytes()).decode("utf-8")
+        st.markdown(
+            f"""
+            <div style="width:100%; text-align:center; margin-bottom:0.65rem;">
+                <img src="data:image/png;base64,{logo_base64}"
+                     alt="Jaipuria Institute of Management"
+                     style="width:230px; max-width:70%; height:auto;">
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        '<div class="login-heading">PGDM Outreach Intelligence</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div class="login-subheading">Sign in to access the dashboard</div>',
+        unsafe_allow_html=True,
+    )
+
+    left, centre, right = st.columns([1.1, 1.0, 1.1])
+    with centre:
+        with st.form("dashboard_login_form", clear_on_submit=False):
+            username = st.text_input(
+                "Username",
+                placeholder="Enter username",
+                autocomplete="username",
+            )
+            password = st.text_input(
+                "Password",
+                type="password",
+                placeholder="Enter password",
+                autocomplete="current-password",
+            )
+            submitted = st.form_submit_button(
+                "Login",
+                use_container_width=True,
+            )
+
+        if submitted:
+            correct_username, correct_password = _auth_credentials()
+
+            username_ok = hmac.compare_digest(
+                str(username).strip(), correct_username
+            )
+            password_ok = hmac.compare_digest(
+                str(password), correct_password
+            )
+
+            if username_ok and password_ok:
+                st.session_state["authenticated"] = True
+                st.session_state["logged_in_user"] = correct_username
+                st.rerun()
+
+            st.error("Invalid username or password.")
+
+    return False
+
+
+def logout():
+    """End the current dashboard session and return to the login page."""
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+    st.rerun()
+
+
 def page_config(title):
     st.set_page_config(
         page_title=f"{title} | PGDM Outreach",
@@ -30,6 +187,11 @@ def page_config(title):
         layout="wide",
         initial_sidebar_state="expanded",
     )
+
+    # Central authentication gate. Because every dashboard page calls
+    # page_config(), direct links to any page are protected as well.
+    if not login_required():
+        st.stop()
 
 
 def enable_auto_refresh(seconds=60):
@@ -555,6 +717,15 @@ def sidebar_nav():
 
         st.caption("● Live Google Sheet")
         st.caption("↻ Auto-sync every 60 sec")
+
+        st.markdown(
+            '<div class="side-section">ACCOUNT</div>',
+            unsafe_allow_html=True,
+        )
+        logged_in_user = st.session_state.get("logged_in_user", "User")
+        st.caption(f"Signed in as: {logged_in_user}")
+        if st.button("🚪 Logout", use_container_width=True, key="sidebar_logout"):
+            logout()
 
 
 def header(title, subtitle):
