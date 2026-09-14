@@ -237,14 +237,22 @@ def login_required():
 
 
 def logout_button():
-    """Render a compact persistent-auth logout icon in the current main container."""
+    """Render a small visible logout icon and clear the persistent auth cookie."""
     authenticator = _authenticator()
-    authenticator.logout(
-        button_name="⏻",
-        location="main",
+
+    # Render the button ourselves so its position/style is fully controlled.
+    # streamlit-authenticator is still used to perform the actual logout and
+    # delete the persistent authentication cookie.
+    if st.button(
+        "⏻",
         key="top_header_logout",
+        help="Logout",
         use_container_width=False,
-    )
+    ):
+        authenticator.logout(location="unrendered")
+        st.session_state.pop("authenticated", None)
+        st.session_state.pop("logged_in_user", None)
+        st.rerun()
 
 def page_config(title):
     st.set_page_config(
@@ -794,7 +802,9 @@ def header(title, subtitle):
         .st-key-top_header_logout {
             display: flex !important;
             justify-content: flex-end !important;
-            margin-bottom: -0.10rem !important;
+            align-items: center !important;
+            margin: 0 0 0.10rem 0 !important;
+            padding: 0 !important;
         }
         .st-key-top_header_logout button {
             width: 34px !important;
