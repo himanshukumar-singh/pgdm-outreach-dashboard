@@ -118,10 +118,16 @@ def login_required():
         )
         return True
 
-    # Hide all dashboard navigation/content before authentication.
+    # ------------------------------------------------------------------
+    # LOGIN PAGE ONLY
+    # Compact glass card + professional moving multi-colour background.
+    # This CSS exists only while the user is logged out, so dashboard pages
+    # keep their existing design after authentication.
+    # ------------------------------------------------------------------
     st.markdown(
         """
         <style>
+        /* Hide dashboard chrome before authentication */
         [data-testid="stSidebar"],
         [data-testid="stSidebarCollapsedControl"],
         [data-testid="collapsedControl"],
@@ -137,49 +143,239 @@ def login_required():
             background: transparent !important;
         }
 
+        /* ===== Animated login background ===== */
+        [data-testid="stAppViewContainer"] {
+            position: relative !important;
+            overflow: hidden !important;
+            min-height: 100vh !important;
+            background:
+                radial-gradient(circle at 14% 18%, rgba(59,130,246,.24) 0 11%, transparent 34%),
+                radial-gradient(circle at 84% 18%, rgba(139,92,246,.22) 0 10%, transparent 35%),
+                radial-gradient(circle at 78% 82%, rgba(6,182,212,.20) 0 11%, transparent 35%),
+                radial-gradient(circle at 18% 82%, rgba(236,72,153,.16) 0 10%, transparent 34%),
+                linear-gradient(125deg, #f8fbff, #eef6ff, #f7f2ff, #edfbff, #fff5fb) !important;
+            background-size: 170% 170%, 175% 175%, 180% 180%, 175% 175%, 320% 320% !important;
+            animation: pgdmLoginBg 16s ease-in-out infinite !important;
+        }
+
+        [data-testid="stAppViewContainer"]::before,
+        [data-testid="stAppViewContainer"]::after {
+            content: "";
+            position: fixed;
+            border-radius: 999px;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(58px);
+            opacity: .78;
+            will-change: transform;
+        }
+
+        [data-testid="stAppViewContainer"]::before {
+            width: 300px;
+            height: 300px;
+            left: -80px;
+            top: 8%;
+            background: linear-gradient(135deg,
+                rgba(37,99,235,.36),
+                rgba(124,58,237,.26),
+                rgba(6,182,212,.24));
+            animation: pgdmOrbOne 10s ease-in-out infinite alternate;
+        }
+
+        [data-testid="stAppViewContainer"]::after {
+            width: 360px;
+            height: 360px;
+            right: -100px;
+            bottom: -70px;
+            background: linear-gradient(135deg,
+                rgba(14,165,233,.28),
+                rgba(236,72,153,.23),
+                rgba(249,115,22,.20));
+            animation: pgdmOrbTwo 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes pgdmLoginBg {
+            0%   { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%; }
+            25%  { background-position: 22% 28%, 78% 18%, 72% 86%, 24% 78%, 35% 50%; }
+            50%  { background-position: 38% 18%, 64% 36%, 86% 66%, 16% 58%, 100% 50%; }
+            75%  { background-position: 18% 40%, 90% 12%, 62% 88%, 38% 68%, 58% 50%; }
+            100% { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%; }
+        }
+
+        @keyframes pgdmOrbOne {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to   { transform: translate3d(170px, 85px, 0) scale(1.15); }
+        }
+
+        @keyframes pgdmOrbTwo {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to   { transform: translate3d(-180px, -95px, 0) scale(1.12); }
+        }
+
+        /* Keep the actual login content above the animation */
+        [data-testid="stMain"],
+        [data-testid="stMainBlockContainer"] {
+            position: relative !important;
+            z-index: 2 !important;
+        }
+
+        /* ===== Compact layout ===== */
         .block-container {
-            max-width: 1120px !important;
-            padding-top: 3.2rem !important;
+            max-width: 960px !important;
+            padding-top: 1.35rem !important;
+            padding-bottom: 1.0rem !important;
+        }
+
+        .login-logo-wrap {
+            width: 100%;
+            text-align: center;
+            margin: .10rem 0 .30rem 0;
+        }
+
+        .login-logo-wrap img {
+            width: 185px !important;
+            max-width: 60vw !important;
+            height: auto !important;
+            filter: drop-shadow(0 8px 18px rgba(15,42,69,.08));
         }
 
         .login-heading {
             text-align: center;
             color: #102a43;
-            font-size: 2rem;
-            font-weight: 800;
-            margin: 0.35rem 0 0.25rem 0;
+            font-size: 1.72rem;
+            line-height: 1.05;
+            font-weight: 850;
+            letter-spacing: -.025em;
+            margin: .18rem 0 .18rem 0;
         }
 
         .login-subheading {
             text-align: center;
-            color: #73849b;
-            font-size: 0.95rem;
-            margin-bottom: 1.25rem;
+            color: #71839a;
+            font-size: .84rem;
+            font-weight: 500;
+            margin-bottom: .78rem;
         }
 
+        /* ===== Compact glass login card ===== */
         div[data-testid="stForm"] {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 18px;
-            padding: 1.45rem 1.45rem 1.20rem 1.45rem;
-            box-shadow: 0 14px 42px rgba(16, 42, 67, 0.09);
+            width: 100% !important;
+            max-width: 330px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            background: rgba(255,255,255,.76) !important;
+            border: 1px solid rgba(255,255,255,.80) !important;
+            border-radius: 18px !important;
+            padding: 1.00rem 1.08rem .95rem 1.08rem !important;
+            box-shadow:
+                0 18px 44px rgba(16,42,67,.11),
+                inset 0 1px 0 rgba(255,255,255,.75) !important;
+            backdrop-filter: blur(18px) saturate(125%) !important;
+            -webkit-backdrop-filter: blur(18px) saturate(125%) !important;
+        }
+
+        div[data-testid="stForm"] h1,
+        div[data-testid="stForm"] h2,
+        div[data-testid="stForm"] h3 {
+            color: #17263a !important;
+            font-size: 1.36rem !important;
+            line-height: 1.10 !important;
+            margin: 0 0 .55rem 0 !important;
+            font-weight: 800 !important;
+        }
+
+        div[data-testid="stTextInput"] {
+            margin-bottom: .10rem !important;
         }
 
         div[data-testid="stTextInput"] label {
             color: #17365d !important;
+            font-size: .78rem !important;
             font-weight: 700 !important;
         }
 
         div[data-testid="stTextInput"] input {
+            min-height: 2.38rem !important;
+            height: 2.38rem !important;
             border-radius: 10px !important;
-            min-height: 2.8rem !important;
+            border: 1px solid rgba(214,224,235,.96) !important;
+            background: rgba(245,248,252,.90) !important;
+            font-size: .84rem !important;
+            padding-left: .75rem !important;
+            transition: border-color .20s ease, box-shadow .20s ease, background .20s ease !important;
+        }
+
+        div[data-testid="stTextInput"] input:focus {
+            background: #ffffff !important;
+            border-color: #5b8def !important;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.10) !important;
+        }
+
+        div[data-testid="stFormSubmitButton"] {
+            margin-top: .18rem !important;
         }
 
         div[data-testid="stFormSubmitButton"] button {
-            width: 100% !important;
+            width: auto !important;
+            min-width: 88px !important;
+            min-height: 2.30rem !important;
+            height: 2.30rem !important;
+            padding: 0 .95rem !important;
             border-radius: 10px !important;
-            min-height: 2.85rem !important;
+            border: 0 !important;
+            color: #ffffff !important;
+            font-size: .80rem !important;
             font-weight: 800 !important;
+            background: linear-gradient(135deg, #1f67d7 0%, #477eea 52%, #6d4be8 100%) !important;
+            box-shadow: 0 8px 18px rgba(37,99,235,.20) !important;
+            transition: transform .18s ease, box-shadow .18s ease !important;
+        }
+
+        div[data-testid="stFormSubmitButton"] button:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 11px 22px rgba(37,99,235,.27) !important;
+        }
+
+        /* Invalid-login alert should follow the compact card width */
+        div[data-testid="stAlert"] {
+            max-width: 330px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            font-size: .78rem !important;
+        }
+
+        @media (max-width: 680px) {
+            .block-container {
+                padding-top: 1.0rem !important;
+                padding-left: .85rem !important;
+                padding-right: .85rem !important;
+            }
+
+            .login-logo-wrap img {
+                width: 160px !important;
+            }
+
+            .login-heading {
+                font-size: 1.45rem !important;
+            }
+
+            .login-subheading {
+                font-size: .80rem !important;
+                margin-bottom: .65rem !important;
+            }
+
+            div[data-testid="stForm"] {
+                max-width: 310px !important;
+                padding: .92rem .95rem .88rem .95rem !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            [data-testid="stAppViewContainer"],
+            [data-testid="stAppViewContainer"]::before,
+            [data-testid="stAppViewContainer"]::after {
+                animation: none !important;
+            }
         }
         </style>
         """,
@@ -191,10 +387,9 @@ def login_required():
         logo_base64 = base64.b64encode(logo_path.read_bytes()).decode("utf-8")
         st.markdown(
             f"""
-            <div style="width:100%; text-align:center; margin-bottom:0.65rem;">
+            <div class="login-logo-wrap">
                 <img src="data:image/png;base64,{logo_base64}"
-                     alt="Jaipuria Institute of Management"
-                     style="width:230px; max-width:70%; height:auto;">
+                     alt="Jaipuria Institute of Management">
             </div>
             """,
             unsafe_allow_html=True,
@@ -209,7 +404,8 @@ def login_required():
         unsafe_allow_html=True,
     )
 
-    left, centre, right = st.columns([1.1, 1.0, 1.1])
+    # Keep the form centred. CSS above sets the exact compact card width.
+    left, centre, right = st.columns([1.0, 1.0, 1.0])
     with centre:
         authenticator.login(
             location="main",
@@ -234,7 +430,6 @@ def login_required():
         st.rerun()
 
     return False
-
 
 
 def logout_button():
