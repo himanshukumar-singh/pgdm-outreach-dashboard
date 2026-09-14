@@ -257,8 +257,8 @@ def logout_button():
            --------------------------------------------------------- */
         .st-key-global_logout_control {
             position: fixed !important;
-            top: 56px !important;
-            right: 7.35rem !important;
+            top: 10px !important;
+            right: 2.0rem !important;
             z-index: 999999 !important;
 
             width: 38px !important;
@@ -332,15 +332,15 @@ def logout_button():
         /* Slightly tighter placement on narrower screens. */
         @media (max-width: 1100px) {
             .st-key-global_logout_control {
-                right: 5.8rem !important;
-                top: 54px !important;
+                right: 1.6rem !important;
+                top: 10px !important;
             }
         }
 
         @media (max-width: 760px) {
             .st-key-global_logout_control {
-                right: 1.20rem !important;
-                top: 50px !important;
+                right: 0.85rem !important;
+                top: 8px !important;
             }
         }
         </style>
