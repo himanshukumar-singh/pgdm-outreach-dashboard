@@ -700,16 +700,74 @@ def inject_css():
             margin-bottom: 0;
         }
 
+        /* ---------------- Compact LIVE GOOGLE SHEET badge ----------------
+           Same visual treatment as the Overview page on every dashboard page.
+        */
         .live-badge {
-            display: inline-block;
-            padding: .22rem .42rem;
+            padding: .20rem .40rem;
             border-radius: 999px;
-            background: #e8f7ee;
-            color: #16794c;
+            background: #EAF8F0;
+            color: #17784A;
+            border: 1px solid #C6EBD6;
+            font-size: .55rem;
             font-weight: 800;
-            font-size: .56rem;
-            border: 1px solid #cbeed9;
-            margin-top: 0.04rem;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+
+            animation: liveTextColorsCommon 5s linear infinite;
+        }
+
+        .live-dot-common {
+            width: 7px;
+            height: 7px;
+            min-width: 7px;
+            min-height: 7px;
+            display: inline-block;
+            border-radius: 50%;
+            flex-shrink: 0;
+
+            background: #22C55E;
+            box-shadow: 0 0 7px rgba(34, 197, 94, .70);
+
+            animation:
+                liveDotColorsCommon 5s linear infinite,
+                liveDotPulseCommon 1.25s ease-in-out infinite;
+        }
+
+        @keyframes liveDotColorsCommon {
+            0%   { background:#22C55E; box-shadow:0 0 7px rgba(34,197,94,.75); }
+            10%  { background:#3B82F6; box-shadow:0 0 7px rgba(59,130,246,.75); }
+            20%  { background:#8B5CF6; box-shadow:0 0 7px rgba(139,92,246,.75); }
+            30%  { background:#EC4899; box-shadow:0 0 7px rgba(236,72,153,.75); }
+            40%  { background:#EF4444; box-shadow:0 0 7px rgba(239,68,68,.75); }
+            50%  { background:#F97316; box-shadow:0 0 7px rgba(249,115,22,.75); }
+            60%  { background:#EAB308; box-shadow:0 0 7px rgba(234,179,8,.75); }
+            70%  { background:#14B8A6; box-shadow:0 0 7px rgba(20,184,166,.75); }
+            80%  { background:#06B6D4; box-shadow:0 0 7px rgba(6,182,212,.75); }
+            90%  { background:#6366F1; box-shadow:0 0 7px rgba(99,102,241,.75); }
+            100% { background:#22C55E; box-shadow:0 0 7px rgba(34,197,94,.75); }
+        }
+
+        @keyframes liveTextColorsCommon {
+            0%   { color:#15803D; }
+            10%  { color:#2563EB; }
+            20%  { color:#7C3AED; }
+            30%  { color:#DB2777; }
+            40%  { color:#DC2626; }
+            50%  { color:#EA580C; }
+            60%  { color:#A16207; }
+            70%  { color:#0F766E; }
+            80%  { color:#0891B2; }
+            90%  { color:#4F46E5; }
+            100% { color:#15803D; }
+        }
+
+        @keyframes liveDotPulseCommon {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.22); }
         }
 
         /* ---------------- Filter region ---------------- */
@@ -944,8 +1002,11 @@ def header(title, subtitle):
 
     with c2:
         st.markdown(
-            '<div style="text-align:right; margin-top:0.02rem;">'
-            '<span class="live-badge">● LIVE GOOGLE SHEET</span>'
+            '<div style="text-align:right; margin-top:-0.55rem;">'
+            '<span class="live-badge">'
+            '<span class="live-dot-common"></span>'
+            'LIVE GOOGLE SHEET'
+            '</span>'
             '</div>',
             unsafe_allow_html=True,
         )
