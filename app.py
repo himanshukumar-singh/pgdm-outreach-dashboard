@@ -1,4 +1,5 @@
 import html
+import math
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -3235,6 +3236,297 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)::aft
     }
 }
 
+
+/* =========================================================
+   Q1 — REAL HTML/CSS BUBBLE MATRIX
+   These bubbles are native HTML elements, so shadow + motion
+   work reliably in Streamlit (unlike CSS targeting Plotly SVG).
+   ========================================================= */
+
+.q1-css-matrix {
+    position: relative;
+    overflow: hidden;
+    margin-top: .18rem;
+    padding: .40rem .46rem .44rem .46rem;
+    border-radius: 14px;
+    border: 1px solid #E2D8CE;
+    background:
+        radial-gradient(circle at 94% 6%, rgba(107,63,125,.050), transparent 24%),
+        radial-gradient(circle at 5% 94%, rgba(229,140,43,.045), transparent 22%),
+        linear-gradient(180deg,#FFFDFC 0%,#FAF7F2 100%);
+    box-shadow:
+        0 18px 34px rgba(52,43,38,.115),
+        0 5px 12px rgba(107,63,125,.045),
+        inset 0 1px 0 rgba(255,255,255,.96);
+    transition:
+        transform .24s ease,
+        box-shadow .24s ease;
+    animation: q1MatrixCardBreath 6.5s ease-in-out infinite;
+}
+
+.q1-css-matrix:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 24px 44px rgba(52,43,38,.145),
+        0 7px 16px rgba(107,63,125,.060),
+        inset 0 1px 0 rgba(255,255,255,.98);
+}
+
+@keyframes q1MatrixCardBreath {
+    0%,100% {
+        box-shadow:
+            0 18px 34px rgba(52,43,38,.105),
+            0 5px 12px rgba(107,63,125,.040),
+            inset 0 1px 0 rgba(255,255,255,.96);
+    }
+    50% {
+        box-shadow:
+            0 23px 42px rgba(52,43,38,.145),
+            0 8px 17px rgba(229,140,43,.055),
+            inset 0 1px 0 rgba(255,255,255,.98);
+    }
+}
+
+/* moving premium sheen on the visual surface */
+.q1-css-matrix::before {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    bottom: 0;
+    left: -32%;
+    width: 20%;
+    pointer-events: none;
+    transform: skewX(-18deg);
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.48),
+        rgba(255,255,255,0)
+    );
+    animation: q1CssMatrixSheen 8s ease-in-out infinite;
+}
+
+@keyframes q1CssMatrixSheen {
+    0%,22% { left:-32%; opacity:0; }
+    33%    { opacity:.70; }
+    56%    { left:110%; opacity:0; }
+    100%   { left:110%; opacity:0; }
+}
+
+.q1-css-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 0;
+    width: 100%;
+    min-width: 690px;
+}
+
+.q1-css-corner,
+.q1-css-campus,
+.q1-css-activity,
+.q1-css-cell {
+    min-height: 38px;
+    box-sizing: border-box;
+    border-right: 1px solid #E8E0D8;
+    border-bottom: 1px solid #E8E0D8;
+}
+
+.q1-css-campus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #17395A;
+    font-size: .61rem;
+    font-weight: 900;
+    background:
+        linear-gradient(180deg,#FCFAF7 0%,#F8F3ED 100%);
+    border-top: 1px solid #E2D8CE;
+}
+
+.q1-css-campus:last-child {
+    border-right: none;
+}
+
+.q1-css-corner {
+    border-top: 1px solid #E2D8CE;
+    background:
+        linear-gradient(180deg,#FCFAF7 0%,#F8F3ED 100%);
+}
+
+.q1-css-activity {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: .48rem;
+    color: #3F566D;
+    font-size: .57rem;
+    font-weight: 760;
+    background: rgba(255,255,255,.55);
+    border-left: 1px solid #E2D8CE;
+    white-space: nowrap;
+}
+
+.q1-css-cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(180deg,rgba(255,255,255,.72),rgba(252,249,245,.68));
+    transition: background .20s ease;
+}
+
+.q1-css-cell:hover {
+    background:
+        radial-gradient(circle at 50% 50%, rgba(229,140,43,.060), transparent 65%),
+        linear-gradient(180deg,#FFFDFC,#F9F5F0);
+}
+
+/* The actual bubble: visible shadow + real motion */
+.q1-motion-bubble {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 950;
+    font-size: .58rem;
+    line-height: 1;
+    border: 1.5px solid rgba(255,255,255,.92);
+    box-shadow:
+        0 10px 15px rgba(23,57,90,.23),
+        0 4px 7px rgba(47,35,31,.15),
+        inset 0 3px 4px rgba(255,255,255,.58),
+        inset 0 -3px 6px rgba(23,57,90,.10);
+    animation:
+        q1BubbleFloat var(--bubble-duration, 4.2s) ease-in-out infinite,
+        q1BubbleGlow 5.8s ease-in-out infinite;
+    animation-delay:
+        var(--bubble-delay, 0s),
+        calc(var(--bubble-delay, 0s) + .35s);
+    transition:
+        transform .20s ease,
+        box-shadow .20s ease,
+        filter .20s ease;
+    cursor: default;
+    will-change: transform, box-shadow;
+}
+
+.q1-motion-bubble::before {
+    content: "";
+    position: absolute;
+    width: 32%;
+    height: 23%;
+    left: 18%;
+    top: 13%;
+    border-radius: 50%;
+    transform: rotate(-28deg);
+    background: rgba(255,255,255,.50);
+    filter: blur(.2px);
+    pointer-events: none;
+}
+
+.q1-motion-bubble::after {
+    content: "";
+    position: absolute;
+    left: 18%;
+    right: 18%;
+    bottom: -8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(23,57,90,.16);
+    filter: blur(5px);
+    transform: scaleX(.82);
+    opacity: .75;
+    animation: q1BubbleGroundShadow var(--bubble-duration, 4.2s) ease-in-out infinite;
+    animation-delay: var(--bubble-delay, 0s);
+    pointer-events: none;
+}
+
+@keyframes q1BubbleFloat {
+    0%,100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-5px) scale(1.075);
+    }
+}
+
+@keyframes q1BubbleGroundShadow {
+    0%,100% {
+        transform: scaleX(.82);
+        opacity: .70;
+    }
+    50% {
+        transform: scaleX(.66);
+        opacity: .42;
+    }
+}
+
+@keyframes q1BubbleGlow {
+    0%,100% {
+        filter: saturate(1) brightness(1);
+        box-shadow:
+            0 10px 15px rgba(23,57,90,.23),
+            0 4px 7px rgba(47,35,31,.15),
+            inset 0 3px 4px rgba(255,255,255,.58),
+            inset 0 -3px 6px rgba(23,57,90,.10);
+    }
+    50% {
+        filter: saturate(1.08) brightness(1.03);
+        box-shadow:
+            0 15px 23px rgba(23,57,90,.30),
+            0 6px 10px rgba(229,140,43,.15),
+            inset 0 3px 5px rgba(255,255,255,.70),
+            inset 0 -4px 7px rgba(23,57,90,.11);
+    }
+}
+
+.q1-motion-bubble:hover {
+    animation-play-state: paused;
+    transform: translateY(-7px) scale(1.13);
+    box-shadow:
+        0 19px 29px rgba(23,57,90,.34),
+        0 7px 12px rgba(229,140,43,.18),
+        inset 0 3px 5px rgba(255,255,255,.72),
+        inset 0 -4px 7px rgba(23,57,90,.12);
+}
+
+.q1-bubble-count {
+    position: relative;
+    z-index: 3;
+    text-shadow: 0 1px 0 rgba(255,255,255,.38);
+}
+
+.q1-css-matrix-foot {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .7rem;
+    margin-top: .30rem;
+    color: #8692A0;
+    font-size: .48rem;
+}
+
+.q1-css-matrix-foot strong {
+    color: #17395A;
+    font-weight: 900;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .q1-css-matrix,
+    .q1-css-matrix::before,
+    .q1-motion-bubble,
+    .q1-motion-bubble::after {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -4585,118 +4877,118 @@ else:
                 unsafe_allow_html=True,
             )
 
-            fig = go.Figure()
-
+            # Native HTML/CSS matrix is used here instead of Plotly markers.
+            # This makes bubble shadow and continuous motion work reliably
+            # inside Streamlit.
             max_count = max(
                 int(activity_mix["Activities"].max()),
                 1,
             )
 
+            # Quick lookup: (activity_type, campus) -> count
+            bubble_lookup = {
+                (str(row["Activity Type"]), str(row["Campus"])): int(row["Activities"])
+                for _, row in activity_mix.iterrows()
+            }
+
+            def _hex_luminance(hex_color):
+                value = str(hex_color).lstrip("#")
+                if len(value) != 6:
+                    return 1.0
+                r = int(value[0:2], 16) / 255.0
+                g = int(value[2:4], 16) / 255.0
+                b = int(value[4:6], 16) / 255.0
+                return (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
+
+            grid_columns = (
+                "118px "
+                + " ".join(["minmax(105px, 1fr)"] * len(campus_order))
+            )
+
+            matrix_parts = [
+                '<div class="q1-css-matrix">',
+                f'<div class="q1-css-grid" style="grid-template-columns:{grid_columns};">',
+                '<div class="q1-css-corner"></div>',
+            ]
+
+            # Campus column headers
+            for campus in campus_order:
+                matrix_parts.append(
+                    f'<div class="q1-css-campus">{html.escape(str(campus))}</div>'
+                )
+
+            bubble_index = 0
+
+            # Activity Type rows
             for activity_type in activity_order:
-                subset = activity_mix[
-                    activity_mix["Activity Type"].eq(activity_type)
-                ].copy()
-
-                marker_sizes = (
-                    16
-                    + (subset["Activities"] / max_count) * 34
+                matrix_parts.append(
+                    f'<div class="q1-css-activity">{html.escape(str(activity_type))}</div>'
                 )
 
-                fig.add_trace(
-                    go.Scatter(
-                        x=subset["Campus"],
-                        y=[activity_type] * len(subset),
-                        mode="markers+text",
-                        text=subset["Activities"].astype(int),
-                        textposition="middle center",
-                        textfont=dict(
-                            size=9,
-                            color="#17395A",
-                            family="Arial, sans-serif",
-                        ),
-                        marker=dict(
-                            size=marker_sizes,
-                            color=activity_colors.get(
-                                activity_type,
-                                _activity_fallback_color(activity_type),
-                            ),
-                            opacity=.86,
-                            line=dict(
-                                color="#FFFFFF",
-                                width=1.5,
-                            ),
-                        ),
-                        customdata=subset[
-                            ["Activities"]
-                        ].values,
-                        name=activity_type,
-                        hovertemplate=(
-                            "<b>%{y}</b><br>"
-                            "Campus: %{x}<br>"
-                            "Activities: %{customdata[0]:.0f}"
-                            "<extra></extra>"
-                        ),
-                        showlegend=False,
+                activity_color = activity_colors.get(
+                    activity_type,
+                    _activity_fallback_color(activity_type),
+                )
+
+                luminance = _hex_luminance(activity_color)
+                text_color = "#FFFFFF" if luminance < .47 else "#17395A"
+
+                for campus in campus_order:
+                    count = bubble_lookup.get(
+                        (str(activity_type), str(campus)),
+                        0,
                     )
-                )
 
-            fig.update_xaxes(
-                title="",
-                categoryorder="array",
-                categoryarray=campus_order,
-                side="top",
-                showgrid=True,
-                gridcolor="#EEE7DF",
-                gridwidth=1,
-                linecolor="#DCD4CC",
-                tickfont=dict(
-                    size=10,
-                    color="#17395A",
-                ),
-                fixedrange=True,
-            )
+                    matrix_parts.append('<div class="q1-css-cell">')
 
-            fig.update_yaxes(
-                title="",
-                categoryorder="array",
-                categoryarray=activity_order,
-                autorange="reversed",
-                showgrid=True,
-                gridcolor="#F1ECE6",
-                gridwidth=1,
-                linecolor="#DCD4CC",
-                tickfont=dict(
-                    size=9,
-                    color="#4E6175",
-                ),
-                fixedrange=True,
-            )
+                    if count > 0:
+                        # sqrt scaling gives a professional bubble-size relationship
+                        size_px = 22 + (
+                            math.sqrt(count / max_count) * 38
+                        )
 
-            fig.update_layout(
-                height=295,
-                margin=dict(
-                    l=6,
-                    r=8,
-                    t=42,
-                    b=8,
-                ),
-                paper_bgcolor="#FCFAF7",
-                plot_bgcolor="#FCFAF7",
-                font=dict(
-                    family="Arial, sans-serif",
-                    color="#52657A",
-                ),
-                hoverlabel=dict(
-                    bgcolor="#17395A",
-                    bordercolor="#17395A",
-                    font_color="#FFFFFF",
-                ),
-            )
+                        delay = -((bubble_index % 9) * .31)
+                        duration = 3.8 + ((bubble_index % 5) * .22)
 
-            st.plotly_chart(
-                fig,
-                width="stretch",
-                config=CHART_CONFIG,
+                        tooltip = (
+                            f"{activity_type} · {campus}: {count} activities"
+                        )
+
+                        matrix_parts.append(
+                            (
+                                '<div class="q1-motion-bubble" '
+                                f'title="{html.escape(tooltip)}" '
+                                f'style="width:{size_px:.1f}px;'
+                                f'height:{size_px:.1f}px;'
+                                f'background:radial-gradient(circle at 32% 24%,'
+                                f'rgba(255,255,255,.74) 0 9%,'
+                                f'{activity_color} 34%,'
+                                f'{activity_color} 100%);'
+                                f'color:{text_color};'
+                                f'--bubble-delay:{delay:.2f}s;'
+                                f'--bubble-duration:{duration:.2f}s;">'
+                                f'<span class="q1-bubble-count">{count}</span>'
+                                '</div>'
+                            )
+                        )
+                        bubble_index += 1
+
+                    matrix_parts.append('</div>')
+
+            matrix_parts.extend([
+                '</div>',
+                (
+                    '<div class="q1-css-matrix-foot">'
+                    '<span>Bubble size = activity count · hover for detail</span>'
+                    '<span><strong>Live:</strong> shadow + motion update with filtered data</span>'
+                    '</div>'
+                ),
+                '</div>',
+            ])
+
+            st.markdown(
+                "".join(matrix_parts),
+                unsafe_allow_html=True,
             )
 
     with q1_insight_col:
