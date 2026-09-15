@@ -1837,6 +1837,433 @@ div[data-testid="stHorizontalBlock"]:has(.q1-chart-marker) {
     }
 }
 
+
+/* =========================================================
+   JAIPURIA-INSPIRED PREMIUM THEME
+   Warm ivory canvas + deep navy + restrained orange/violet
+   ========================================================= */
+
+[data-testid="stAppViewContainer"] {
+    background:
+        radial-gradient(circle at 92% 2%, rgba(103,60,128,.055), transparent 27%),
+        radial-gradient(circle at 8% 90%, rgba(230,139,43,.050), transparent 26%),
+        linear-gradient(180deg, #FBFAF7 0%, #F6F3EE 100%) !important;
+}
+
+.block-container,
+[data-testid="stAppViewContainer"] {
+    font-family: "Aptos", "Segoe UI", Arial, sans-serif !important;
+}
+
+.overview-eyebrow,
+.overview-section-kicker {
+    color: #6B3F7D !important;
+}
+
+.overview-title,
+.overview-section-title,
+.filter-panel-title,
+.chart-title,
+.table-title,
+.q1-table-heading .title {
+    color: #17395A !important;
+}
+
+.overview-subtitle,
+.overview-section-sub,
+.chart-subtitle,
+.table-subtitle,
+.filter-note,
+.q1-table-heading .sub {
+    color: #728297 !important;
+}
+
+/* Jaipuria-style orange accent instead of a generic blue rule */
+.overview-accent {
+    background: linear-gradient(
+        90deg,
+        #E58C2B 0%,
+        #F0B356 22%,
+        #70417D 50%,
+        rgba(112,65,125,.16) 75%,
+        rgba(112,65,125,0) 100%
+    ) !important;
+}
+
+div[data-baseweb="select"] > div,
+div[data-testid="stDateInput"] input {
+    background: rgba(255,255,255,.94) !important;
+    border-color: #E4DDD4 !important;
+    color: #17395A !important;
+    box-shadow: 0 3px 10px rgba(65,45,35,.028) !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.985) 0%, rgba(253,252,249,.98) 100%) !important;
+    border-color: #E5DED6 !important;
+    box-shadow: 0 9px 26px rgba(42,45,55,.045) !important;
+}
+
+.pro-kpi {
+    background:
+        linear-gradient(118deg, rgba(255,255,255,.99) 0%, rgba(255,255,255,.965) 64%, var(--wash) 170%) !important;
+    border-color: #E7E0D8 !important;
+    box-shadow:
+        0 8px 22px rgba(50,42,38,.045),
+        inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+
+.pro-kpi .label {
+    color: #6D7888 !important;
+}
+
+.pro-kpi .value {
+    color: #17395A !important;
+}
+
+.pro-kpi .sub {
+    color: #8793A1 !important;
+}
+
+/* =========================================================
+   Q1 — ACTIVITY TYPE × CAMPUS BUBBLE MATRIX
+   ========================================================= */
+
+.q1-brand-chart-marker {
+    display: none;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker) {
+    position: relative !important;
+    min-height: 382px !important;
+    height: 382px !important;
+    overflow: hidden !important;
+    padding: .74rem .86rem .52rem .86rem !important;
+    background:
+        radial-gradient(circle at 94% 6%, rgba(112,65,125,.060), transparent 25%),
+        linear-gradient(180deg,#FFFFFF 0%,#FCFAF7 100%) !important;
+    border: 1px solid #E4DDD4 !important;
+    border-radius: 16px !important;
+    box-shadow:
+        0 12px 30px rgba(46,42,38,.060),
+        inset 0 1px 0 rgba(255,255,255,.96) !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -28%;
+    width: 25%;
+    height: 3px;
+    z-index: 5;
+    background: linear-gradient(
+        90deg,
+        rgba(229,140,43,0),
+        rgba(229,140,43,.96),
+        rgba(112,65,125,.88),
+        rgba(229,140,43,0)
+    );
+    animation: jaipuriaChartSweep 6.8s ease-in-out infinite;
+}
+
+@keyframes jaipuriaChartSweep {
+    0%,16%  { left:-28%; opacity:0; }
+    28%     { opacity:1; }
+    56%     { left:110%; opacity:.95; }
+    68%,100%{ left:110%; opacity:0; }
+}
+
+.q1-brand-heading {
+    margin: 0;
+    padding: 0;
+}
+
+.q1-brand-heading .eyebrow {
+    color: #E08727;
+    font-size: .50rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin-bottom: .10rem;
+}
+
+.q1-brand-heading .title {
+    color: #17395A;
+    font-size: .98rem;
+    font-weight: 950;
+    letter-spacing: -.012em;
+    line-height: 1.12;
+}
+
+.q1-brand-heading .sub {
+    color: #748397;
+    font-size: .58rem;
+    line-height: 1.36;
+    margin-top: .12rem;
+    max-width: 92%;
+}
+
+.q1-brand-rule {
+    height: 1px;
+    margin: .36rem 0 .08rem 0;
+    background: linear-gradient(
+        90deg,
+        #E8D7C3 0%,
+        #E8E0D8 58%,
+        rgba(232,224,216,0) 100%
+    );
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+div[data-testid="stPlotlyChart"] {
+    margin-top: .03rem !important;
+}
+
+/* =========================================================
+   Q1 — BRAND MANAGEMENT INTELLIGENCE PANEL
+   ========================================================= */
+
+.q1-brand-insight {
+    position: relative;
+    overflow: hidden;
+    height: 382px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    background:
+        linear-gradient(180deg, #17395A 0%, #17395A 31%, #FFFFFF 31%, #FCFAF7 100%);
+    border: 1px solid #DCD5CE;
+    box-shadow:
+        0 12px 30px rgba(44,39,37,.072),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    animation: brandInsightFloat 5.0s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease;
+}
+
+.q1-brand-insight:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 17px 36px rgba(44,39,37,.105),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.q1-brand-insight::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 31%;
+    background: linear-gradient(180deg,#F0A13A,#E17E20);
+}
+
+.q1-brand-insight::after {
+    content: "";
+    position: absolute;
+    top: -35%;
+    left: -45%;
+    width: 35%;
+    height: 165%;
+    transform: rotate(18deg);
+    background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.15),
+        rgba(255,255,255,0)
+    );
+    animation: brandInsightSheen 7s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes brandInsightFloat {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-2px); }
+}
+
+@keyframes brandInsightSheen {
+    0%,18%  { left:-45%; opacity:0; }
+    31%     { opacity:.75; }
+    55%     { left:118%; opacity:0; }
+    100%    { left:118%; opacity:0; }
+}
+
+.q1-brand-head {
+    position: relative;
+    z-index: 2;
+    padding: .68rem .76rem .58rem .82rem;
+}
+
+.q1-brand-kicker {
+    color: #F3AF52;
+    font-size: .50rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+.q1-brand-title {
+    color: #FFFFFF;
+    font-size: .98rem;
+    font-weight: 950;
+    margin-top: .08rem;
+    letter-spacing: -.012em;
+}
+
+.q1-brand-sub {
+    color: rgba(255,255,255,.70);
+    font-size: .53rem;
+    line-height: 1.34;
+    margin-top: .10rem;
+}
+
+.q1-brand-body {
+    position: relative;
+    z-index: 2;
+    padding: .56rem .66rem .64rem .66rem;
+}
+
+.q1-brand-hero {
+    display: grid;
+    grid-template-columns: 1.06fr .94fr;
+    gap: 7px;
+}
+
+.q1-brand-hero-card {
+    border-radius: 11px;
+    padding: .45rem .50rem;
+    border: 1px solid #E4DED7;
+    background: linear-gradient(145deg,#FFFFFF,#FBF8F3);
+    box-shadow: 0 4px 12px rgba(53,45,40,.035);
+}
+
+.q1-brand-hero-card .label {
+    color: #7D8794;
+    font-size: .46rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .055em;
+}
+
+.q1-brand-hero-card .value {
+    color: #17395A;
+    font-size: .82rem;
+    font-weight: 950;
+    line-height: 1.14;
+    margin-top: .10rem;
+}
+
+.q1-brand-hero-card .note {
+    color: #8A949F;
+    font-size: .46rem;
+    line-height: 1.22;
+    margin-top: .07rem;
+}
+
+.q1-brand-signal {
+    margin-top: 8px;
+    padding: .44rem .48rem;
+    border-radius: 11px;
+    background: #FFF7EC;
+    border: 1px solid #F0DEC5;
+}
+
+.q1-brand-signal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+}
+
+.q1-brand-signal .label {
+    color: #7D6950;
+    font-size: .47rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+}
+
+.q1-brand-signal .value {
+    color: #17395A;
+    font-size: .64rem;
+    font-weight: 950;
+}
+
+.q1-brand-progress {
+    height: 5px;
+    margin-top: .30rem;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #EDE6DD;
+}
+
+.q1-brand-progress span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg,#E58C2B,#F2B24E,#70417D);
+}
+
+.q1-brand-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-top: 8px;
+}
+
+.q1-brand-fact {
+    padding: .39rem .43rem;
+    border-radius: 10px;
+    background: #FFFFFF;
+    border: 1px solid #E6E0D9;
+}
+
+.q1-brand-fact .label {
+    color: #89939F;
+    font-size: .44rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+}
+
+.q1-brand-fact .value {
+    color: #6B3F7D;
+    font-size: .68rem;
+    font-weight: 950;
+    margin-top: .08rem;
+}
+
+.q1-brand-action {
+    margin-top: 8px;
+    padding: .46rem .49rem;
+    border-radius: 10px;
+    background: linear-gradient(90deg,#F8F2EA,#FFF9F1);
+    border: 1px solid #EBDCCB;
+    border-left: 4px solid #E58C2B;
+    color: #5C6877;
+    font-size: .50rem;
+    line-height: 1.34;
+}
+
+.q1-brand-action strong {
+    color: #17395A;
+    font-weight: 950;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker) {
+    align-items: stretch !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)::before,
+    .q1-brand-insight,
+    .q1-brand-insight::after {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -3062,7 +3489,7 @@ with k6:
 
 
 # =========================================================
-# CAMPUS ACTIVITY PORTFOLIO — EXECUTIVE VISUAL + INSIGHT
+# ACTIVITY TYPE × CAMPUS — EXECUTIVE VISUAL + INSIGHT
 # =========================================================
 
 st.markdown(
@@ -3070,15 +3497,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ---------------------------------------------------------
-# PREPARE ACTIVITY DATA ONCE
-# ---------------------------------------------------------
 activity_mix = pd.DataFrame()
 
 if {"Campus", "Activity Type"}.issubset(filtered.columns):
     activity_mix = (
         filtered.dropna(subset=["Campus", "Activity Type"])
-        .groupby(["Campus", "Activity Type"], observed=True)
+        .groupby(["Activity Type", "Campus"], observed=True)
         .size()
         .reset_index(name="Activities")
     )
@@ -3086,13 +3510,6 @@ if {"Campus", "Activity Type"}.issubset(filtered.columns):
 if activity_mix.empty:
     st.info("No campus/activity-type data is available for the selected filters.")
 else:
-    campus_totals = (
-        activity_mix.groupby("Campus", observed=True)["Activities"]
-        .sum()
-        .sort_values(ascending=False)
-    )
-    campus_order = campus_totals.index.tolist()
-
     activity_colors = _activity_color_map()
 
     for activity_type in activity_mix["Activity Type"].astype(str).unique():
@@ -3101,35 +3518,54 @@ else:
             _activity_fallback_color(activity_type),
         )
 
+    campus_totals = (
+        activity_mix.groupby("Campus", observed=True)["Activities"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+    activity_totals = (
+        activity_mix.groupby("Activity Type", observed=True)["Activities"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+
+    campus_order = campus_totals.index.tolist()
+    activity_order = activity_totals.index.tolist()
+
     leader_campus = str(campus_totals.index[0])
     leader_count = int(campus_totals.iloc[0])
 
-    leader_mix = (
-        activity_mix[activity_mix["Campus"].eq(leader_campus)]
-        .sort_values("Activities", ascending=False)
-    )
+    leader_type = str(activity_totals.index[0])
+    leader_type_count = int(activity_totals.iloc[0])
 
-    leader_type = str(leader_mix.iloc[0]["Activity Type"])
-    leader_type_count = int(leader_mix.iloc[0]["Activities"])
-    leader_share = _pct(leader_type_count, leader_count)
-
-    campus_avg = float(campus_totals.mean()) if len(campus_totals) else 0.0
-    activity_gap = leader_count - campus_avg
-
-    total_q1_activities = int(campus_totals.sum())
+    total_q1_activities = int(activity_mix["Activities"].sum())
     leader_portfolio_share = _pct(
         leader_count,
         total_q1_activities,
     )
-
-    leader_type_diversity = int(
-        activity_mix[
-            activity_mix["Campus"].eq(leader_campus)
-        ]["Activity Type"].nunique()
+    leader_type_share = _pct(
+        leader_type_count,
+        total_q1_activities,
     )
 
+    active_campuses = int(activity_mix["Campus"].nunique())
+    active_formats = int(activity_mix["Activity Type"].nunique())
+
+    # Most concentrated Campus × Activity Type cell.
+    peak_cell = (
+        activity_mix
+        .sort_values("Activities", ascending=False)
+        .iloc[0]
+    )
+    peak_cell_count = int(peak_cell["Activities"])
+    peak_cell_campus = str(peak_cell["Campus"])
+    peak_cell_type = str(peak_cell["Activity Type"])
+
+    lowest_campus = str(campus_totals.index[-1])
+    lowest_campus_count = int(campus_totals.iloc[-1])
+
     # -----------------------------------------------------
-    # CHART + PROFESSIONAL EMS INSIGHT — SAME HEIGHT/ALIGNMENT
+    # MATRIX CHART + BRAND MANAGEMENT INSIGHT
     # -----------------------------------------------------
     q1_chart_col, q1_insight_col = st.columns(
         [2.45, 1.00],
@@ -3140,102 +3576,130 @@ else:
     with q1_chart_col:
         with st.container(border=True):
             st.markdown(
-                '<span class="q1-chart-marker"></span>',
+                '<span class="q1-brand-chart-marker"></span>',
                 unsafe_allow_html=True,
             )
 
             st.markdown(
                 (
-                    '<div class="q1-chart-heading">'
-                    '<div class="title">Campus Activity Portfolio</div>'
+                    '<div class="q1-brand-heading">'
+                    '<div class="eyebrow">Activity Portfolio</div>'
+                    '<div class="title">Activity Type × Campus Matrix</div>'
                     '<div class="sub">'
-                    'Campus-wise activity mix with actual counts inside each segment. '
-                    'The numeric axis is hidden and auto-scales as the daily activity count grows.'
+                    'Rows show Activity Type and columns show Campus. '
+                    'Bubble size represents activity count; every count updates automatically with the live sheet.'
                     '</div>'
                     '</div>'
-                    '<div class="q1-chart-separator"></div>'
+                    '<div class="q1-brand-rule"></div>'
                 ),
                 unsafe_allow_html=True,
             )
 
-            fig = px.bar(
-                activity_mix,
-                x="Activities",
-                y="Campus",
-                color="Activity Type",
-                orientation="h",
-                barmode="stack",
-                text="Activities",
-                category_orders={
-                    "Campus": campus_order,
-                },
-                color_discrete_map=activity_colors,
+            fig = go.Figure()
+
+            max_count = max(
+                int(activity_mix["Activities"].max()),
+                1,
             )
 
-            fig.update_traces(
-                textposition="inside",
-                insidetextanchor="middle",
-                textfont=dict(
-                    size=9,
-                    color="#17324D",
-                ),
-                marker_line_width=0,
-                cliponaxis=False,
-                hovertemplate=(
-                    "<b>%{y}</b><br>"
-                    "Activity Type: %{fullData.name}<br>"
-                    "Activities: %{x:.0f}"
-                    "<extra></extra>"
-                ),
-            )
+            for activity_type in activity_order:
+                subset = activity_mix[
+                    activity_mix["Activity Type"].eq(activity_type)
+                ].copy()
 
-            # Dynamic auto-scaling, no visible numeric ticks.
+                marker_sizes = (
+                    16
+                    + (subset["Activities"] / max_count) * 34
+                )
+
+                fig.add_trace(
+                    go.Scatter(
+                        x=subset["Campus"],
+                        y=[activity_type] * len(subset),
+                        mode="markers+text",
+                        text=subset["Activities"].astype(int),
+                        textposition="middle center",
+                        textfont=dict(
+                            size=9,
+                            color="#17395A",
+                            family="Arial, sans-serif",
+                        ),
+                        marker=dict(
+                            size=marker_sizes,
+                            color=activity_colors.get(
+                                activity_type,
+                                _activity_fallback_color(activity_type),
+                            ),
+                            opacity=.86,
+                            line=dict(
+                                color="#FFFFFF",
+                                width=1.5,
+                            ),
+                        ),
+                        customdata=subset[
+                            ["Activities"]
+                        ].values,
+                        name=activity_type,
+                        hovertemplate=(
+                            "<b>%{y}</b><br>"
+                            "Campus: %{x}<br>"
+                            "Activities: %{customdata[0]:.0f}"
+                            "<extra></extra>"
+                        ),
+                        showlegend=False,
+                    )
+                )
+
             fig.update_xaxes(
                 title="",
-                rangemode="tozero",
-                showticklabels=False,
-                ticks="",
-                showgrid=False,
-                zeroline=False,
+                categoryorder="array",
+                categoryarray=campus_order,
+                side="top",
+                showgrid=True,
+                gridcolor="#EEE7DF",
+                gridwidth=1,
+                linecolor="#DCD4CC",
+                tickfont=dict(
+                    size=10,
+                    color="#17395A",
+                ),
                 fixedrange=True,
             )
 
             fig.update_yaxes(
                 title="",
                 categoryorder="array",
-                categoryarray=campus_order,
+                categoryarray=activity_order,
                 autorange="reversed",
-                showgrid=False,
+                showgrid=True,
+                gridcolor="#F1ECE6",
+                gridwidth=1,
+                linecolor="#DCD4CC",
+                tickfont=dict(
+                    size=9,
+                    color="#4E6175",
+                ),
                 fixedrange=True,
             )
 
-            # Extra top margin ensures legend never overlaps/hides the heading.
-            fig = professional_chart(
-                fig,
-                270,
-                legend=True,
-            )
-
             fig.update_layout(
-                legend_title_text="Activity Type",
-                bargap=.30,
+                height=295,
                 margin=dict(
                     l=6,
                     r=8,
-                    t=48,
-                    b=4,
+                    t=42,
+                    b=8,
                 ),
-                legend=dict(
-                    orientation="h",
-                    yanchor="bottom",
-                    y=1.03,
-                    xanchor="right",
-                    x=1,
-                    font=dict(size=9),
-                    title=dict(
-                        text="Activity Type",
-                        font=dict(size=9),
-                    ),
+                paper_bgcolor="#FCFAF7",
+                plot_bgcolor="#FCFAF7",
+                font=dict(
+                    family="Arial, sans-serif",
+                    color="#52657A",
+                ),
+                hoverlabel=dict(
+                    bgcolor="#17395A",
+                    bordercolor="#17395A",
+                    font_color="#FFFFFF",
                 ),
             )
 
@@ -3246,68 +3710,78 @@ else:
             )
 
     with q1_insight_col:
-        if activity_gap > 0:
-            concentration_note = (
-                f"{activity_gap:.1f} above campus average"
+        if leader_portfolio_share >= 45:
+            signal_label = "High concentration"
+            signal_action = (
+                f"{leader_campus} contributes {leader_portfolio_share:.1f}% of all filtered activities. "
+                "Check owner bandwidth and reach quality before adding more volume."
+            )
+        elif leader_portfolio_share >= 32:
+            signal_label = "Moderate concentration"
+            signal_action = (
+                f"{leader_campus} is the largest contributor but the portfolio is not fully concentrated. "
+                "Use outcomes to decide whether to rebalance activity volume."
             )
         else:
-            concentration_note = "Close to campus average"
-
-        if leader_portfolio_share >= 40:
-            action_text = (
-                f"{leader_campus} carries a high share of the current portfolio. "
-                f"Validate owner capacity and whether {leader_type} is producing proportionate reach/outcomes "
-                "before adding more activity volume."
-            )
-        elif leader_share >= 55:
-            action_text = (
-                f"{leader_type} is highly concentrated within {leader_campus}. "
-                "Review activity-format dependency and diversify only where audience opportunity supports it."
-            )
-        else:
-            action_text = (
-                f"{leader_campus} has a relatively balanced activity mix. "
-                "Use reach and execution outcomes to decide which format should receive incremental effort."
+            signal_label = "Balanced portfolio"
+            signal_action = (
+                "Activity volume is reasonably distributed across campuses. "
+                "Focus next on format-level effectiveness and execution quality."
             )
 
-        q1_insight_html = (
-            '<div class="q1-exec-insight">'
-                '<div class="q1-insight-kicker">EMS · Activity Intelligence</div>'
-                '<div class="q1-insight-title">Portfolio Readout</div>'
-                '<div class="q1-insight-sub">'
-                    'Management summary for the current filter selection.'
-                '</div>'
-                '<div class="q1-insight-grid">'
-                    '<div class="q1-insight-metric">'
-                        '<div class="label">Activity Leader</div>'
-                        f'<div class="value">{html.escape(leader_campus)}</div>'
-                        f'<div class="note">{leader_count:,} activities</div>'
-                    '</div>'
-                    '<div class="q1-insight-metric">'
-                        '<div class="label">Dominant Format</div>'
-                        f'<div class="value">{html.escape(leader_type)}</div>'
-                        f'<div class="note">{leader_type_count:,} · {leader_share:.1f}% of leader campus</div>'
-                    '</div>'
-                    '<div class="q1-insight-metric">'
-                        '<div class="label">Portfolio Share</div>'
-                        f'<div class="value">{leader_portfolio_share:.1f}%</div>'
-                        f'<div class="note">{html.escape(leader_campus)} share of all filtered activities</div>'
-                    '</div>'
-                    '<div class="q1-insight-metric">'
-                        '<div class="label">Activity Diversity</div>'
-                        f'<div class="value">{leader_type_diversity}</div>'
-                        f'<div class="note">{html.escape(concentration_note)}</div>'
+        q1_brand_insight_html = (
+            '<div class="q1-brand-insight">'
+                '<div class="q1-brand-head">'
+                    '<div class="q1-brand-kicker">Jaipuria · Activity Intelligence</div>'
+                    '<div class="q1-brand-title">Management Signal</div>'
+                    '<div class="q1-brand-sub">'
+                        'A compact readout of portfolio concentration, activity mix and the next management action.'
                     '</div>'
                 '</div>'
-                '<div class="q1-insight-action">'
-                    '<strong>Recommended Action:</strong> '
-                    f'{html.escape(action_text)}'
+                '<div class="q1-brand-body">'
+                    '<div class="q1-brand-hero">'
+                        '<div class="q1-brand-hero-card">'
+                            '<div class="label">Leading Campus</div>'
+                            f'<div class="value">{html.escape(leader_campus)}</div>'
+                            f'<div class="note">{leader_count:,} activities · {leader_portfolio_share:.1f}% portfolio share</div>'
+                        '</div>'
+                        '<div class="q1-brand-hero-card">'
+                            '<div class="label">Leading Format</div>'
+                            f'<div class="value">{html.escape(leader_type)}</div>'
+                            f'<div class="note">{leader_type_count:,} activities · {leader_type_share:.1f}% of total</div>'
+                        '</div>'
+                    '</div>'
+                    '<div class="q1-brand-signal">'
+                        '<div class="q1-brand-signal-row">'
+                            '<div class="label">Portfolio Concentration</div>'
+                            f'<div class="value">{leader_portfolio_share:.1f}% · {html.escape(signal_label)}</div>'
+                        '</div>'
+                        '<div class="q1-brand-progress">'
+                            f'<span style="width:{min(leader_portfolio_share,100):.1f}%"></span>'
+                        '</div>'
+                    '</div>'
+                    '<div class="q1-brand-facts">'
+                        '<div class="q1-brand-fact">'
+                            '<div class="label">Peak Combination</div>'
+                            f'<div class="value">{html.escape(peak_cell_type)} · {html.escape(peak_cell_campus)}</div>'
+                        '</div>'
+                        '<div class="q1-brand-fact">'
+                            '<div class="label">Coverage Breadth</div>'
+                            f'<div class="value">{active_formats} formats · {active_campuses} campuses</div>'
+                        '</div>'
+                    '</div>'
+                    '<div class="q1-brand-action">'
+                        '<strong>Recommended Action:</strong> '
+                        f'{html.escape(signal_action)} '
+                        f'Also review {html.escape(lowest_campus)} ({lowest_campus_count} activities) '
+                        'to confirm whether lower volume is intentional or represents an outreach gap.'
+                    '</div>'
                 '</div>'
             '</div>'
         )
 
         st.markdown(
-            q1_insight_html,
+            q1_brand_insight_html,
             unsafe_allow_html=True,
         )
 
