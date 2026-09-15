@@ -3527,6 +3527,296 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)::aft
     }
 }
 
+
+/* =========================================================
+   Q1 — EXACT CHART / INSIGHT HEIGHT ALIGNMENT
+   ========================================================= */
+
+:root {
+    --q1-equal-panel-height: 575px;
+}
+
+/* Make both Streamlit columns stretch to the same vertical size */
+div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker) {
+    align-items: stretch !important;
+}
+
+/* Left chart card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker) {
+    height: var(--q1-equal-panel-height) !important;
+    min-height: var(--q1-equal-panel-height) !important;
+    max-height: var(--q1-equal-panel-height) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+/* Left card inner Streamlit block */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    min-height: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Matrix consumes remaining space cleanly */
+.q1-css-matrix {
+    height: 465px !important;
+    min-height: 465px !important;
+    max-height: 465px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.q1-css-grid {
+    flex: 1 1 auto !important;
+    height: auto !important;
+}
+
+/* Keep rows visually balanced */
+.q1-css-corner,
+.q1-css-campus,
+.q1-css-activity,
+.q1-css-cell {
+    min-height: 48px !important;
+}
+
+/* Right insight card: exact same outer height */
+.q1-brand-insight {
+    height: var(--q1-equal-panel-height) !important;
+    min-height: var(--q1-equal-panel-height) !important;
+    max-height: var(--q1-equal-panel-height) !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Let the white management body use all remaining space */
+.q1-brand-body {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+}
+
+.q1-brand-action {
+    margin-top: auto !important;
+}
+
+/* =========================================================
+   Q1 — CLEAN BUBBLES: NO WHITE GLOSS PATCH
+   ========================================================= */
+
+/* Remove the white glossy highlight blob */
+.q1-motion-bubble::before {
+    display: none !important;
+}
+
+/* Cleaner premium depth without white glare */
+.q1-motion-bubble {
+    border: 1px solid rgba(255,255,255,.55) !important;
+    box-shadow:
+        0 10px 16px rgba(23,57,90,.24),
+        0 4px 8px rgba(47,35,31,.14),
+        inset 0 1px 2px rgba(255,255,255,.20),
+        inset 0 -3px 6px rgba(23,57,90,.10) !important;
+}
+
+/* Bubble hover remains dimensional but not glossy */
+.q1-motion-bubble:hover {
+    box-shadow:
+        0 19px 29px rgba(23,57,90,.34),
+        0 7px 12px rgba(229,140,43,.16),
+        inset 0 1px 2px rgba(255,255,255,.22),
+        inset 0 -4px 7px rgba(23,57,90,.12) !important;
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --q1-equal-panel-height: 555px;
+    }
+}
+
+
+/* =========================================================
+   Q1 — COMPACT EQUAL-HEIGHT LAYOUT
+   Smaller chart + perfectly matched left/right panel height
+   ========================================================= */
+
+:root {
+    --q1-compact-panel-height: 500px;
+}
+
+/* Keep both columns stretched equally */
+div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker) {
+    align-items: stretch !important;
+}
+
+/* LEFT PANEL — compact chart card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker) {
+    height: var(--q1-compact-panel-height) !important;
+    min-height: var(--q1-compact-panel-height) !important;
+    max-height: var(--q1-compact-panel-height) !important;
+    padding: .62rem .72rem .42rem .72rem !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    min-height: 100% !important;
+    gap: .24rem !important;
+}
+
+/* Slightly tighter heading */
+.q1-brand-heading .title {
+    font-size: .93rem !important;
+}
+
+.q1-brand-heading .sub {
+    font-size: .54rem !important;
+    line-height: 1.28 !important;
+    margin-top: .08rem !important;
+}
+
+.q1-brand-rule {
+    margin: .28rem 0 .06rem 0 !important;
+}
+
+/* Matrix becomes smaller but remains readable */
+.q1-css-matrix {
+    height: 392px !important;
+    min-height: 392px !important;
+    max-height: 392px !important;
+    margin-top: .08rem !important;
+    padding: .26rem .34rem .30rem .34rem !important;
+    box-sizing: border-box !important;
+}
+
+.q1-css-grid {
+    flex: 1 1 auto !important;
+    height: auto !important;
+}
+
+/* Compact row heights */
+.q1-css-corner,
+.q1-css-campus,
+.q1-css-activity,
+.q1-css-cell {
+    min-height: 40px !important;
+}
+
+.q1-css-campus {
+    font-size: .57rem !important;
+}
+
+.q1-css-activity {
+    font-size: .54rem !important;
+    padding-right: .40rem !important;
+}
+
+.q1-css-matrix-foot {
+    margin-top: .20rem !important;
+    font-size: .44rem !important;
+}
+
+/* RIGHT PANEL — exactly same height as left */
+.q1-brand-insight {
+    height: var(--q1-compact-panel-height) !important;
+    min-height: var(--q1-compact-panel-height) !important;
+    max-height: var(--q1-compact-panel-height) !important;
+    box-sizing: border-box !important;
+}
+
+/* Compact the right panel so content fits naturally */
+.q1-brand-head {
+    padding: .58rem .66rem .48rem .72rem !important;
+}
+
+.q1-brand-title {
+    font-size: .91rem !important;
+}
+
+.q1-brand-sub {
+    font-size: .50rem !important;
+    line-height: 1.28 !important;
+}
+
+.q1-brand-body {
+    padding: .46rem .54rem .54rem .54rem !important;
+    gap: 0 !important;
+}
+
+.q1-brand-hero-card {
+    padding: .38rem .42rem !important;
+}
+
+.q1-brand-hero-card .value {
+    font-size: .76rem !important;
+}
+
+.q1-brand-hero-card .note {
+    font-size: .43rem !important;
+}
+
+.q1-brand-signal {
+    margin-top: 6px !important;
+    padding: .38rem .42rem !important;
+}
+
+.q1-brand-facts {
+    margin-top: 6px !important;
+    gap: 6px !important;
+}
+
+.q1-brand-fact {
+    padding: .34rem .38rem !important;
+}
+
+.q1-brand-fact .value {
+    font-size: .62rem !important;
+}
+
+.q1-brand-action {
+    margin-top: auto !important;
+    padding: .40rem .43rem !important;
+    font-size: .47rem !important;
+    line-height: 1.28 !important;
+}
+
+/* Ensure the right card visually touches the same bottom line */
+div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker)
+> div[data-testid="stColumn"] {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker)
+> div[data-testid="stColumn"] > div {
+    flex: 1 1 auto !important;
+}
+
+/* Responsive fallback */
+@media (max-width: 1200px) {
+    :root {
+        --q1-compact-panel-height: 485px;
+    }
+
+    .q1-css-matrix {
+        height: 378px !important;
+        min-height: 378px !important;
+        max-height: 378px !important;
+    }
+
+    .q1-css-corner,
+    .q1-css-campus,
+    .q1-css-activity,
+    .q1-css-cell {
+        min-height: 38px !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -4960,10 +5250,7 @@ else:
                                 f'title="{html.escape(tooltip)}" '
                                 f'style="width:{size_px:.1f}px;'
                                 f'height:{size_px:.1f}px;'
-                                f'background:radial-gradient(circle at 32% 24%,'
-                                f'rgba(255,255,255,.74) 0 9%,'
-                                f'{activity_color} 34%,'
-                                f'{activity_color} 100%);'
+                                f'background:{activity_color};'
                                 f'color:{text_color};'
                                 f'--bubble-delay:{delay:.2f}s;'
                                 f'--bubble-duration:{duration:.2f}s;">'
