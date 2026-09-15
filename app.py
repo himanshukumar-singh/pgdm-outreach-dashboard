@@ -1655,13 +1655,36 @@ def _pct(num, den):
     return (float(num) / float(den) * 100.0) if den else 0.0
 
 
-def overview_section(kicker, title, subtitle):
+def overview_section(kicker, title=None, subtitle=None):
+    """
+    Render an Overview section heading.
+
+    Supports both:
+        overview_section("KICKER", "Title", "Subtitle")
+    and the older two-argument form:
+        overview_section("Title", "Subtitle")
+    """
+    if subtitle is None:
+        subtitle = "" if title is None else str(title)
+        title = str(kicker)
+        kicker = ""
+
+    kicker = "" if kicker is None else str(kicker)
+    title = "" if title is None else str(title)
+    subtitle = "" if subtitle is None else str(subtitle)
+
+    kicker_html = (
+        f'<div class="overview-section-kicker">{html.escape(kicker)}</div>'
+        if kicker.strip()
+        else ""
+    )
+
     st.markdown(
         (
-            f'<div class="overview-section-kicker">{html.escape(kicker)}</div>'
-            f'<div class="overview-section-title">{html.escape(title)}</div>'
-            f'<div class="overview-section-sub">{html.escape(subtitle)}</div>'
-            '<div class="overview-divider"></div>'
+            kicker_html
+            + f'<div class="overview-section-title">{html.escape(title)}</div>'
+            + f'<div class="overview-section-sub">{html.escape(subtitle)}</div>'
+            + '<div class="overview-divider"></div>'
         ),
         unsafe_allow_html=True,
     )
@@ -1879,6 +1902,7 @@ reach_achievement = _pct(actual_reach, planned_reach)
 # EXECUTIVE SNAPSHOT
 # =========================================================
 overview_section(
+    "Executive Snapshot",
     "Outreach Performance at a Glance",
     "Core volume, event coverage and student-reach indicators for the current filter selection.",
 )
