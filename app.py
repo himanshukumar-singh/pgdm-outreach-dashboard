@@ -6979,13 +6979,11 @@ def render_activity_event_status_matrix(matrix_df):
     source["Event"] = source["Event"].apply(_aev_clean_text)
     source["Campus"] = source["Campus"].apply(_aev_clean_text)
     source["Status"] = source["Status"].apply(_aev_clean_status)
-
     source = source[source["Activity Type"].ne("")].copy()
+
     if source.empty:
         return
 
-    # Keep the four Jaipuria campuses fixed so the matrix does not jump
-    # when a campus filter is applied. A filtered-out campus simply shows 0.
     campus_order = ["Noida", "Lucknow", "Jaipur", "Indore"]
     status_order = ["Planned", "Confirmed", "Completed", "Cancelled", "Rescheduled"]
 
@@ -7007,11 +7005,7 @@ def render_activity_event_status_matrix(matrix_df):
         if activity not in preferred_activity_order
     )
 
-    # Blank Event values are kept visible rather than silently discarded.
-    source["Event Display"] = source["Event"].where(
-        source["Event"].ne(""),
-        "No Event",
-    )
+    source["Event Display"] = source["Event"].where(source["Event"].ne(""), "No Event")
 
     grouped = (
         source.groupby(
@@ -7048,9 +7042,7 @@ def render_activity_event_status_matrix(matrix_df):
                         & grouped["Campus"].eq(campus)
                         & grouped["Status"].eq(status)
                     ]
-                    counts[(campus, status)] = (
-                        int(match["Count"].sum()) if not match.empty else 0
-                    )
+                    counts[(campus, status)] = int(match["Count"].sum()) if not match.empty else 0
 
             rows.append({
                 "activity": activity,
@@ -7065,13 +7057,40 @@ def render_activity_event_status_matrix(matrix_df):
     total_records = int(len(source))
     unique_events = int(source.loc[source["Event"].ne(""), "Event"].nunique())
 
-    campus_totals = (
-        source.groupby("Campus", observed=True)
-        .size()
-        .reindex(campus_order, fill_value=0)
-    )
-    leading_campus = str(campus_totals.idxmax()) if not campus_totals.empty else "—"
-    leading_campus_count = int(campus_totals.max()) if not campus_totals.empty else 0
+    campus_status = {}
+    campus_perf_rows = []
+    for campus in campus_order:
+        cdf = source[source["Campus"].eq(campus)]
+        total = int(len(cdf))
+        planned = int(cdf["Status"].eq("Planned").sum())
+        confirmed = int(cdf["Status"].eq("Confirmed").sum())
+        completed = int(cdf["Status"].eq("Completed").sum())
+        cancelled = int(cdf["Status"].eq("Cancelled").sum())
+        rescheduled = int(cdf["Status"].eq("Rescheduled").sum())
+        completion_pct = (completed / total * 100.0) if total else 0.0
+        campus_status[campus] = {
+            "Total": total,
+            "Planned": planned,
+            "Confirmed": confirmed,
+            "Completed": completed,
+            "Cancelled": cancelled,
+            "Rescheduled": rescheduled,
+        }
+        campus_perf_rows.append({
+            "Campus": campus,
+            "Total": total,
+            "Planned": planned,
+            "Confirmed": confirmed,
+            "Completed": completed,
+            "Completion %": completion_pct,
+        })
+
+    campus_perf_df = pd.DataFrame(campus_perf_rows)
+    leading_campus_row = campus_perf_df.sort_values(
+        ["Total", "Completed", "Confirmed"], ascending=False
+    ).iloc[0]
+    leading_campus = str(leading_campus_row["Campus"])
+    leading_campus_count = int(leading_campus_row["Total"])
 
     activity_totals = source.groupby("Activity Type", observed=True).size().sort_values(ascending=False)
     leading_activity = str(activity_totals.index[0]) if not activity_totals.empty else "—"
@@ -7099,490 +7118,459 @@ def render_activity_event_status_matrix(matrix_df):
         top_activity_event_count = 0
 
     st.markdown(
-        """
+        r'''
         <style>
-        /* ======================================================
-           ACTIVITY TYPE × EVENT × CAMPUS STATUS MATRIX
-           ====================================================== */
-        .aev-shell {
-            position: relative;
-            overflow: hidden;
-            margin: .18rem 0 .62rem 0;
-            border: 1px solid #DCE6F2;
-            border-radius: 18px;
-            background:
-                radial-gradient(circle at 96% 3%, rgba(124,58,237,.055), transparent 23%),
-                radial-gradient(circle at 3% 97%, rgba(20,184,166,.045), transparent 24%),
-                linear-gradient(180deg,#FFFFFF 0%,#FAFCFF 100%);
-            box-shadow:
-                0 13px 32px rgba(22,47,83,.07),
-                inset 0 1px 0 rgba(255,255,255,.96);
+        .aev-shell{
+            position:relative;
+            overflow:hidden;
+            margin:.18rem 0 .62rem 0;
+            border:1px solid #DCE6F2;
+            border-radius:18px;
+            background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%);
+            box-shadow:0 12px 30px rgba(22,47,83,.065),inset 0 1px 0 rgba(255,255,255,.96);
         }
-        .aev-shell::before {
+        .aev-shell::before{
             content:"";
             position:absolute;
-            left:-28%;
-            top:0;
-            width:24%;
+            left:0;right:0;top:0;
             height:3px;
-            z-index:6;
-            background:linear-gradient(90deg,transparent,#20B9A8,#3978ED,#8454E8,#F4A12B,transparent);
-            animation:aevSweep 7.2s ease-in-out infinite;
+            background:linear-gradient(90deg,#2D6CDF 0%,#6A67E8 34%,#F09D2B 68%,#1CA96E 100%);
+            opacity:.92;
+            z-index:5;
         }
-        @keyframes aevSweep {
-            0%,14%{left:-28%;opacity:0}
-            24%{opacity:1}
-            60%{left:108%;opacity:.95}
-            70%,100%{left:108%;opacity:0}
-        }
-        .aev-head {
+        .aev-head{
             display:flex;
+            align-items:center;
             justify-content:space-between;
-            align-items:center;
             gap:1rem;
-            padding:.72rem .85rem .58rem .85rem;
-            border-bottom:1px solid #E5ECF4;
-            background:linear-gradient(100deg,#FFFFFF 0%,#F9FCFF 58%,#FBF9FF 100%);
+            padding:.66rem .82rem .54rem .82rem;
+            border-bottom:1px solid #E7EDF5;
+            background:linear-gradient(90deg,#FFFFFF 0%,#FCFDFF 64%,#FBF9FF 100%);
         }
-        .aev-head-left {
-            display:flex;
-            align-items:center;
-            gap:.62rem;
-            min-width:0;
-        }
-        .aev-head-icon {
-            width:38px;
-            height:38px;
-            flex:0 0 38px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            border-radius:12px;
-            color:#FFFFFF;
-            background:linear-gradient(145deg,#14B8A6 0%,#3978ED 52%,#7C3AED 100%);
-            box-shadow:0 8px 18px rgba(57,120,237,.18),inset 0 1px 0 rgba(255,255,255,.22);
-            font-size:17px;
-            animation:aevIconFloat 4.4s ease-in-out infinite;
-        }
-        @keyframes aevIconFloat {
-            0%,100%{transform:translateY(0)}
-            50%{transform:translateY(-2px)}
-        }
-        .aev-kicker {
-            color:#F08C22;
-            font-size:.50rem;
-            font-weight:950;
-            letter-spacing:.11em;
-            text-transform:uppercase;
-        }
-        .aev-title {
-            color:#102F59;
-            font-size:1rem;
+        .aev-title{
+            color:#16385F;
+            font-size:.98rem;
             font-weight:950;
             line-height:1.08;
-            margin-top:.04rem;
         }
-        .aev-sub {
-            color:#7A8EA5;
-            font-size:.58rem;
-            line-height:1.32;
-            margin-top:.10rem;
+        .aev-sub{
+            color:#7589A2;
+            font-size:.57rem;
+            line-height:1.34;
+            margin-top:.12rem;
         }
-        .aev-head-badges {
+        .aev-head-badges{
             display:flex;
+            align-items:center;
+            gap:6px;
             flex-wrap:wrap;
             justify-content:flex-end;
-            gap:6px;
         }
-        .aev-head-badge {
+        .aev-head-badge{
             display:inline-flex;
             align-items:center;
             gap:5px;
-            padding:.24rem .44rem;
+            padding:.24rem .43rem;
             border-radius:999px;
-            border:1px solid #DDE6F1;
+            border:1px solid #DCE5F1;
             background:#FFFFFF;
-            color:#365474;
-            font-size:.50rem;
+            color:#365574;
+            font-size:.48rem;
             font-weight:900;
-            box-shadow:0 4px 10px rgba(22,47,83,.035);
+            box-shadow:0 4px 10px rgba(23,52,90,.04);
             white-space:nowrap;
         }
-        .aev-head-badge::before {
+        .aev-head-badge::before{
             content:"";
-            width:6px;
-            height:6px;
-            border-radius:50%;
-            background:linear-gradient(135deg,#14B8A6,#4F6FEA);
-            box-shadow:0 0 0 3px rgba(79,111,234,.07);
+            width:6px;height:6px;border-radius:50%;
+            background:#3978ED;
+            box-shadow:0 0 0 3px rgba(57,120,237,.10);
         }
-        .aev-scroll {
+        .aev-scroll{
             width:100%;
             overflow-x:auto;
             overflow-y:hidden;
+            padding:.10rem .72rem .18rem .72rem;
             scrollbar-width:thin;
-            scrollbar-color:#C7D5E6 #F4F7FB;
-            padding:.55rem .55rem .20rem .55rem;
-            box-sizing:border-box;
+            scrollbar-color:#BFCDE0 #F1F5FA;
         }
-        .aev-table {
+        .aev-table{
             width:100%;
-            min-width:1140px;
-            table-layout:fixed;
+            min-width:1510px;
             border-collapse:separate;
             border-spacing:0;
-            overflow:hidden;
-            border:1px solid #DDE7F1;
-            border-radius:13px;
+            table-layout:fixed;
+            color:#274766;
             background:#FFFFFF;
+            border:1px solid #DCE6F1;
+            border-radius:13px;
+            overflow:hidden;
             font-family:Arial,sans-serif;
         }
-        .aev-table th,
-        .aev-table td {
-            border-right:1px solid #E3EAF2;
-            border-bottom:1px solid #E8EEF5;
+        .aev-table th,.aev-table td{
+            border-right:1px solid #E1E8F1;
+            border-bottom:1px solid #E7EDF4;
             text-align:center;
             vertical-align:middle;
         }
-        .aev-table th:last-child,
-        .aev-table td:last-child { border-right:none; }
-        .aev-table tbody tr:last-child td { border-bottom:none; }
-        .aev-left-head {
-            color:#FFFFFF;
-            background:linear-gradient(145deg,#183B66 0%,#285889 100%);
-            font-size:.56rem;
+        .aev-table th:last-child,.aev-table td:last-child{border-right:none;}
+        .aev-left-head{
+            background:linear-gradient(180deg,#EEF4FB 0%,#E8F0F9 100%);
+            color:#17375E;
+            font-size:.55rem;
             font-weight:950;
-            padding:.45rem .34rem;
-            line-height:1.12;
-            white-space:normal;
+            padding:.42rem .34rem;
+            text-align:left!important;
         }
-        .aev-campus-head {
-            color:#12365E;
-            font-size:.66rem;
+        .aev-campus-head{
+            background:linear-gradient(180deg,#EEF4FB 0%,#E6EFF9 100%);
+            color:#193A64;
+            font-size:.62rem;
             font-weight:950;
-            padding:.38rem .20rem;
+            padding:.42rem .20rem;
             letter-spacing:.01em;
-            white-space:nowrap;
         }
-        .aev-campus-head.noida   { background:linear-gradient(180deg,#D9EAFF 0%,#EAF4FF 100%); }
-        .aev-campus-head.lucknow { background:linear-gradient(180deg,#DDF4E3 0%,#ECF9EF 100%); }
-        .aev-campus-head.jaipur  { background:linear-gradient(180deg,#FFE6D2 0%,#FFF2E7 100%); }
-        .aev-campus-head.indore  { background:linear-gradient(180deg,#E8DDFB 0%,#F2ECFF 100%); }
-        .aev-status-head {
-            padding:.34rem .08rem;
-            font-size:.43rem;
+        .aev-status-head{
+            color:#FFFFFF;
+            font-size:.44rem;
             font-weight:950;
+            padding:.36rem .08rem;
             line-height:1.05;
             white-space:nowrap;
         }
-        .aev-status-head.planned     { color:#235E98; background:#DCEEFF; }
-        .aev-status-head.confirmed   { color:#1D7047; background:#DCF4E6; }
-        .aev-status-head.completed   { color:#087C67; background:#D5F3ED; }
-        .aev-status-head.cancelled   { color:#AC3841; background:#FFE0E2; }
-        .aev-status-head.rescheduled { color:#98690B; background:#FFF0C9; }
-        .aev-activity-cell {
-            width:132px;
-            padding:.40rem .44rem;
-            text-align:left !important;
-            color:#173A62;
-            font-size:.55rem;
-            font-weight:950;
+        .aev-status-head.planned{background:#8DBFE3;color:#FFFFFF;}
+        .aev-status-head.confirmed{background:#3776C5;}
+        .aev-status-head.completed{background:#2C9B63;}
+        .aev-status-head.cancelled{background:#EE5B57;}
+        .aev-status-head.rescheduled{background:#E6A53A;color:#FFFFFF;}
+        .aev-activity-cell{
+            width:126px;
+            padding:.42rem .42rem!important;
+            text-align:left!important;
+            color:#15395F;
+            font-size:.56rem;
+            font-weight:900;
             line-height:1.22;
-            white-space:normal;
-            word-break:keep-all;
-            overflow-wrap:normal;
-            hyphens:none;
-            background:linear-gradient(180deg,#F8FBFF 0%,#F2F7FC 100%);
-            border-left:3px solid #4B7BEC;
-        }
-        .aev-activity-count {
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            min-width:22px;
-            margin-left:4px;
-            padding:.07rem .22rem;
-            border-radius:999px;
-            color:#425C79;
-            background:#E8F0FA;
-            border:1px solid #D7E3F0;
-            font-size:.44rem;
-            font-weight:950;
-            vertical-align:middle;
-        }
-        .aev-event-cell {
-            width:105px;
-            padding:.34rem .38rem;
-            text-align:left !important;
-            color:#304F70;
-            font-size:.53rem;
-            font-weight:820;
-            line-height:1.18;
             white-space:normal;
             word-break:normal;
             overflow-wrap:normal;
-            background:#FFFFFF;
+            background:linear-gradient(180deg,#F8FBFF 0%,#F2F7FD 100%)!important;
         }
-        .aev-event-main {
-            display:inline-block;
-            color:#2E4F73;
-            font-weight:850;
+        .aev-activity-name{display:inline;}
+        .aev-activity-count{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:20px;
+            height:18px;
+            padding:0 .25rem;
+            margin-left:.30rem;
+            border-radius:999px;
+            color:#285A8D;
+            background:#E5F0FB;
+            border:1px solid #D1E2F3;
+            font-size:.45rem;
+            font-weight:950;
+            vertical-align:1px;
+        }
+        .aev-event-cell{
+            width:104px;
+            padding:.36rem .32rem!important;
+            text-align:left!important;
+            background:#FFFFFF;
             white-space:normal;
         }
-        .aev-event-count {
+        .aev-event-main{
+            color:#294B6F;
+            font-size:.54rem;
+            font-weight:800;
+            line-height:1.18;
+        }
+        .aev-event-count{
             display:inline-flex;
             align-items:center;
             justify-content:center;
-            min-width:19px;
+            min-width:18px;
             height:16px;
-            margin-left:4px;
             padding:0 .18rem;
+            margin-left:.22rem;
             border-radius:999px;
-            color:#5E7690;
-            background:#EEF3F8;
-            border:1px solid #DEE7F0;
-            font-size:.41rem;
+            color:#6A7F97;
+            background:#F1F5F9;
+            border:1px solid #DFE7F0;
+            font-size:.42rem;
             font-weight:900;
-            vertical-align:middle;
+            vertical-align:1px;
         }
-        .aev-table tbody tr:nth-child(even) .aev-event-cell,
-        .aev-table tbody tr:nth-child(even) td:not(.aev-activity-cell) {
-            background:#FBFCFE;
-        }
-        .aev-table tbody tr:hover td:not(.aev-activity-cell) {
-            background:#F4F8FE;
-        }
-        .aev-data-cell {
-            padding:.27rem .06rem;
-            width:45px;
-            min-width:45px;
-            height:30px;
+        .aev-data-cell{
+            width:54px;
+            height:31px;
+            padding:.24rem .05rem!important;
+            background:#FFFFFF;
             font-size:.50rem;
         }
-        .aev-zero {
-            color:#C1CBD7;
-            font-weight:700;
-        }
-        .aev-count {
+        .aev-table tbody tr:nth-child(even) td:not(.aev-activity-cell){background:#FBFCFE;}
+        .aev-table tbody tr:hover td:not(.aev-activity-cell){background:#F4F8FE;}
+        .aev-zero{color:#C4CFDB;font-weight:700;}
+        .aev-count{
             display:inline-flex;
             align-items:center;
             justify-content:center;
-            min-width:23px;
+            min-width:24px;
             height:19px;
-            padding:0 .16rem;
+            padding:0 .18rem;
             border-radius:6px;
-            font-size:.48rem;
+            font-size:.47rem;
             font-weight:950;
             font-variant-numeric:tabular-nums;
             box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
         }
-        .aev-count-planned     { color:#245F96; background:#DEEEFF; border:1px solid #CDE3FA; }
-        .aev-count-confirmed   { color:#1D754A; background:#DCF5E7; border:1px solid #CBEAD8; }
-        .aev-count-completed   { color:#087965; background:#D8F3ED; border:1px solid #C6E9E1; }
-        .aev-count-cancelled   { color:#B43B45; background:#FFE2E4; border:1px solid #F2CDD1; }
-        .aev-count-rescheduled { color:#97650A; background:#FFF0CE; border:1px solid #F0DCA8; }
-        .aev-insights {
-            display:grid;
-            grid-template-columns:repeat(4,minmax(0,1fr));
-            gap:8px;
-            padding:.50rem .55rem .62rem .55rem;
+        .aev-count-planned{color:#245E91;background:#DCEEFF;border:1px solid #C8E1F7;}
+        .aev-count-confirmed{color:#FFFFFF;background:#3B79C8;border:1px solid #3470BA;}
+        .aev-count-completed{color:#FFFFFF;background:#2EA069;border:1px solid #29945F;}
+        .aev-count-cancelled{color:#FFFFFF;background:#EF625D;border:1px solid #E15752;}
+        .aev-count-rescheduled{color:#7C5205;background:#FFE7B7;border:1px solid #F0D295;}
+        .aev-total-row td{
+            background:linear-gradient(180deg,#FFF9E9 0%,#FFF4D8 100%)!important;
+            color:#153A5F;
+            font-weight:950;
+            border-top:1px solid #ECD9A8;
         }
-        .aev-insight-card {
+        .aev-total-label{
+            text-align:left!important;
+            padding:.40rem .44rem!important;
+            font-size:.55rem;
+        }
+        .aev-insight-grid{
+            display:grid;
+            grid-template-columns:1.05fr .98fr 1.05fr;
+            gap:10px;
+            padding:.60rem .72rem .72rem .72rem;
+        }
+        .aev-insight-card{
             position:relative;
             overflow:hidden;
-            min-height:76px;
-            padding:.54rem .58rem;
-            border:1px solid var(--border);
-            border-radius:12px;
-            background:linear-gradient(145deg,#FFFFFF 0%,var(--wash) 150%);
-            box-shadow:0 5px 14px rgba(22,47,83,.04);
+            min-height:178px;
+            padding:.70rem .74rem;
+            border:1px solid #DCE6F1;
+            border-radius:14px;
+            background:#FFFFFF;
+            box-shadow:0 7px 18px rgba(22,49,88,.045);
             transition:transform .20s ease,box-shadow .20s ease;
         }
-        .aev-insight-card:hover {
-            transform:translateY(-2px);
-            box-shadow:0 10px 22px rgba(22,47,83,.08);
-        }
-        .aev-insight-card::before {
+        .aev-insight-card:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(22,49,88,.075);}
+        .aev-insight-card::before{
             content:"";
             position:absolute;
-            left:0;
-            right:0;
-            top:0;
-            height:3px;
-            background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);
+            left:0;right:0;top:0;height:2px;
+            background:linear-gradient(90deg,#2D6CDF,#7B53D8,#F0A12A);
+            opacity:.82;
         }
-        .aev-insight-card.blue   { --accent:#2D6CDF;--accent2:#6EA5F7;--wash:#EEF5FF;--border:#D8E6FB; }
-        .aev-insight-card.green  { --accent:#159A6A;--accent2:#61C991;--wash:#EFF9F4;--border:#D6ECE1; }
-        .aev-insight-card.violet { --accent:#7453C6;--accent2:#A88AE8;--wash:#F5F1FC;--border:#E5DCF6; }
-        .aev-insight-card.amber  { --accent:#D88C21;--accent2:#F2B755;--wash:#FFF8EB;--border:#F0E0C1; }
-        .aev-insight-label {
-            color:#71849B;
-            font-size:.47rem;
+        .aev-card-title{
+            display:flex;
+            align-items:center;
+            gap:.40rem;
+            color:#16385F;
+            font-size:.72rem;
             font-weight:950;
-            text-transform:uppercase;
-            letter-spacing:.06em;
+            margin-bottom:.47rem;
         }
-        .aev-insight-value {
-            color:#153A61;
-            font-size:.77rem;
-            font-weight:950;
-            line-height:1.15;
-            margin-top:.14rem;
+        .aev-card-icon{
+            width:25px;height:25px;border-radius:9px;
+            display:inline-flex;align-items:center;justify-content:center;
+            flex:0 0 25px;font-size:.70rem;
+            box-shadow:0 5px 11px rgba(28,57,101,.06);
         }
-        .aev-insight-note {
-            color:#7F91A5;
-            font-size:.48rem;
-            line-height:1.28;
-            margin-top:.16rem;
+        .aev-card-icon.insight{background:#FFF4D9;color:#D78A11;}
+        .aev-card-icon.performance{background:#EAF2FF;color:#2D6CDF;}
+        .aev-card-icon.action{background:#FFF0F2;color:#DB4053;}
+        .aev-point{
+            display:grid;
+            grid-template-columns:20px 1fr;
+            gap:.38rem;
+            align-items:start;
+            margin-bottom:.38rem;
         }
-        .aev-action-strip {
-            margin:0 .55rem .58rem .55rem;
-            padding:.46rem .56rem;
-            border:1px solid #F0DFC2;
-            border-left:4px solid #E99A28;
-            border-radius:10px;
-            background:linear-gradient(90deg,#FFF9EF 0%,#FFFCF7 100%);
-            color:#5E7289;
-            font-size:.52rem;
-            line-height:1.36;
+        .aev-point:last-child{margin-bottom:0;}
+        .aev-point-num{
+            width:20px;height:20px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            color:#FFFFFF;
+            background:linear-gradient(145deg,#3476EE,#4C4DD1);
+            font-size:.48rem;font-weight:950;
+            box-shadow:0 4px 10px rgba(52,90,208,.18);
         }
-        .aev-action-strip strong { color:#1D4E7C;font-weight:950; }
-        @media(max-width:1150px) {
-            .aev-insights { grid-template-columns:repeat(2,minmax(0,1fr)); }
+        .aev-point-text{color:#5B718B;font-size:.53rem;line-height:1.42;}
+        .aev-perf-table{width:100%;border-collapse:collapse;font-size:.50rem;color:#284866;}
+        .aev-perf-table th{
+            color:#75869A;font-size:.45rem;font-weight:950;text-align:left;
+            padding:.15rem .11rem .27rem .11rem;border-bottom:1px solid #E6ECF3;white-space:nowrap;
         }
-        @media(prefers-reduced-motion:reduce) {
-            .aev-shell::before,.aev-head-icon { animation:none !important; }
+        .aev-perf-table td{
+            padding:.27rem .11rem;border-bottom:1px solid #EDF1F6;font-weight:720;vertical-align:middle;
         }
+        .aev-perf-table tr:last-child td{font-weight:950;border-bottom:none;}
+        .aev-progress-wrap{display:flex;align-items:center;gap:.24rem;min-width:74px;}
+        .aev-progress-track{height:8px;flex:1;border-radius:999px;overflow:hidden;background:#E9EEF5;}
+        .aev-progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#18A45F,#48C989);}
+        .aev-progress-pct{color:#218B58;font-size:.46rem;font-weight:950;min-width:24px;text-align:right;}
+        @media(max-width:1100px){.aev-insight-grid{grid-template-columns:1fr;}}
         </style>
-        """,
+        ''',
         unsafe_allow_html=True,
     )
 
     parts = [
         '<div class="aev-shell">',
         '<div class="aev-head">',
-        '<div class="aev-head-left">',
-        '<div class="aev-head-icon">▦</div>',
         '<div>',
-        '<div class="aev-kicker">Activity Execution Matrix</div>',
-        '<div class="aev-title">Activity Type – Event & Status Matrix</div>',
-        '<div class="aev-sub">Event-level execution status across Noida, Lucknow, Jaipur and Indore. Counts respond to the active Overview filters.</div>',
-        '</div></div>',
+        '<div class="aev-title">Activity Type – Event &amp; Status Matrix</div>',
+        '<div class="aev-sub">Campus-wise event execution status. Counts update automatically with the active Overview filters.</div>',
+        '</div>',
         '<div class="aev-head-badges">',
         f'<span class="aev-head-badge">{total_records:,} records</span>',
         f'<span class="aev-head-badge">{len(activity_order):,} activity types</span>',
-        f'<span class="aev-head-badge">{unique_events:,} tagged events</span>',
+        f'<span class="aev-head-badge">{unique_events:,} event types</span>',
         '</div>',
         '</div>',
         '<div class="aev-scroll">',
         '<table class="aev-table">',
         '<colgroup>',
-        '<col style="width:132px">',
-        '<col style="width:105px">',
-        *['<col style="width:45px">' for _ in range(len(campus_order) * len(status_order))],
+        '<col style="width:126px">',
+        '<col style="width:104px">',
+        *['<col style="width:54px">' for _ in range(len(campus_order) * len(status_order))],
         '</colgroup>',
         '<thead><tr>',
         '<th class="aev-left-head" rowspan="2">Activity Type</th>',
         '<th class="aev-left-head" rowspan="2">Event</th>',
     ]
 
-    campus_class = {
-        "Noida": "noida",
-        "Lucknow": "lucknow",
-        "Jaipur": "jaipur",
-        "Indore": "indore",
-    }
-
     for campus in campus_order:
         parts.append(
-            f'<th class="aev-campus-head {campus_class[campus]}" colspan="{len(status_order)}">'
-            f'{escape(campus)}</th>'
+            f'<th class="aev-campus-head" colspan="{len(status_order)}">{escape(campus)}</th>'
         )
 
     parts.append('</tr><tr>')
     for _campus in campus_order:
         for status in status_order:
-            parts.append(
-                f'<th class="aev-status-head {status.lower()}">{escape(status)}</th>'
-            )
+            parts.append(f'<th class="aev-status-head {status.lower()}">{escape(status)}</th>')
     parts.append('</tr></thead><tbody>')
 
     for row in rows:
         parts.append('<tr>')
-
         if row["show_activity"]:
             parts.append(
                 f'<td class="aev-activity-cell" rowspan="{row["rowspan"]}">'
-                f'{escape(row["activity"])}'
+                f'<span class="aev-activity-name">{escape(row["activity"])}</span>'
                 f'<span class="aev-activity-count">{row["activity_total"]:,}</span>'
                 '</td>'
             )
 
-        event_label = escape(row["event"])
         parts.append(
             '<td class="aev-event-cell">'
-            f'<span class="aev-event-main">{event_label}</span>'
+            f'<span class="aev-event-main">{escape(row["event"])}</span>'
             f'<span class="aev-event-count">{row["event_total"]:,}</span>'
             '</td>'
         )
 
         for campus in campus_order:
             for status in status_order:
-                value = row["counts"].get((campus, status), 0)
                 parts.append(
                     '<td class="aev-data-cell">'
-                    + _aev_count_cell(value, status)
+                    + _aev_count_cell(row["counts"].get((campus, status), 0), status)
                     + '</td>'
                 )
-
         parts.append('</tr>')
 
+    parts.append('<tr class="aev-total-row">')
+    parts.append('<td class="aev-total-label" colspan="2">Total</td>')
+    for campus in campus_order:
+        for status in status_order:
+            parts.append(f'<td>{int(campus_status[campus][status]):,}</td>')
+    parts.append('</tr>')
     parts.extend(['</tbody></table></div>'])
 
-    parts.append('<div class="aev-insights">')
-    parts.append(
-        '<div class="aev-insight-card blue">'
-        '<div class="aev-insight-label">Leading Campus</div>'
-        f'<div class="aev-insight-value">{escape(leading_campus)}</div>'
-        f'<div class="aev-insight-note">{leading_campus_count:,} records in the current filtered selection.</div>'
-        '</div>'
-    )
-    parts.append(
-        '<div class="aev-insight-card green">'
-        '<div class="aev-insight-label">Leading Activity</div>'
-        f'<div class="aev-insight-value">{escape(leading_activity)}</div>'
-        f'<div class="aev-insight-note">{leading_activity_count:,} records across the visible campus portfolio.</div>'
-        '</div>'
-    )
-    parts.append(
-        '<div class="aev-insight-card violet">'
-        '<div class="aev-insight-label">Top Event Combination</div>'
-        f'<div class="aev-insight-value">{escape(top_activity_event)}</div>'
-        f'<div class="aev-insight-note">{top_activity_event_count:,} tagged event records in this combination.</div>'
-        '</div>'
-    )
-    parts.append(
-        '<div class="aev-insight-card amber">'
-        '<div class="aev-insight-label">Execution Pipeline</div>'
-        f'<div class="aev-insight-value">{ready_pipeline:,} ready · {completed_count:,} completed</div>'
-        f'<div class="aev-insight-note">{cancelled_count:,} cancelled · {rescheduled_count:,} rescheduled.</div>'
-        '</div>'
-    )
+    total_activity_share = (leading_campus_count / total_records * 100.0) if total_records else 0.0
+    overall_completion = (completed_count / total_records * 100.0) if total_records else 0.0
+
+    key_points = [
+        f'{leading_campus} has the highest current activity volume ({leading_campus_count:,}; {total_activity_share:.1f}% of records).',
+        f'{leading_activity} is the leading activity type with {leading_activity_count:,} records.',
+        f'{top_activity_event} is the strongest tagged event combination ({top_activity_event_count:,} records).',
+        f'{ready_pipeline:,} records are currently in planned / confirmed / rescheduled execution pipeline.',
+    ]
+
+    action_points = [
+        f'Convert the {ready_pipeline:,} ready-pipeline records into completed execution.',
+        f'Prioritize follow-up in {leading_campus}, the highest-volume campus in the current selection.',
+        f'Review {planned_count:,} planned and {confirmed_count:,} confirmed records for ownership and event readiness.',
+        f'Address {cancelled_count:,} cancelled and {rescheduled_count:,} rescheduled records before adding avoidable new volume.',
+    ]
+
+    parts.append('<div class="aev-insight-grid">')
+
+    parts.append('<div class="aev-insight-card">')
+    parts.append('<div class="aev-card-title"><span class="aev-card-icon insight">💡</span>Key Insights</div>')
+    for idx, value in enumerate(key_points, 1):
+        parts.append(
+            '<div class="aev-point">'
+            f'<span class="aev-point-num">{idx}</span>'
+            f'<span class="aev-point-text">{escape(value)}</span>'
+            '</div>'
+        )
     parts.append('</div>')
 
-    action_text = (
-        f"Convert the {ready_pipeline:,} planned / confirmed / rescheduled records into completed execution, "
-        f"starting with {leading_campus} and the highest-volume activity ({leading_activity})."
-        if ready_pipeline > 0
-        else f"Maintain execution quality in {leading_campus}; no ready pipeline is visible in the current selection."
-    )
+    parts.append('<div class="aev-insight-card">')
+    parts.append('<div class="aev-card-title"><span class="aev-card-icon performance">▥</span>Campus Execution Total</div>')
     parts.append(
-        '<div class="aev-action-strip">'
-        '<strong>Recommended Action:</strong> '
-        f'{escape(action_text)}'
-        '</div>'
+        '<table class="aev-perf-table"><thead><tr>'
+        '<th>Campus</th><th>Records</th><th>Planned</th><th>Completed</th><th>Completion %</th>'
+        '</tr></thead><tbody>'
     )
+    for _, perf in campus_perf_df.iterrows():
+        pct = max(0.0, min(100.0, float(perf["Completion %"])))
+        parts.append(
+            '<tr>'
+            f'<td>{escape(str(perf["Campus"]))}</td>'
+            f'<td>{int(perf["Total"]):,}</td>'
+            f'<td>{int(perf["Planned"]):,}</td>'
+            f'<td>{int(perf["Completed"]):,}</td>'
+            '<td><div class="aev-progress-wrap">'
+            '<div class="aev-progress-track">'
+            f'<div class="aev-progress-fill" style="width:{pct:.1f}%"></div>'
+            '</div>'
+            f'<span class="aev-progress-pct">{pct:.0f}%</span>'
+            '</div></td>'
+            '</tr>'
+        )
+    parts.append(
+        '<tr>'
+        '<td>Total</td>'
+        f'<td>{total_records:,}</td>'
+        f'<td>{planned_count:,}</td>'
+        f'<td>{completed_count:,}</td>'
+        '<td><div class="aev-progress-wrap">'
+        '<div class="aev-progress-track">'
+        f'<div class="aev-progress-fill" style="width:{max(0,min(100,overall_completion)):.1f}%"></div>'
+        '</div>'
+        f'<span class="aev-progress-pct">{overall_completion:.0f}%</span>'
+        '</div></td>'
+        '</tr>'
+    )
+    parts.append('</tbody></table></div>')
 
+    parts.append('<div class="aev-insight-card">')
+    parts.append('<div class="aev-card-title"><span class="aev-card-icon action">◎</span>Recommended Actions</div>')
+    for idx, value in enumerate(action_points, 1):
+        parts.append(
+            '<div class="aev-point">'
+            f'<span class="aev-point-num">{idx}</span>'
+            f'<span class="aev-point-text">{escape(value)}</span>'
+            '</div>'
+        )
+    parts.append('</div>')
+
+    parts.append('</div>')
     parts.append('</div>')
     st.markdown(''.join(parts), unsafe_allow_html=True)
 
