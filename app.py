@@ -2615,6 +2615,503 @@ div[data-testid="stButton"] button:hover {
     }
 }
 
+
+/* =========================================================
+   FILTERS — PREMIUM JAIPURIA CONTROL DECK
+   ========================================================= */
+
+/* no secondary sentence below Filters */
+.filter-note {
+    display: none !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) {
+    position: relative;
+    overflow: hidden;
+    padding: .50rem .56rem .50rem .56rem !important;
+    border: 1px solid rgba(218,205,192,.95) !important;
+    border-radius: 17px !important;
+    background:
+        radial-gradient(circle at 8% 15%, rgba(229,140,43,.070), transparent 24%),
+        radial-gradient(circle at 91% 86%, rgba(107,63,125,.060), transparent 26%),
+        linear-gradient(125deg,#FFFDFC 0%,#FAF7F2 45%,#FCF9F6 100%) !important;
+    background-size: 125% 125% !important;
+    box-shadow:
+        0 14px 34px rgba(49,42,38,.070),
+        0 1px 0 rgba(255,255,255,.95) inset !important;
+    animation: filterDeckBreath 8.5s ease-in-out infinite;
+    align-items: end !important;
+}
+
+@keyframes filterDeckBreath {
+    0%,100% {
+        background-position: 0% 50%;
+        box-shadow:
+            0 14px 34px rgba(49,42,38,.060),
+            0 1px 0 rgba(255,255,255,.95) inset;
+    }
+    50% {
+        background-position: 100% 50%;
+        box-shadow:
+            0 17px 40px rgba(72,51,44,.090),
+            0 1px 0 rgba(255,255,255,.95) inset;
+    }
+}
+
+/* orange-violet moving brand line */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)::before {
+    content: "";
+    position: absolute;
+    z-index: 6;
+    top: 0;
+    left: -26%;
+    width: 25%;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        rgba(229,140,43,0),
+        #E58C2B,
+        #F1B45C,
+        #6B3F7D,
+        rgba(107,63,125,0)
+    );
+    animation: filterDeckSweep 6.8s ease-in-out infinite;
+}
+
+@keyframes filterDeckSweep {
+    0%,16%  { left:-26%; opacity:0; }
+    28%     { opacity:1; }
+    57%     { left:108%; opacity:.95; }
+    70%,100%{ left:108%; opacity:0; }
+}
+
+/* soft moving ambient highlight */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    width: 170px;
+    height: 170px;
+    right: -60px;
+    top: -105px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(229,140,43,.10) 0%,
+        rgba(107,63,125,.055) 42%,
+        rgba(255,255,255,0) 72%
+    );
+    animation: filterOrbFloat 8s ease-in-out infinite;
+}
+
+@keyframes filterOrbFloat {
+    0%,100% { transform: translate(0,0) scale(1); }
+    50%     { transform: translate(-24px,15px) scale(1.08); }
+}
+
+/* labels */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stSelectbox"] label,
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] label {
+    color:#425B74 !important;
+    font-size:.62rem !important;
+    font-weight:900 !important;
+    letter-spacing:.025em !important;
+    margin:0 0 .13rem .05rem !important;
+}
+
+/* filter control tiles */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-baseweb="select"] > div,
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] input {
+    position: relative !important;
+    min-height:2.40rem !important;
+    height:2.40rem !important;
+    border-radius:11px !important;
+    border:1px solid #E4D9CF !important;
+    color:#17395A !important;
+    background:
+        linear-gradient(145deg,#FFFFFF 0%,#FBF7F1 100%) !important;
+    box-shadow:
+        0 5px 13px rgba(58,47,42,.042),
+        0 1px 0 rgba(255,255,255,.98) inset !important;
+    transition:
+        transform .20s ease,
+        box-shadow .20s ease,
+        border-color .20s ease,
+        background .20s ease !important;
+}
+
+/* motion on every filter tile */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stSelectbox"],
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] {
+    animation: filterTileFloat 6.4s ease-in-out infinite;
+}
+
+@keyframes filterTileFloat {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-1px); }
+}
+
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-baseweb="select"] > div:hover,
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] input:hover {
+    transform:translateY(-3px) !important;
+    border-color:#D5B99E !important;
+    background:
+        linear-gradient(145deg,#FFFFFF 0%,#FFF7ED 100%) !important;
+    box-shadow:
+        0 11px 24px rgba(74,53,45,.100),
+        0 0 0 1px rgba(229,140,43,.070) inset !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-baseweb="select"] > div:focus-within,
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] input:focus {
+    border-color:#A87343 !important;
+    box-shadow:
+        0 12px 26px rgba(78,55,44,.100),
+        0 0 0 2px rgba(229,140,43,.13) !important;
+}
+
+/* value text and caret */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-baseweb="select"] span {
+    color:#17395A !important;
+    font-weight:700 !important;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) svg {
+    color:#6B3F7D !important;
+}
+
+/* reset */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stButton"] button {
+    min-height:2.40rem !important;
+    height:2.40rem !important;
+    border-radius:11px !important;
+    border:1px solid rgba(39,63,89,.25) !important;
+    color:#FFFFFF !important;
+    background:
+        linear-gradient(115deg,#17395A 0%,#254E74 38%,#6B3F7D 72%,#E58C2B 120%) !important;
+    background-size:190% 100% !important;
+    box-shadow:
+        0 9px 20px rgba(23,57,90,.20),
+        0 1px 0 rgba(255,255,255,.14) inset !important;
+    animation: resetFlow 5.5s ease-in-out infinite !important;
+}
+
+@keyframes resetFlow {
+    0%,100% { background-position:0% 50%; }
+    50%     { background-position:100% 50%; }
+}
+
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stButton"] button:hover {
+    transform:translateY(-3px) scale(1.015) !important;
+    box-shadow:0 14px 28px rgba(23,57,90,.27) !important;
+}
+
+
+/* =========================================================
+   EXECUTIVE SNAPSHOT — PREMIUM HEADER + KPI RAIL
+   ========================================================= */
+
+.snapshot-banner {
+    position: relative;
+    overflow: hidden;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    margin:.26rem 0 .32rem 0;
+    padding:.54rem .68rem .50rem .74rem;
+    border-radius:14px;
+    border:1px solid #E6DED5;
+    background:
+        radial-gradient(circle at 91% 15%, rgba(107,63,125,.060), transparent 28%),
+        linear-gradient(110deg,#FFFDFC 0%,#F9F5EF 55%,#FCF9F6 100%);
+    box-shadow:
+        0 9px 24px rgba(52,45,40,.045),
+        inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+.snapshot-banner::before {
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:4px;
+    background:linear-gradient(180deg,#E58C2B,#F1B45C,#6B3F7D);
+}
+
+.snapshot-banner::after {
+    content:"";
+    position:absolute;
+    left:-34%;
+    top:0;
+    bottom:0;
+    width:22%;
+    transform:skewX(-17deg);
+    background:linear-gradient(
+        105deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.72),
+        rgba(255,255,255,0)
+    );
+    animation:snapshotSheen 7.5s ease-in-out infinite;
+}
+
+@keyframes snapshotSheen {
+    0%,20% { left:-34%; opacity:0; }
+    32%    { opacity:.80; }
+    54%    { left:110%; opacity:0; }
+    100%   { left:110%; opacity:0; }
+}
+
+.snapshot-copy,
+.snapshot-badges {
+    position:relative;
+    z-index:2;
+}
+
+.snapshot-eyebrow {
+    color:#E08727;
+    font-size:.49rem;
+    font-weight:950;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+.snapshot-title {
+    color:#17395A;
+    font-size:1.02rem;
+    font-weight:950;
+    letter-spacing:-.015em;
+    margin-top:.07rem;
+}
+
+.snapshot-sub {
+    color:#7A8998;
+    font-size:.57rem;
+    margin-top:.08rem;
+}
+
+.snapshot-badges {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.snapshot-badge {
+    padding:.20rem .36rem;
+    border-radius:999px;
+    font-size:.45rem;
+    font-weight:950;
+    letter-spacing:.05em;
+    border:1px solid;
+    box-shadow:0 3px 9px rgba(55,45,40,.035);
+}
+
+.snapshot-badge.navy {
+    color:#17395A;
+    background:#EEF4F9;
+    border-color:#D9E4ED;
+}
+.snapshot-badge.orange {
+    color:#9B601D;
+    background:#FFF4E6;
+    border-color:#F1D9BB;
+}
+.snapshot-badge.violet {
+    color:#6B3F7D;
+    background:#F6F0F8;
+    border-color:#E5D8EA;
+}
+
+/* KPI rail container */
+.snapshot-motion-marker {
+    display:none;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
+    position:relative;
+    overflow:hidden;
+    padding:.40rem .42rem .44rem .42rem !important;
+    border-radius:16px;
+    border:1px solid #E5DDD4;
+    background:
+        radial-gradient(circle at 6% 15%, rgba(229,140,43,.048), transparent 25%),
+        radial-gradient(circle at 94% 90%, rgba(107,63,125,.045), transparent 25%),
+        linear-gradient(135deg,#FFFEFC 0%,#FAF7F2 100%);
+    box-shadow:
+        0 12px 30px rgba(53,45,40,.055),
+        inset 0 1px 0 rgba(255,255,255,.96);
+}
+
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker)::before {
+    content:"";
+    position:absolute;
+    left:-28%;
+    top:0;
+    width:24%;
+    height:2px;
+    background:linear-gradient(
+        90deg,
+        rgba(229,140,43,0),
+        #E58C2B,
+        #F0B04F,
+        #6B3F7D,
+        rgba(107,63,125,0)
+    );
+    animation:snapshotRailSweep 6.8s ease-in-out infinite;
+}
+
+@keyframes snapshotRailSweep {
+    0%,17%  { left:-28%; opacity:0; }
+    29%     { opacity:1; }
+    58%     { left:110%; opacity:.95; }
+    70%,100%{ left:110%; opacity:0; }
+}
+
+/* KPI tiles feel more like a premium instrument panel */
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
+    min-height:72px !important;
+    height:72px !important;
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.94) 58%,var(--wash) 150%) !important;
+    border-color:#E5DED7 !important;
+    box-shadow:
+        0 6px 16px rgba(51,43,39,.045),
+        inset 0 1px 0 rgba(255,255,255,.96) !important;
+    animation:kpiPremiumFloat 6s ease-in-out infinite !important;
+}
+
+@keyframes kpiPremiumFloat {
+    0%,100% { transform:translateY(0); }
+    50%     { transform:translateY(-1.5px); }
+}
+
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi:hover {
+    transform:translateY(-4px) scale(1.008) !important;
+    border-color:#D7C8B9 !important;
+    box-shadow:
+        0 14px 28px rgba(58,45,38,.105),
+        0 0 0 1px rgba(229,140,43,.055) inset !important;
+}
+
+
+/* =========================================================
+   Q1 CHART — SHADOW + MOTION
+   ========================================================= */
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker) {
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease !important;
+    animation:q1CardBreath 6.4s ease-in-out infinite;
+}
+
+@keyframes q1CardBreath {
+    0%,100% {
+        box-shadow:
+            0 12px 30px rgba(46,42,38,.060),
+            inset 0 1px 0 rgba(255,255,255,.96);
+    }
+    50% {
+        box-shadow:
+            0 18px 38px rgba(65,48,41,.095),
+            inset 0 1px 0 rgba(255,255,255,.96);
+    }
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker):hover {
+    transform:translateY(-3px);
+    border-color:#D7C8B9 !important;
+    box-shadow:
+        0 20px 42px rgba(58,43,38,.120),
+        inset 0 1px 0 rgba(255,255,255,.96) !important;
+}
+
+/* actual plotting surface gets a soft floating shadow */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+div[data-testid="stPlotlyChart"] {
+    position:relative;
+    overflow:hidden;
+    border-radius:13px;
+    background:#FCFAF7;
+    box-shadow:
+        0 10px 22px rgba(64,48,40,.070),
+        0 0 0 1px rgba(229,219,209,.85);
+    transition:
+        transform .24s ease,
+        box-shadow .24s ease;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+div[data-testid="stPlotlyChart"]:hover {
+    transform:translateY(-2px);
+    box-shadow:
+        0 16px 30px rgba(65,48,40,.105),
+        0 0 0 1px rgba(216,198,181,.95);
+}
+
+/* ultra-subtle light sweep over chart surface */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+div[data-testid="stPlotlyChart"]::after {
+    content:"";
+    position:absolute;
+    pointer-events:none;
+    top:0;
+    bottom:0;
+    left:-34%;
+    width:22%;
+    transform:skewX(-18deg);
+    background:linear-gradient(
+        105deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.30),
+        rgba(255,255,255,0)
+    );
+    animation:q1PlotSheen 8s ease-in-out infinite;
+}
+
+@keyframes q1PlotSheen {
+    0%,22% { left:-34%; opacity:0; }
+    34%    { opacity:.55; }
+    54%    { left:112%; opacity:0; }
+    100%   { left:112%; opacity:0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker),
+    div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)::before,
+    div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)::after,
+    div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+    div[data-testid="stSelectbox"],
+    div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+    div[data-testid="stDateInput"],
+    .snapshot-banner::after,
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker)::before,
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi,
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker),
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+    div[data-testid="stPlotlyChart"]::after {
+        animation:none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -3611,9 +4108,6 @@ st.markdown(header_html, unsafe_allow_html=True)
 # Target Segment → Owner → Priority → Date Range → Reset
 # =========================================================
 st.markdown('<div class="filter-panel-title">Filters</div>', unsafe_allow_html=True)
-    unsafe_allow_html=True,
-)
-
 filter_cols = st.columns(
     [0.82, 1.00, 0.78, 0.82, 1.02, 0.90, 0.70, 1.20, 0.66],
     gap="small",
@@ -3779,14 +4273,34 @@ reach_achievement = _pct(actual_reach, planned_reach)
 # =========================================================
 # EXECUTIVE SNAPSHOT
 # =========================================================
-overview_section(
-    "Outreach Performance at a Glance",
-    "Core volume, event coverage and student-reach indicators for the current filter selection.",
+st.markdown(
+    (
+        '<div class="snapshot-banner">'
+            '<div class="snapshot-copy">'
+                '<div class="snapshot-eyebrow">Executive Snapshot</div>'
+                '<div class="snapshot-title">Outreach Performance at a Glance</div>'
+                '<div class="snapshot-sub">'
+                    'Live outreach volume, event coverage and student-reach performance.'
+                '</div>'
+            '</div>'
+            '<div class="snapshot-badges">'
+                '<span class="snapshot-badge navy">LIVE VIEW</span>'
+                '<span class="snapshot-badge orange">MANAGEMENT SUMMARY</span>'
+                '<span class="snapshot-badge violet">AUTO-SYNC</span>'
+            '</div>'
+        '</div>'
+    ),
+    unsafe_allow_html=True,
 )
 
 k1, k2, k3, k4, k5, k6 = st.columns(6, gap="small")
 
 with k1:
+    st.markdown(
+        '<span class="snapshot-motion-marker"></span>',
+        unsafe_allow_html=True,
+    )
+
     professional_kpi(
         "Total Activities",
         f"{total_activities:,}",
