@@ -6516,19 +6516,7 @@ st.markdown(header_html, unsafe_allow_html=True)
 
 with st.container(border=True):
     st.markdown(
-        (
-            '<span class="custom-filter-deck-marker"></span>'
-            '<div class="custom-filter-deck-head">'
-                '<div class="custom-filter-title-wrap">'
-                    '<span class="custom-filter-funnel">'
-                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'
-                            '<path d="M4 5h16l-6.2 7.2V18l-3.6 2v-7.8L4 5z"/>'
-                        '</svg>'
-                    '</span>'
-                    '<span class="custom-filter-title">Filters</span>'
-                '</div>'
-            '</div>'
-        ),
+        '<span class="custom-filter-deck-marker"></span>',
         unsafe_allow_html=True,
     )
 
@@ -6702,43 +6690,10 @@ actual_reach = 0 if pd.isna(actual_reach_value) else int(actual_reach_value)
 reach_achievement = _pct(actual_reach, planned_reach)
 
 
-KPI_ICONS = {
-    "activities": """<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h4l5-4v10l-5-4H4z"/><path d="M15 9.5c1.7 1.4 1.7 3.6 0 5"/><path d="M18 7c3.3 2.8 3.3 7.2 0 10"/></svg>""",
-    "events": """<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="M8 14h3M13 14h3M8 18h3"/></svg>""",
-    "institutions": """<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-4 7 4v12"/><path d="M9 13h2M13 13h2M9 17h2M13 17h2"/></svg>""",
-    "cities": """<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>""",
-    "planned": """<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 2.6-7 6-7s6 3 6 7M14 14c3 0 6 2 6 6"/></svg>""",
-    "actual": """<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6M15 6h3v3"/></svg>""",
-}
-
 # =========================================================
-# EXECUTIVE SNAPSHOT
+# EXECUTIVE KPI CARDS
+# Clean KPI rail only — no banner / watermark / badges
 # =========================================================
-st.markdown(
-    (
-        '<div class="snapshot-banner">'
-            '<div class="snapshot-symbol">'
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">'
-                    '<path d="M5 20V13M10 20V9M15 20V5M20 20V11"/>'
-                '</svg>'
-            '</div>'
-            '<div class="snapshot-copy">'
-                '<div class="snapshot-eyebrow">Executive Snapshot</div>'
-                '<div class="snapshot-title">Outreach Performance at a Glance</div>'
-                '<div class="snapshot-sub">'
-                    'Live outreach volume, event coverage and student-reach performance.'
-                '</div>'
-            '</div>'
-            '<div class="snapshot-badges">'
-                '<span class="snapshot-badge navy">LIVE VIEW</span>'
-                '<span class="snapshot-badge orange">MANAGEMENT SUMMARY</span>'
-                '<span class="snapshot-badge violet">AUTO-SYNC</span>'
-            '</div>'
-        '</div>'
-    ),
-    unsafe_allow_html=True,
-)
-
 k1, k2, k3, k4, k5, k6 = st.columns(6, gap="small")
 
 with k1:
@@ -6751,7 +6706,7 @@ with k1:
         "Total Activities",
         f"{total_activities:,}",
         "Filtered outreach activity volume",
-        KPI_ICONS["activities"],
+        "●",
         "kpi-blue",
     )
 
@@ -6760,7 +6715,7 @@ with k2:
         "Total Events",
         f"{total_events:,}",
         "Records with Event populated",
-        KPI_ICONS["events"],
+        "✦",
         "kpi-cyan",
     )
 
@@ -6769,7 +6724,7 @@ with k3:
         "Institutions",
         f"{institutions:,}",
         "Unique institutions / event names",
-        KPI_ICONS["institutions"],
+        "◆",
         "kpi-violet",
     )
 
@@ -6778,7 +6733,7 @@ with k4:
         "Cities Covered",
         f"{cities:,}",
         "Current outreach footprint",
-        KPI_ICONS["cities"],
+        "⌖",
         "kpi-teal",
     )
 
@@ -6787,7 +6742,7 @@ with k5:
         "Planned Reach",
         f"{planned_reach:,}",
         "Planned student / faculty reach",
-        KPI_ICONS["planned"],
+        "◎",
         "kpi-amber",
     )
 
@@ -6796,7 +6751,7 @@ with k6:
         "Actual Reach",
         f"{actual_reach:,}",
         f"{reach_achievement:.1f}% of planned reach" if planned_reach else "Actual reach entered",
-        KPI_ICONS["actual"],
+        "✓",
         "kpi-green",
     )
 
@@ -8116,233 +8071,125 @@ div[data-testid="stPopoverBody"] {
 }
 
 /* =========================================================
-   EXECUTIVE SNAPSHOT — PREMIUM COLORFUL VERSION
-   Final override. KPI logic stays unchanged.
+   FILTER DECK CLEAN-UP — HEADING REMOVED
    ========================================================= */
 
-.snapshot-banner {
+/* Filters title/icon removed intentionally; controls are the focus. */
+.custom-filter-deck-head,
+.custom-filter-title-wrap,
+.custom-filter-funnel,
+.custom-filter-title,
+.custom-filter-note,
+.custom-filter-signature {
+    display: none !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) {
+    padding: .72rem .92rem .72rem .92rem !important;
+}
+
+/* =========================================================
+   EXECUTIVE KPI RAIL — COLORFUL PROFESSIONAL CARDS
+   No banner, no watermark, no management badges.
+   ========================================================= */
+
+.snapshot-banner,
+.snapshot-symbol,
+.snapshot-copy,
+.snapshot-badges,
+.snapshot-eyebrow,
+.snapshot-title,
+.snapshot-sub,
+.snapshot-badge {
+    display: none !important;
+}
+
+.snapshot-motion-marker {
+    display: none !important;
+}
+
+/* One premium shell for all six KPI cards */
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
     position: relative !important;
-    overflow: hidden !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 1rem !important;
-    margin: .22rem 0 0 0 !important;
-    padding: .70rem .92rem .66rem 4.20rem !important;
-    border: 1px solid #E2E9F4 !important;
-    border-bottom: 0 !important;
-    border-radius: 19px 19px 0 0 !important;
-    min-height: 4.65rem !important;
+    overflow: visible !important;
+    margin: .22rem 0 .48rem 0 !important;
+    padding: .70rem .72rem .72rem .72rem !important;
+    gap: .62rem !important;
+    border: 1px solid #DFE7F2 !important;
+    border-radius: 20px !important;
     background:
-        radial-gradient(circle at 14% 18%, rgba(59,130,246,.075), transparent 24%),
-        radial-gradient(circle at 85% 10%, rgba(245,158,11,.085), transparent 22%),
-        radial-gradient(circle at 96% 88%, rgba(139,92,246,.075), transparent 25%),
-        linear-gradient(118deg,#FFFFFF 0%,#FFFDFC 52%,#FBFAFF 100%) !important;
+        radial-gradient(circle at 3% 15%, rgba(45,108,223,.065), transparent 23%),
+        radial-gradient(circle at 97% 12%, rgba(124,58,237,.055), transparent 22%),
+        radial-gradient(circle at 82% 100%, rgba(245,158,11,.045), transparent 24%),
+        linear-gradient(135deg,#FFFFFF 0%,#FBFCFF 52%,#FAF9FF 100%) !important;
     box-shadow:
-        0 13px 31px rgba(23,48,88,.075),
-        0 4px 12px rgba(23,48,88,.035),
+        0 16px 38px rgba(25,50,88,.085),
+        0 5px 14px rgba(25,50,88,.035),
         inset 0 1px 0 rgba(255,255,255,.98) !important;
 }
 
-.snapshot-banner::before {
-    content: "" !important;
-    position: absolute !important;
-    inset: 0 auto 0 0 !important;
-    width: 6px !important;
-    border-radius: 19px 0 0 0 !important;
-    background: linear-gradient(180deg,#F59E0B 0%,#F97316 28%,#8B5CF6 64%,#3B82F6 100%) !important;
-    box-shadow: 3px 0 11px rgba(124,58,237,.10) !important;
-}
-
-.snapshot-banner::after {
-    content: "Greater Minds\\A Brighter Futures" !important;
-    white-space: pre !important;
-    position: absolute !important;
-    left: 53% !important;
-    top: 50% !important;
-    transform: translate(-50%,-50%) rotate(-5deg) !important;
-    width: auto !important;
-    height: auto !important;
-    background: none !important;
-    color: rgba(205,151,105,.24) !important;
-    font-family: Georgia, serif !important;
-    font-style: italic !important;
-    font-size: .92rem !important;
-    font-weight: 700 !important;
-    line-height: .88 !important;
-    text-align: center !important;
-    pointer-events: none !important;
-    animation: snapshotWatermarkPremium 7.4s ease-in-out infinite !important;
-}
-
-@keyframes snapshotWatermarkPremium {
-    0%,100% { opacity:.62; transform:translate(-50%,-50%) rotate(-5deg) scale(1); }
-    50% { opacity:.94; transform:translate(-50%,-53%) rotate(-5deg) scale(1.025); }
-}
-
-.snapshot-symbol {
-    position: absolute !important;
-    z-index: 4 !important;
-    left: .92rem !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    width: 48px !important;
-    height: 48px !important;
-    border-radius: 16px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: #FFFFFF !important;
-    background: linear-gradient(145deg,#5C4CF3 0%,#8C4DE1 46%,#F59A30 100%) !important;
-    box-shadow:
-        0 13px 26px rgba(105,72,210,.24),
-        inset 0 1px 0 rgba(255,255,255,.30) !important;
-    animation: snapshotSymbolFloat 4.8s ease-in-out infinite !important;
-}
-
-@keyframes snapshotSymbolFloat {
-    0%,100% { transform:translateY(-50%); }
-    50% { transform:translateY(calc(-50% - 2px)); }
-}
-
-.snapshot-symbol svg {
-    width: 24px !important;
-    height: 24px !important;
-}
-
-.snapshot-copy,
-.snapshot-badges {
-    position: relative !important;
-    z-index: 4 !important;
-}
-
-.snapshot-eyebrow {
-    color: #F08A1C !important;
-    font-size: .52rem !important;
-    font-weight: 950 !important;
-    letter-spacing: .14em !important;
-    text-transform: uppercase !important;
-    margin-bottom: .08rem !important;
-}
-
-.snapshot-title {
-    color: #0D2F59 !important;
-    font-size: 1.12rem !important;
-    font-weight: 950 !important;
-    line-height: 1.05 !important;
-    letter-spacing: -.018em !important;
-    margin: 0 !important;
-}
-
-.snapshot-sub {
-    color: #778AA3 !important;
-    font-size: .60rem !important;
-    margin-top: .14rem !important;
-    line-height: 1.30 !important;
-}
-
-.snapshot-badges {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    flex-wrap: wrap !important;
-    justify-content: flex-end !important;
-}
-
-.snapshot-badge {
-    padding: .28rem .56rem !important;
-    border-radius: 999px !important;
-    font-size: .45rem !important;
-    font-weight: 900 !important;
-    letter-spacing: .025em !important;
-    border: 1px solid rgba(255,255,255,.82) !important;
-    box-shadow:
-        0 5px 12px rgba(26,47,84,.055),
-        inset 0 1px 0 rgba(255,255,255,.88) !important;
-}
-
-.snapshot-badge.navy {
-    color: #174A86 !important;
-    background: linear-gradient(180deg,#EEF6FF 0%,#DFEDFF 100%) !important;
-    border-color: #D5E5F7 !important;
-}
-
-.snapshot-badge.orange {
-    color: #A86009 !important;
-    background: linear-gradient(180deg,#FFF7EA 0%,#FFE8C1 100%) !important;
-    border-color: #F5D9A7 !important;
-}
-
-.snapshot-badge.violet {
-    color: #7436C3 !important;
-    background: linear-gradient(180deg,#FAF4FF 0%,#EEDFFF 100%) !important;
-    border-color: #E5D5F7 !important;
-}
-
-/* KPI rail joins visually with the snapshot banner */
-.snapshot-motion-marker { display:none !important; }
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
-    position: relative !important;
-    margin-top: -1px !important;
-    padding: .56rem .52rem .62rem .52rem !important;
-    border: 1px solid #E2E9F4 !important;
-    border-top: 1px solid #F0F4FA !important;
-    border-radius: 0 0 19px 19px !important;
-    background: linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%) !important;
-    box-shadow:
-        0 13px 31px rgba(23,48,88,.075),
-        0 4px 12px rgba(23,48,88,.035) !important;
-    overflow: visible !important;
-    gap: .48rem !important;
-}
-
+/* premium multi-color top line */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker)::before {
     content: "" !important;
     position: absolute !important;
-    left: 13% !important;
-    right: 13% !important;
+    left: 18px !important;
+    right: 18px !important;
     top: 0 !important;
-    height: 2px !important;
+    height: 3px !important;
     border-radius: 999px !important;
-    background: linear-gradient(90deg,rgba(245,158,11,.18) 0%,rgba(124,58,237,.70) 52%,rgba(16,185,129,.18) 100%) !important;
+    background: linear-gradient(
+        90deg,
+        #2D6CDF 0%,
+        #11A6BA 20%,
+        #7C4DDE 40%,
+        #14A38B 60%,
+        #E59A1F 80%,
+        #21A768 100%
+    ) !important;
+    opacity: .95 !important;
 }
 
-/* Premium KPI tiles */
+/* card base */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
     position: relative !important;
     overflow: hidden !important;
-    min-height: 82px !important;
-    height: 82px !important;
-    border-radius: 15px !important;
-    padding: .62rem .64rem .55rem .66rem !important;
-    grid-template-columns: 43px minmax(0,1fr) !important;
-    grid-template-rows: 22px 18px 14px !important;
-    column-gap: .58rem !important;
+    min-height: 98px !important;
+    height: 98px !important;
+    border-radius: 17px !important;
+    padding: .74rem .74rem .66rem .76rem !important;
+    grid-template-columns: 48px minmax(0,1fr) !important;
+    grid-template-rows: 31px 19px 17px !important;
+    column-gap: .72rem !important;
     row-gap: .08rem !important;
-    background: linear-gradient(135deg,#FFFFFF 0%,#FFFFFF 52%,var(--wash) 148%) !important;
+    align-items: center !important;
+    background:
+        linear-gradient(135deg,#FFFFFF 0%,#FFFFFF 48%,var(--wash) 145%) !important;
     border: 1px solid var(--border) !important;
     box-shadow:
-        0 10px 24px rgba(25,50,90,.065),
-        0 3px 9px rgba(25,50,90,.035),
-        inset 0 1px 0 rgba(255,255,255,.96) !important;
-    animation: kpiPremiumLift 5.8s ease-in-out infinite !important;
-    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease !important;
+        0 10px 24px rgba(25,49,86,.065),
+        0 3px 8px rgba(25,49,86,.025),
+        inset 0 1px 0 rgba(255,255,255,.98) !important;
+    animation: kpiExecutiveFloat 5.8s ease-in-out infinite !important;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease !important;
 }
 
-@keyframes kpiPremiumLift {
-    0%,100% { transform:translateY(0); }
-    50% { transform:translateY(-1.5px); }
+@keyframes kpiExecutiveFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-1.5px); }
 }
 
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi:hover {
-    transform: translateY(-4px) scale(1.008) !important;
+    transform: translateY(-5px) scale(1.012) !important;
     border-color: var(--accent2) !important;
     box-shadow:
-        0 16px 34px rgba(24,50,91,.125),
-        0 0 0 1px rgba(255,255,255,.80) inset !important;
+        0 18px 38px rgba(24,50,91,.145),
+        0 0 0 1px rgba(255,255,255,.82) inset !important;
 }
 
+/* top accent line */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::before {
     content: "" !important;
     position: absolute !important;
@@ -8350,109 +8197,175 @@ div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::befo
     right: 0 !important;
     top: 0 !important;
     width: 100% !important;
-    height: 3px !important;
-    border-radius: 15px 15px 0 0 !important;
-    background: linear-gradient(90deg,var(--accent) 0%,var(--accent2) 65%,rgba(255,255,255,0) 100%) !important;
-    opacity: .96 !important;
+    height: 4px !important;
+    border-radius: 17px 17px 0 0 !important;
+    background: linear-gradient(90deg,var(--accent),var(--accent2),rgba(255,255,255,0)) !important;
+    opacity: .97 !important;
 }
 
+/* color glow */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::after {
     content: "" !important;
     position: absolute !important;
-    right: -24px !important;
-    bottom: -32px !important;
-    width: 92px !important;
-    height: 92px !important;
+    right: -28px !important;
+    bottom: -38px !important;
+    width: 108px !important;
+    height: 108px !important;
     border-radius: 50% !important;
     background: radial-gradient(circle,var(--bubble) 0%,rgba(255,255,255,0) 72%) !important;
-    opacity: .86 !important;
+    opacity: .92 !important;
     pointer-events: none !important;
 }
 
+/* vivid icon tile */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon {
+    position: relative !important;
+    z-index: 3 !important;
     grid-column: 1 !important;
     grid-row: 1 / 4 !important;
-    width: 41px !important;
-    height: 41px !important;
-    border-radius: 14px !important;
+    width: 46px !important;
+    height: 46px !important;
     margin: 0 !important;
-    border: 1px solid var(--border) !important;
-    background: linear-gradient(145deg,rgba(255,255,255,.98),var(--iconbg)) !important;
+    border-radius: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #FFFFFF !important;
+    background: linear-gradient(145deg,var(--accent),var(--accent2)) !important;
+    border: 1px solid rgba(255,255,255,.45) !important;
     box-shadow:
-        0 9px 19px rgba(28,55,95,.085),
-        inset 0 1px 0 rgba(255,255,255,.96) !important;
-    color: var(--accent) !important;
+        0 10px 22px color-mix(in srgb, var(--accent) 25%, transparent),
+        inset 0 1px 0 rgba(255,255,255,.30) !important;
     font-size: 0 !important;
 }
 
+/* force SVG visibility — fixes blank icon boxes */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon svg {
-    width: 21px !important;
-    height: 21px !important;
+    position: relative !important;
+    z-index: 4 !important;
+    display: block !important;
+    width: 23px !important;
+    height: 23px !important;
+    color: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+    fill: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon svg * {
+    stroke: #FFFFFF !important;
+}
+
+/* subtle icon sheen */
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 3px !important;
+    z-index: 1 !important;
+    border-radius: 12px !important;
+    background: linear-gradient(145deg,rgba(255,255,255,.32),rgba(255,255,255,0) 55%) !important;
+    pointer-events: none !important;
+}
+
+/* value first */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .value {
+    position: relative !important;
+    z-index: 3 !important;
     grid-column: 2 !important;
     grid-row: 1 !important;
-    color: #0D2E59 !important;
-    font-size: 1.42rem !important;
+    align-self: end !important;
+    color: #0D2F59 !important;
+    font-size: 1.50rem !important;
     font-weight: 950 !important;
+    letter-spacing: -.032em !important;
     line-height: 1 !important;
-    letter-spacing: -.028em !important;
 }
 
+/* label */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .label {
+    position: relative !important;
+    z-index: 3 !important;
     grid-column: 2 !important;
     grid-row: 2 !important;
-    color: #254569 !important;
-    font-size: .51rem !important;
+    color: #23456D !important;
+    font-size: .58rem !important;
     font-weight: 900 !important;
     text-transform: none !important;
     letter-spacing: 0 !important;
-    line-height: 1 !important;
+    line-height: 1.08 !important;
 }
 
+/* description */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .sub {
+    position: relative !important;
+    z-index: 3 !important;
     grid-column: 2 !important;
     grid-row: 3 !important;
-    color: #8A9AAF !important;
-    font-size: .41rem !important;
-    line-height: 1.05 !important;
+    color: #8294AA !important;
+    font-size: .46rem !important;
     font-weight: 650 !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
-/* Card-specific stronger color system */
+/* small colored underline */
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .mini-line {
+    display: block !important;
+    position: absolute !important;
+    left: 5.00rem !important;
+    bottom: .38rem !important;
+    width: 36% !important;
+    height: 2px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg,var(--accent),var(--accent2),rgba(255,255,255,0)) !important;
+    opacity: .28 !important;
+}
+
+/* richer card color system */
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-blue {
-    --accent:#2D6DF2; --accent2:#69A6FF; --wash:#EEF5FF;
-    --border:#D5E4FD; --bubble:#DDEAFF; --iconbg:#EAF3FF;
+    --accent:#2E6FF2; --accent2:#72A7FF; --wash:#EEF5FF;
+    --border:#D4E3FF; --bubble:#DDEBFF; --iconbg:#E9F2FF;
 }
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-cyan {
-    --accent:#08A0B7; --accent2:#58D3DE; --wash:#ECFBFD;
-    --border:#CDEEF3; --bubble:#D8F5F8; --iconbg:#E7FAFC;
+    --accent:#0FA8BA; --accent2:#52D4E2; --wash:#ECFBFD;
+    --border:#CDEFF4; --bubble:#D6F5F8; --iconbg:#E6FAFC;
 }
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-violet {
-    --accent:#754CE1; --accent2:#B28CFF; --wash:#F5F0FF;
-    --border:#E3D8FA; --bubble:#EAE0FF; --iconbg:#F0E9FF;
+    --accent:#7B4FE1; --accent2:#B48DFF; --wash:#F6F1FF;
+    --border:#E5D9FA; --bubble:#ECE1FF; --iconbg:#F2EAFF;
 }
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-teal {
-    --accent:#12A18A; --accent2:#64D3C0; --wash:#EEFAF7;
-    --border:#D0ECE6; --bubble:#D8F2EC; --iconbg:#E7F8F4;
+    --accent:#14A58E; --accent2:#68D5C2; --wash:#EEFAF7;
+    --border:#D0EEE7; --bubble:#D8F3ED; --iconbg:#E8F9F5;
 }
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-amber {
-    --accent:#D98918; --accent2:#F5B84E; --wash:#FFF7EB;
-    --border:#F2DFBB; --bubble:#F9EAC7; --iconbg:#FFF3DB;
+    --accent:#E08B18; --accent2:#F6BC55; --wash:#FFF8EB;
+    --border:#F2DFB8; --bubble:#F9E9C7; --iconbg:#FFF3D9;
 }
 div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-green {
-    --accent:#16A45D; --accent2:#65D790; --wash:#EEFAF2;
-    --border:#D3EBD9; --bubble:#DCF3E2; --iconbg:#E8F7ED;
+    --accent:#19A861; --accent2:#68D894; --wash:#EFFAF3;
+    --border:#D2ECDC; --bubble:#DCF4E4; --iconbg:#E9F7EF;
 }
 
 @media (max-width: 1200px) {
-    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stHorizontalBlock"] { overflow-x:auto !important; }
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+    div[data-testid="stHorizontalBlock"] {
+        overflow-x: auto !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
+        overflow-x: auto !important;
+    }
 }
+
 @media (prefers-reduced-motion: reduce) {
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)::after,
-    .snapshot-banner::after,
-    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi { animation:none !important; }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
+        animation: none !important;
+    }
 }
 
 </style>
