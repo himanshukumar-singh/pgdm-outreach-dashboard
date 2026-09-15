@@ -3817,6 +3817,599 @@ div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker)
     }
 }
 
+
+/* =========================================================
+   Q1 RIGHT PANEL — CAMPUS EVENT + STATUS INTELLIGENCE
+   ========================================================= */
+
+.q1-event-status-panel {
+    position: relative;
+    overflow: hidden;
+    height: var(--q1-compact-panel-height, 500px);
+    min-height: var(--q1-compact-panel-height, 500px);
+    max-height: var(--q1-compact-panel-height, 500px);
+    box-sizing: border-box;
+    border-radius: 16px;
+    border: 1px solid #DCD5CE;
+    background:
+        radial-gradient(circle at 90% 8%, rgba(107,63,125,.07), transparent 24%),
+        linear-gradient(180deg,#17395A 0%,#17395A 24%,#FFFFFF 24%,#FCFAF7 100%);
+    box-shadow:
+        0 15px 34px rgba(44,39,37,.085),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    display: flex;
+    flex-direction: column;
+    animation: q1EventPanelFloat 5.6s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease;
+}
+
+.q1-event-status-panel:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 20px 42px rgba(44,39,37,.12),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.q1-event-status-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 24%;
+    background: linear-gradient(180deg,#F0A13A,#E17E20);
+}
+
+.q1-event-status-panel::after {
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: -44%;
+    width: 32%;
+    height: 150%;
+    transform: rotate(17deg);
+    background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.13),
+        rgba(255,255,255,0)
+    );
+    animation: q1EventPanelSheen 7.2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes q1EventPanelFloat {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-2px); }
+}
+
+@keyframes q1EventPanelSheen {
+    0%,18%  { left:-44%; opacity:0; }
+    31%     { opacity:.72; }
+    56%     { left:118%; opacity:0; }
+    100%    { left:118%; opacity:0; }
+}
+
+.q1-event-head {
+    position: relative;
+    z-index: 2;
+    padding: .60rem .72rem .50rem .78rem;
+}
+
+.q1-event-kicker {
+    color: #F2AD4C;
+    font-size: .49rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .11em;
+}
+
+.q1-event-title {
+    color: #FFFFFF;
+    font-size: .92rem;
+    font-weight: 950;
+    margin-top: .08rem;
+    line-height: 1.15;
+}
+
+.q1-event-sub {
+    color: rgba(255,255,255,.70);
+    font-size: .49rem;
+    line-height: 1.28;
+    margin-top: .09rem;
+}
+
+.q1-event-body {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: .48rem .56rem .54rem .56rem;
+}
+
+.q1-mini-section {
+    border-radius: 12px;
+    border: 1px solid #E4DED7;
+    background:
+        linear-gradient(145deg,#FFFFFF 0%,#FBF8F4 100%);
+    padding: .42rem .48rem .44rem .48rem;
+    box-shadow:
+        0 5px 13px rgba(55,46,42,.035),
+        inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+.q1-mini-section + .q1-mini-section {
+    margin-top: 7px;
+}
+
+.q1-mini-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .4rem;
+    margin-bottom: .34rem;
+}
+
+.q1-mini-heading .title {
+    color: #17395A;
+    font-size: .56rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+}
+
+.q1-mini-heading .meta {
+    color: #8A7460;
+    font-size: .47rem;
+    font-weight: 850;
+}
+
+.q1-event-row {
+    display: grid;
+    grid-template-columns: 55px 1fr 28px;
+    gap: 6px;
+    align-items: center;
+    min-height: 26px;
+    margin-bottom: 4px;
+}
+
+.q1-event-row:last-child {
+    margin-bottom: 0;
+}
+
+.q1-event-campus {
+    color: #425C76;
+    font-size: .49rem;
+    font-weight: 850;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.q1-event-bar-track {
+    position: relative;
+    overflow: hidden;
+    height: 8px;
+    border-radius: 999px;
+    background: #EEE8E1;
+    box-shadow: inset 0 1px 2px rgba(46,37,33,.07);
+}
+
+.q1-event-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background:
+        linear-gradient(90deg,#E58C2B 0%,#F1B45C 52%,#6B3F7D 100%);
+    background-size: 180% 100%;
+    animation: q1EventBarFlow 5s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(229,140,43,.16);
+}
+
+@keyframes q1EventBarFlow {
+    0%,100% { background-position: 0% 50%; }
+    50%     { background-position: 100% 50%; }
+}
+
+.q1-event-count {
+    color: #17395A;
+    font-size: .52rem;
+    font-weight: 950;
+    text-align: right;
+}
+
+.q1-status-row {
+    display: grid;
+    grid-template-columns: 55px 1fr;
+    gap: 6px;
+    align-items: center;
+    min-height: 28px;
+    margin-bottom: 4px;
+}
+
+.q1-status-row:last-child {
+    margin-bottom: 0;
+}
+
+.q1-status-stack {
+    display: flex;
+    width: 100%;
+    height: 12px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #EEE8E1;
+    box-shadow: inset 0 1px 2px rgba(46,37,33,.07);
+}
+
+.q1-status-seg {
+    height: 100%;
+    min-width: 0;
+    transition:
+        filter .18s ease,
+        transform .18s ease;
+    animation: q1StatusPulse 5.8s ease-in-out infinite;
+}
+
+.q1-status-seg:hover {
+    filter: brightness(1.08) saturate(1.08);
+}
+
+@keyframes q1StatusPulse {
+    0%,100% { filter: brightness(1); }
+    50%     { filter: brightness(1.035); }
+}
+
+.q1-status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 8px;
+    margin-top: .34rem;
+}
+
+.q1-status-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #718094;
+    font-size: .43rem;
+    font-weight: 750;
+}
+
+.q1-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.85);
+}
+
+.q1-event-footer {
+    margin-top: auto;
+    padding: .39rem .44rem;
+    border-radius: 10px;
+    background:
+        radial-gradient(circle at 95% 10%, rgba(107,63,125,.05), transparent 28%),
+        linear-gradient(90deg,#FFF7EC 0%,#FFFDFC 100%);
+    border: 1px solid #EADBC9;
+    border-left: 4px solid #E58C2B;
+    color: #5B6A7A;
+    font-size: .47rem;
+    line-height: 1.30;
+}
+
+.q1-event-footer strong {
+    color: #17395A;
+    font-weight: 950;
+}
+
+.q1-event-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    border-radius: 10px;
+    border: 1px dashed #DDCFC0;
+    background: #FFFDFC;
+    color: #8B98A5;
+    font-size: .49rem;
+    text-align: center;
+    padding: .5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .q1-event-status-panel,
+    .q1-event-status-panel::after,
+    .q1-event-bar-fill,
+    .q1-status-seg {
+        animation: none !important;
+    }
+}
+
+
+/* =========================================================
+   FULL-WIDTH MANAGEMENT SIGNAL SUMMARY
+   Sits below Activity + Event charts
+   ========================================================= */
+
+.q1-management-summary {
+    position: relative;
+    overflow: hidden;
+    margin: .52rem 0 .42rem 0;
+    border-radius: 16px;
+    border: 1px solid #DDD4CB;
+    background:
+        radial-gradient(circle at 92% 12%, rgba(107,63,125,.060), transparent 24%),
+        radial-gradient(circle at 7% 88%, rgba(229,140,43,.055), transparent 24%),
+        linear-gradient(120deg,#FFFDFC 0%,#F9F5EF 56%,#FCF9F6 100%);
+    box-shadow:
+        0 14px 34px rgba(48,41,37,.070),
+        inset 0 1px 0 rgba(255,255,255,.96);
+    animation: q1SummaryBreath 6.4s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease;
+}
+
+.q1-management-summary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 19px 42px rgba(48,41,37,.105),
+        inset 0 1px 0 rgba(255,255,255,.98);
+}
+
+.q1-management-summary::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(180deg,#E58C2B 0%,#F1B45C 45%,#6B3F7D 100%);
+}
+
+.q1-management-summary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -34%;
+    width: 22%;
+    transform: skewX(-18deg);
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.70),
+        rgba(255,255,255,0)
+    );
+    animation: q1SummarySheen 7.4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes q1SummaryBreath {
+    0%,100% {
+        box-shadow:
+            0 14px 34px rgba(48,41,37,.060),
+            inset 0 1px 0 rgba(255,255,255,.96);
+    }
+    50% {
+        box-shadow:
+            0 18px 40px rgba(65,48,41,.095),
+            inset 0 1px 0 rgba(255,255,255,.98);
+    }
+}
+
+@keyframes q1SummarySheen {
+    0%,20% { left:-34%; opacity:0; }
+    32%    { opacity:.72; }
+    56%    { left:110%; opacity:0; }
+    100%   { left:110%; opacity:0; }
+}
+
+.q1-summary-head {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .58rem .72rem .44rem .80rem;
+    border-bottom: 1px solid #E7DED5;
+}
+
+.q1-summary-kicker {
+    color: #E08727;
+    font-size: .48rem;
+    font-weight: 950;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+}
+
+.q1-summary-title {
+    color: #17395A;
+    font-size: .95rem;
+    font-weight: 950;
+    letter-spacing: -.012em;
+    margin-top: .07rem;
+}
+
+.q1-summary-sub {
+    color: #7C8998;
+    font-size: .53rem;
+    line-height: 1.30;
+    margin-top: .09rem;
+}
+
+.q1-summary-status {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: .22rem .40rem;
+    border-radius: 999px;
+    color: #17395A;
+    background: #F2F6F9;
+    border: 1px solid #D9E4EB;
+    font-size: .44rem;
+    font-weight: 950;
+    letter-spacing: .045em;
+    white-space: nowrap;
+}
+
+.q1-summary-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #E58C2B;
+    box-shadow: 0 0 0 3px rgba(229,140,43,.10);
+    animation: q1SummaryDot 1.7s ease-in-out infinite;
+}
+
+@keyframes q1SummaryDot {
+    0%,100% { transform: scale(1); opacity:.85; }
+    50%     { transform: scale(1.30); opacity:1; }
+}
+
+.q1-summary-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 8px;
+    padding: .52rem .70rem .48rem .80rem;
+}
+
+.q1-summary-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 78px;
+    padding: .44rem .48rem;
+    border-radius: 11px;
+    border: 1px solid #E4DED7;
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.98),rgba(250,247,243,.95));
+    box-shadow:
+        0 5px 13px rgba(55,46,42,.035),
+        inset 0 1px 0 rgba(255,255,255,.95);
+    transition:
+        transform .20s ease,
+        box-shadow .20s ease,
+        border-color .20s ease;
+}
+
+.q1-summary-card:hover {
+    transform: translateY(-3px);
+    border-color: #D6C7B9;
+    box-shadow:
+        0 11px 22px rgba(55,46,42,.075),
+        inset 0 1px 0 rgba(255,255,255,.96);
+}
+
+.q1-summary-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 38%;
+    height: 2px;
+    border-radius: 999px;
+}
+
+.q1-summary-card.orange::before {
+    background: linear-gradient(90deg,#E58C2B,#F1B45C,rgba(241,180,92,0));
+}
+.q1-summary-card.violet::before {
+    background: linear-gradient(90deg,#6B3F7D,#A477B5,rgba(164,119,181,0));
+}
+.q1-summary-card.teal::before {
+    background: linear-gradient(90deg,#159786,#66C7B7,rgba(102,199,183,0));
+}
+.q1-summary-card.blue::before {
+    background: linear-gradient(90deg,#2D6CDF,#79A7F8,rgba(121,167,248,0));
+}
+
+.q1-summary-card .label {
+    color: #7F8A97;
+    font-size: .44rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .050em;
+}
+
+.q1-summary-card .value {
+    color: #17395A;
+    font-size: .79rem;
+    font-weight: 950;
+    line-height: 1.13;
+    margin-top: .11rem;
+}
+
+.q1-summary-card .note {
+    color: #8994A0;
+    font-size: .45rem;
+    line-height: 1.24;
+    margin-top: .08rem;
+}
+
+.q1-summary-bottom {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 8px;
+    padding: 0 .70rem .60rem .80rem;
+}
+
+.q1-summary-finding,
+.q1-summary-action {
+    border-radius: 11px;
+    padding: .45rem .50rem;
+    font-size: .49rem;
+    line-height: 1.34;
+}
+
+.q1-summary-finding {
+    color: #526A80;
+    background: linear-gradient(90deg,#F4F8FB 0%,#FCFDFE 100%);
+    border: 1px solid #DCE6ED;
+    border-left: 4px solid #2D6CDF;
+}
+
+.q1-summary-action {
+    color: #5E6876;
+    background:
+        radial-gradient(circle at 96% 8%, rgba(107,63,125,.055), transparent 28%),
+        linear-gradient(90deg,#FFF6E9 0%,#FFFDFC 100%);
+    border: 1px solid #EADAC7;
+    border-left: 4px solid #E58C2B;
+}
+
+.q1-summary-finding strong,
+.q1-summary-action strong {
+    color: #17395A;
+    font-weight: 950;
+}
+
+@media (max-width: 1100px) {
+    .q1-summary-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+
+    .q1-summary-bottom {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .q1-management-summary,
+    .q1-management-summary::after,
+    .q1-summary-status::before {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -5279,80 +5872,491 @@ else:
             )
 
     with q1_insight_col:
-        if leader_portfolio_share >= 45:
-            signal_label = "High concentration"
-            signal_action = (
-                f"{leader_campus} contributes {leader_portfolio_share:.1f}% of all filtered activities. "
-                "Check owner bandwidth and reach quality before adding more volume."
+        # -----------------------------------------------------
+        # CAMPUS-WISE EVENT + STATUS PANEL
+        # Only records with Event populated are treated as events.
+        # -----------------------------------------------------
+        event_frame = filtered.copy()
+
+        if "Event" in event_frame.columns:
+            event_text = (
+                event_frame["Event"]
+                .astype("string")
+                .str.strip()
             )
-        elif leader_portfolio_share >= 32:
-            signal_label = "Moderate concentration"
-            signal_action = (
-                f"{leader_campus} is the largest contributor but the portfolio is not fully concentrated. "
-                "Use outcomes to decide whether to rebalance activity volume."
+            event_mask = (
+                event_text.notna()
+                & event_text.ne("")
+                & event_text.ne("<NA>")
+                & event_text.ne("nan")
+                & event_text.ne("None")
             )
+            event_frame = event_frame[event_mask].copy()
         else:
-            signal_label = "Balanced portfolio"
-            signal_action = (
-                "Activity volume is reasonably distributed across campuses. "
-                "Focus next on format-level effectiveness and execution quality."
+            event_frame = event_frame.iloc[0:0].copy()
+
+        total_events_panel = int(len(event_frame))
+
+        event_panel_parts = [
+            '<div class="q1-event-status-panel">',
+            '<div class="q1-event-head">',
+            '<div class="q1-event-kicker">Campus · Event Intelligence</div>',
+            '<div class="q1-event-title">Events & Execution Status</div>',
+            '<div class="q1-event-sub">'
+            'Campus-wise event volume and status mix for the current filter selection.'
+            '</div>',
+            '</div>',
+            '<div class="q1-event-body">',
+        ]
+
+        if event_frame.empty:
+            event_panel_parts.extend([
+                '<div class="q1-event-empty">',
+                'No Event records are available for the selected filters.',
+                '</div>',
+            ])
+        else:
+            # ---------------- Event count by campus ----------------
+            event_by_campus = (
+                event_frame.groupby("Campus", observed=True)
+                .size()
+                .sort_values(ascending=False)
             )
 
-        q1_brand_insight_html = (
-            '<div class="q1-brand-insight">'
-                '<div class="q1-brand-head">'
-                    '<div class="q1-brand-kicker">Jaipuria · Activity Intelligence</div>'
-                    '<div class="q1-brand-title">Management Signal</div><div style="width:42px;height:2px;margin-top:.24rem;border-radius:999px;background:linear-gradient(90deg,#F3AF52,#FFFFFF55);"></div>'
-                    '<div class="q1-brand-sub">'
-                        'A compact readout of portfolio concentration, activity mix and the next management action.'
-                    '</div>'
-                '</div>'
-                '<div class="q1-brand-body">'
-                    '<div class="q1-brand-hero">'
-                        '<div class="q1-brand-hero-card">'
-                            '<div class="label">Leading Campus</div>'
-                            f'<div class="value">{html.escape(leader_campus)}</div>'
-                            f'<div class="note">{leader_count:,} activities · {leader_portfolio_share:.1f}% portfolio share</div>'
+            max_event_count = max(
+                int(event_by_campus.max()),
+                1,
+            )
+
+            event_panel_parts.extend([
+                '<div class="q1-mini-section">',
+                '<div class="q1-mini-heading">',
+                '<span class="title">Event Volume by Campus</span>',
+                f'<span class="meta">{total_events_panel:,} events</span>',
+                '</div>',
+            ])
+
+            for campus, event_count in event_by_campus.items():
+                event_count = int(event_count)
+                width_pct = (
+                    event_count / max_event_count * 100.0
+                    if max_event_count
+                    else 0
+                )
+
+                event_panel_parts.append(
+                    (
+                        '<div class="q1-event-row">'
+                        f'<div class="q1-event-campus">{html.escape(str(campus))}</div>'
+                        '<div class="q1-event-bar-track">'
+                        f'<div class="q1-event-bar-fill" style="width:{width_pct:.1f}%"></div>'
                         '</div>'
-                        '<div class="q1-brand-hero-card">'
-                            '<div class="label">Leading Format</div>'
-                            f'<div class="value">{html.escape(leader_type)}</div>'
-                            f'<div class="note">{leader_type_count:,} activities · {leader_type_share:.1f}% of total</div>'
+                        f'<div class="q1-event-count">{event_count}</div>'
                         '</div>'
-                    '</div>'
-                    '<div class="q1-brand-signal">'
-                        '<div class="q1-brand-signal-row">'
-                            '<div class="label">Portfolio Concentration</div>'
-                            f'<div class="value">{leader_portfolio_share:.1f}% · {html.escape(signal_label)}</div>'
-                        '</div>'
-                        '<div class="q1-brand-progress">'
-                            f'<span style="width:{min(leader_portfolio_share,100):.1f}%"></span>'
-                        '</div>'
-                    '</div>'
-                    '<div class="q1-brand-facts">'
-                        '<div class="q1-brand-fact">'
-                            '<div class="label">Peak Combination</div>'
-                            f'<div class="value">{html.escape(peak_cell_type)} · {html.escape(peak_cell_campus)}</div>'
-                        '</div>'
-                        '<div class="q1-brand-fact">'
-                            '<div class="label">Coverage Breadth</div>'
-                            f'<div class="value">{active_formats} formats · {active_campuses} campuses</div>'
-                        '</div>'
-                    '</div>'
-                    '<div class="q1-brand-action">'
-                        '<strong>Recommended Action:</strong> '
-                        f'{html.escape(signal_action)} '
-                        f'Also review {html.escape(lowest_campus)} ({lowest_campus_count} activities) '
-                        'to confirm whether lower volume is intentional or represents an outreach gap.'
-                    '</div>'
-                '</div>'
-            '</div>'
-        )
+                    )
+                )
+
+            event_panel_parts.append('</div>')
+
+            # ---------------- Event status by campus ----------------
+            if "Status" in event_frame.columns:
+                status_work = event_frame.copy()
+                status_work["Status"] = (
+                    status_work["Status"]
+                    .astype("string")
+                    .str.strip()
+                    .replace({
+                        "": pd.NA,
+                        "nan": pd.NA,
+                        "None": pd.NA,
+                        "<NA>": pd.NA,
+                    })
+                    .fillna("(blank)")
+                )
+
+                event_status = (
+                    status_work.groupby(
+                        ["Campus", "Status"],
+                        observed=True,
+                        dropna=False,
+                    )
+                    .size()
+                    .reset_index(name="Count")
+                )
+
+                preferred_status_order = [
+                    "Completed",
+                    "Confirmed",
+                    "Planned",
+                    "Cancelled",
+                    "Rescheduled",
+                    "(blank)",
+                ]
+
+                present_statuses = event_status["Status"].astype(str).unique().tolist()
+
+                status_order = [
+                    status for status in preferred_status_order
+                    if status in present_statuses
+                ] + sorted(
+                    [
+                        status for status in present_statuses
+                        if status not in preferred_status_order
+                    ],
+                    key=lambda x: str(x).lower(),
+                )
+
+                status_colors = _status_color_map().copy()
+                status_colors["(blank)"] = "#A4AFBA"
+
+                fallback_status_colors = [
+                    "#7453C6",
+                    "#159786",
+                    "#D18A24",
+                    "#2D6CDF",
+                    "#C65C65",
+                ]
+
+                for idx, status in enumerate(status_order):
+                    status_colors.setdefault(
+                        status,
+                        fallback_status_colors[
+                            idx % len(fallback_status_colors)
+                        ],
+                    )
+
+                event_panel_parts.extend([
+                    '<div class="q1-mini-section">',
+                    '<div class="q1-mini-heading">',
+                    '<span class="title">Event Status by Campus</span>',
+                    '<span class="meta">execution mix</span>',
+                    '</div>',
+                ])
+
+                for campus in event_by_campus.index.tolist():
+                    campus_status = event_status[
+                        event_status["Campus"].eq(campus)
+                    ]
+
+                    campus_total = int(
+                        campus_status["Count"].sum()
+                    )
+
+                    segments = []
+
+                    for status in status_order:
+                        match = campus_status[
+                            campus_status["Status"].eq(status)
+                        ]
+
+                        count = (
+                            int(match["Count"].sum())
+                            if not match.empty
+                            else 0
+                        )
+
+                        if count <= 0:
+                            continue
+
+                        width_pct = (
+                            count / campus_total * 100.0
+                            if campus_total
+                            else 0
+                        )
+
+                        tooltip = (
+                            f"{campus} · {status}: {count}"
+                        )
+
+                        segments.append(
+                            (
+                                '<span class="q1-status-seg" '
+                                f'title="{html.escape(tooltip)}" '
+                                f'style="width:{width_pct:.2f}%;'
+                                f'background:{status_colors[status]};">'
+                                '</span>'
+                            )
+                        )
+
+                    event_panel_parts.append(
+                        (
+                            '<div class="q1-status-row">'
+                            f'<div class="q1-event-campus">{html.escape(str(campus))}</div>'
+                            f'<div class="q1-status-stack">{"".join(segments)}</div>'
+                            '</div>'
+                        )
+                    )
+
+                # Legend
+                event_panel_parts.append(
+                    '<div class="q1-status-legend">'
+                )
+
+                for status in status_order:
+                    event_panel_parts.append(
+                        (
+                            '<span class="q1-status-key">'
+                            f'<span class="q1-status-dot" style="background:{status_colors[status]}"></span>'
+                            f'{html.escape(str(status))}'
+                            '</span>'
+                        )
+                    )
+
+                event_panel_parts.extend([
+                    '</div>',
+                    '</div>',
+                ])
+
+                # Dynamic footer signal
+                completed_events = int(
+                    status_work["Status"].eq("Completed").sum()
+                )
+                confirmed_events = int(
+                    status_work["Status"].eq("Confirmed").sum()
+                )
+                planned_events = int(
+                    status_work["Status"].eq("Planned").sum()
+                )
+                blank_events = int(
+                    status_work["Status"].eq("(blank)").sum()
+                )
+
+                leading_event_campus = str(
+                    event_by_campus.index[0]
+                )
+                leading_event_count = int(
+                    event_by_campus.iloc[0]
+                )
+
+                if blank_events > 0:
+                    footer_text = (
+                        f"<strong>{leading_event_campus}</strong> leads event volume "
+                        f"with {leading_event_count}. "
+                        f"<strong>{blank_events}</strong> event records have blank status; "
+                        "close these data gaps before execution review."
+                    )
+                elif planned_events + confirmed_events > completed_events:
+                    footer_text = (
+                        f"<strong>{leading_event_campus}</strong> leads event volume "
+                        f"with {leading_event_count}. "
+                        f"There are <strong>{confirmed_events + planned_events}</strong> "
+                        "confirmed/planned events in the execution pipeline."
+                    )
+                else:
+                    footer_text = (
+                        f"<strong>{leading_event_campus}</strong> leads event volume "
+                        f"with {leading_event_count}. "
+                        f"<strong>{completed_events}</strong> events are completed."
+                    )
+
+                event_panel_parts.append(
+                    f'<div class="q1-event-footer">{footer_text}</div>'
+                )
+
+        event_panel_parts.extend([
+            '</div>',
+            '</div>',
+        ])
 
         st.markdown(
-            q1_brand_insight_html,
+            "".join(event_panel_parts),
             unsafe_allow_html=True,
         )
+
+
+# ---------------------------------------------------------
+# MANAGEMENT SIGNAL — FULL-WIDTH SUMMARY BELOW BOTH CHARTS
+# ---------------------------------------------------------
+event_summary_frame = filtered.copy()
+
+if "Event" in event_summary_frame.columns:
+    event_summary_text = (
+        event_summary_frame["Event"]
+        .astype("string")
+        .str.strip()
+    )
+    event_summary_mask = (
+        event_summary_text.notna()
+        & event_summary_text.ne("")
+        & event_summary_text.ne("<NA>")
+        & event_summary_text.ne("nan")
+        & event_summary_text.ne("None")
+    )
+    event_summary_frame = event_summary_frame[
+        event_summary_mask
+    ].copy()
+else:
+    event_summary_frame = event_summary_frame.iloc[0:0].copy()
+
+summary_event_count = int(len(event_summary_frame))
+
+if not event_summary_frame.empty:
+    summary_event_campus = (
+        event_summary_frame.groupby("Campus", observed=True)
+        .size()
+        .sort_values(ascending=False)
+    )
+
+    summary_event_leader = str(
+        summary_event_campus.index[0]
+    )
+    summary_event_leader_count = int(
+        summary_event_campus.iloc[0]
+    )
+else:
+    summary_event_leader = "N/A"
+    summary_event_leader_count = 0
+
+summary_completed = 0
+summary_confirmed = 0
+summary_planned = 0
+summary_blank = 0
+
+if (
+    not event_summary_frame.empty
+    and "Status" in event_summary_frame.columns
+):
+    event_summary_status = (
+        event_summary_frame["Status"]
+        .astype("string")
+        .str.strip()
+        .replace({
+            "": pd.NA,
+            "nan": pd.NA,
+            "None": pd.NA,
+            "<NA>": pd.NA,
+        })
+        .fillna("(blank)")
+    )
+
+    summary_completed = int(
+        event_summary_status.eq("Completed").sum()
+    )
+    summary_confirmed = int(
+        event_summary_status.eq("Confirmed").sum()
+    )
+    summary_planned = int(
+        event_summary_status.eq("Planned").sum()
+    )
+    summary_blank = int(
+        event_summary_status.eq("(blank)").sum()
+    )
+
+summary_pipeline = (
+    summary_confirmed
+    + summary_planned
+)
+
+if total_q1_activities:
+    event_share_of_activity = _pct(
+        summary_event_count,
+        total_q1_activities,
+    )
+else:
+    event_share_of_activity = 0.0
+
+if summary_event_count:
+    event_completion_rate = _pct(
+        summary_completed,
+        summary_event_count,
+    )
+else:
+    event_completion_rate = 0.0
+
+# Dynamic management readout
+if summary_blank > 0:
+    management_finding = (
+        f"{leader_campus} leads overall activity volume with {leader_count} activities, "
+        f"while {summary_event_leader} leads event volume with {summary_event_leader_count}. "
+        f"{summary_blank} event records still have blank status."
+    )
+    management_action = (
+        f"Close the {summary_blank} missing event-status records first. "
+        f"Then review whether {leader_type} and the leading event campus are producing "
+        "proportionate reach and execution outcomes."
+    )
+elif summary_pipeline > summary_completed:
+    management_finding = (
+        f"{leader_campus} leads activity volume with {leader_count} activities. "
+        f"{summary_event_leader} leads events with {summary_event_leader_count}; "
+        f"{summary_pipeline} events are currently confirmed/planned versus "
+        f"{summary_completed} completed."
+    )
+    management_action = (
+        "Prioritize conversion of the confirmed/planned event pipeline into completed execution. "
+        f"Protect owner capacity in {leader_campus} and validate whether {leader_type} remains "
+        "the most effective outreach format."
+    )
+else:
+    management_finding = (
+        f"{leader_campus} leads activity volume with {leader_count} activities, "
+        f"and {summary_event_leader} leads event volume with {summary_event_leader_count}. "
+        f"Event completion currently stands at {event_completion_rate:.1f}%."
+    )
+    management_action = (
+        "Use the strongest completed event/activity combinations as the execution benchmark. "
+        f"Review {lowest_campus} ({lowest_campus_count} activities) to confirm whether the lower "
+        "volume is strategic or represents an outreach opportunity."
+    )
+
+management_summary_html = (
+    '<div class="q1-management-summary">'
+        '<div class="q1-summary-head">'
+            '<div>'
+                '<div class="q1-summary-kicker">Jaipuria · Management Intelligence</div>'
+                '<div class="q1-summary-title">Management Signal</div>'
+                '<div class="q1-summary-sub">'
+                    'Combined interpretation of the Activity Type × Campus matrix and campus-wise Event / Status execution.'
+                '</div>'
+            '</div>'
+            '<div class="q1-summary-status">DYNAMIC INSIGHT</div>'
+        '</div>'
+
+        '<div class="q1-summary-grid">'
+            '<div class="q1-summary-card orange">'
+                '<div class="label">Activity Leader</div>'
+                f'<div class="value">{html.escape(leader_campus)}</div>'
+                f'<div class="note">{leader_count:,} activities · {leader_portfolio_share:.1f}% of filtered activity</div>'
+            '</div>'
+
+            '<div class="q1-summary-card violet">'
+                '<div class="label">Dominant Format</div>'
+                f'<div class="value">{html.escape(leader_type)}</div>'
+                f'<div class="note">{leader_type_count:,} activities · {leader_type_share:.1f}% of filtered activity</div>'
+            '</div>'
+
+            '<div class="q1-summary-card teal">'
+                '<div class="label">Event Leader</div>'
+                f'<div class="value">{html.escape(summary_event_leader)}</div>'
+                f'<div class="note">{summary_event_leader_count:,} events · {summary_event_count:,} total events</div>'
+            '</div>'
+
+            '<div class="q1-summary-card blue">'
+                '<div class="label">Event Execution</div>'
+                f'<div class="value">{event_completion_rate:.1f}% completed</div>'
+                f'<div class="note">{summary_completed} completed · {summary_pipeline} confirmed/planned</div>'
+            '</div>'
+        '</div>'
+
+        '<div class="q1-summary-bottom">'
+            '<div class="q1-summary-finding">'
+                '<strong>Finding:</strong> '
+                f'{html.escape(management_finding)} '
+                f'Events represent {event_share_of_activity:.1f}% of filtered activity volume.'
+            '</div>'
+
+            '<div class="q1-summary-action">'
+                '<strong>Recommended Action:</strong> '
+                f'{html.escape(management_action)}'
+            '</div>'
+        '</div>'
+    '</div>'
+)
+
+st.markdown(
+    management_summary_html,
+    unsafe_allow_html=True,
+)
 
 
 # ---------------------------------------------------------
