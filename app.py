@@ -1457,6 +1457,198 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
     }
 }
 
+/* ---------- Q1 top visual + executive insight ---------- */
+.q1-top-marker {
+    display: none;
+}
+
+.q1-visual-title {
+    color: #102A43;
+    font-size: .91rem;
+    font-weight: 900;
+    margin-bottom: .04rem;
+}
+
+.q1-visual-sub {
+    color: #7B8DA3;
+    font-size: .59rem;
+    line-height: 1.34;
+    margin-bottom: .20rem;
+}
+
+.q1-exec-insight {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    box-sizing: border-box;
+    border-radius: 14px;
+    padding: .72rem .72rem .66rem .72rem;
+    background:
+        radial-gradient(circle at 88% 9%, rgba(37,99,235,.10), transparent 25%),
+        radial-gradient(circle at 12% 88%, rgba(20,184,166,.07), transparent 30%),
+        linear-gradient(145deg,#F9FBFF 0%,#FFFFFF 58%,#F8FBFD 100%);
+    border: 1px solid #DCE6F1;
+    box-shadow:
+        0 9px 24px rgba(15,42,69,.055),
+        inset 0 1px 0 rgba(255,255,255,.95);
+    animation: q1InsightFloat 4.8s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease;
+}
+
+.q1-exec-insight:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 15px 32px rgba(15,42,69,.09),
+        inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+.q1-exec-insight::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -42%;
+    width: 28%;
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.18),
+        rgba(255,255,255,.78),
+        rgba(255,255,255,.18),
+        rgba(255,255,255,0)
+    );
+    transform: skewX(-18deg);
+    animation: q1InsightSheen 6.4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes q1InsightFloat {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-2px); }
+}
+
+@keyframes q1InsightSheen {
+    0%,18%  { left: -42%; opacity: 0; }
+    28%     { opacity: .85; }
+    50%     { left: 112%; opacity: 0; }
+    100%    { left: 112%; opacity: 0; }
+}
+
+.q1-insight-kicker {
+    position: relative;
+    z-index: 2;
+    color: #2B6DE8;
+    font-size: .53rem;
+    font-weight: 950;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+}
+
+.q1-insight-title {
+    position: relative;
+    z-index: 2;
+    color: #102A43;
+    font-size: .94rem;
+    font-weight: 900;
+    margin-top: .10rem;
+    margin-bottom: .10rem;
+}
+
+.q1-insight-sub {
+    position: relative;
+    z-index: 2;
+    color: #7B8DA3;
+    font-size: .55rem;
+    line-height: 1.35;
+    margin-bottom: .48rem;
+}
+
+.q1-insight-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+}
+
+.q1-insight-metric {
+    min-height: 64px;
+    border-radius: 10px;
+    padding: .43rem .48rem;
+    border: 1px solid #E0E8F1;
+    background: rgba(255,255,255,.82);
+    box-shadow: 0 3px 10px rgba(15,42,69,.025);
+}
+
+.q1-insight-metric .label {
+    color: #7A8EA4;
+    font-size: .48rem;
+    font-weight: 900;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.q1-insight-metric .value {
+    color: #153A5F;
+    font-size: .82rem;
+    font-weight: 950;
+    line-height: 1.12;
+    margin-top: .11rem;
+}
+
+.q1-insight-metric .note {
+    color: #8394A8;
+    font-size: .48rem;
+    line-height: 1.22;
+    margin-top: .08rem;
+}
+
+.q1-insight-action {
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+    padding: .46rem .51rem;
+    border-radius: 10px;
+    background: linear-gradient(90deg,#EEF5FF 0%,#F7FAFF 100%);
+    border: 1px solid #DCE8F8;
+    border-left: 4px solid #2B6DE8;
+    color: #536B84;
+    font-size: .53rem;
+    line-height: 1.35;
+}
+
+.q1-insight-action strong {
+    color: #1D4F83;
+    font-weight: 950;
+}
+
+.q1-table-heading {
+    margin-top: .46rem;
+    margin-bottom: .20rem;
+}
+
+.q1-table-heading .title {
+    color: #102A43;
+    font-size: .90rem;
+    font-weight: 900;
+}
+
+.q1-table-heading .sub {
+    color: #7B8DA3;
+    font-size: .58rem;
+    margin-top: .10rem;
+    line-height: 1.32;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .q1-exec-insight,
+    .q1-exec-insight::after {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -2687,17 +2879,248 @@ with k6:
 overview_section(
     "Q1 · Activity Portfolio",
     "Campus-wise Activities + Activity Type",
-    "Start with the execution matrix for exact counts, then use the chart below for visual campus-mix comparison.",
+    "Visual campus mix first, followed by the detailed execution matrix for exact status-level review.",
 )
 
 # ---------------------------------------------------------
-# Q1A — PROFESSIONAL EXECUTION MATRIX / PIVOT TABLE
+# PREPARE Q1 DATA ONCE
 # ---------------------------------------------------------
+activity_mix = pd.DataFrame()
+
+if {"Campus", "Activity Type"}.issubset(filtered.columns):
+    activity_mix = (
+        filtered.dropna(subset=["Campus", "Activity Type"])
+        .groupby(["Campus", "Activity Type"], observed=True)
+        .size()
+        .reset_index(name="Activities")
+    )
+
+if activity_mix.empty:
+    st.info("No campus/activity-type data is available for the selected filters.")
+else:
+    campus_totals = (
+        activity_mix.groupby("Campus", observed=True)["Activities"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+    campus_order = campus_totals.index.tolist()
+
+    activity_colors = _activity_color_map()
+
+    for activity_type in activity_mix["Activity Type"].astype(str).unique():
+        activity_colors.setdefault(
+            activity_type,
+            _activity_fallback_color(activity_type),
+        )
+
+    leader_campus = str(campus_totals.index[0])
+    leader_count = int(campus_totals.iloc[0])
+
+    leader_mix = (
+        activity_mix[activity_mix["Campus"].eq(leader_campus)]
+        .sort_values("Activities", ascending=False)
+    )
+
+    leader_type = str(leader_mix.iloc[0]["Activity Type"])
+    leader_type_count = int(leader_mix.iloc[0]["Activities"])
+    leader_share = _pct(leader_type_count, leader_count)
+
+    campus_avg = float(campus_totals.mean()) if len(campus_totals) else 0.0
+    activity_gap = leader_count - campus_avg
+
+    total_q1_activities = int(campus_totals.sum())
+    leader_portfolio_share = _pct(leader_count, total_q1_activities)
+
+    # Diversity = count of distinct activity formats at leader campus.
+    leader_type_diversity = int(
+        activity_mix[
+            activity_mix["Campus"].eq(leader_campus)
+        ]["Activity Type"].nunique()
+    )
+
+    # -----------------------------------------------------
+    # Q1A — CHART + PROFESSIONAL INSIGHT (ABOVE TABLE)
+    # -----------------------------------------------------
+    q1_chart_col, q1_insight_col = st.columns(
+        [2.55, 1.00],
+        gap="medium",
+        vertical_alignment="top",
+    )
+
+    with q1_chart_col:
+        with st.container(border=True):
+            st.markdown(
+                '<span class="q1-top-marker"></span>',
+                unsafe_allow_html=True,
+            )
+
+            st.markdown(
+                '<div class="q1-visual-title">Campus Activity Portfolio</div>'
+                '<div class="q1-visual-sub">'
+                'Activity Type mix by campus. Numeric axis labels are intentionally hidden; '
+                'the actual counts remain inside each activity segment and update automatically.'
+                '</div>',
+                unsafe_allow_html=True,
+            )
+
+            fig = px.bar(
+                activity_mix,
+                x="Activities",
+                y="Campus",
+                color="Activity Type",
+                orientation="h",
+                barmode="stack",
+                text="Activities",
+                category_orders={"Campus": campus_order},
+                color_discrete_map=activity_colors,
+            )
+
+            fig.update_traces(
+                textposition="inside",
+                insidetextanchor="middle",
+                textfont=dict(
+                    size=9,
+                    color="#17324D",
+                ),
+                marker_line_width=0,
+                cliponaxis=False,
+                hovertemplate=(
+                    "<b>%{y}</b><br>"
+                    "Activity Type: %{fullData.name}<br>"
+                    "Activities: %{x:.0f}"
+                    "<extra></extra>"
+                ),
+            )
+
+            # Important:
+            # Do NOT fix the axis maximum. Plotly scales automatically as daily
+            # activity counts increase. Numeric tick labels are hidden so the
+            # visual never looks cramped as the data grows.
+            fig.update_xaxes(
+                title="",
+                rangemode="tozero",
+                showticklabels=False,
+                ticks="",
+                showgrid=False,
+                zeroline=False,
+                fixedrange=True,
+            )
+
+            fig.update_yaxes(
+                title="",
+                categoryorder="array",
+                categoryarray=campus_order,
+                autorange="reversed",
+                showgrid=False,
+                fixedrange=True,
+            )
+
+            fig = professional_chart(
+                fig,
+                300,
+                legend=True,
+            )
+
+            fig.update_layout(
+                legend_title_text="Activity Type",
+                bargap=.32,
+                margin=dict(
+                    l=8,
+                    r=10,
+                    t=8,
+                    b=5,
+                ),
+            )
+
+            st.plotly_chart(
+                fig,
+                width="stretch",
+                config=CHART_CONFIG,
+            )
+
+    with q1_insight_col:
+        if activity_gap > 0:
+            concentration_note = (
+                f"{activity_gap:.1f} above campus average"
+            )
+        else:
+            concentration_note = "Close to campus average"
+
+        if leader_portfolio_share >= 40:
+            action_text = (
+                f"{leader_campus} carries a high share of the current portfolio. "
+                f"Validate owner capacity and whether {leader_type} is creating proportionate reach/outcomes "
+                "before adding more activity volume."
+            )
+        elif leader_share >= 55:
+            action_text = (
+                f"{leader_type} is heavily concentrated within {leader_campus}. "
+                "Review activity-format dependency and diversify only where the audience opportunity supports it."
+            )
+        else:
+            action_text = (
+                f"{leader_campus} has a relatively balanced activity mix. "
+                "Use reach and execution outcomes to identify which format should receive incremental effort."
+            )
+
+        q1_insight_html = (
+            '<div class="q1-exec-insight">'
+                '<div class="q1-insight-kicker">EMS · Activity Intelligence</div>'
+                '<div class="q1-insight-title">Portfolio Readout</div>'
+                '<div class="q1-insight-sub">'
+                    'Management summary for the current filter selection.'
+                '</div>'
+                '<div class="q1-insight-grid">'
+                    '<div class="q1-insight-metric">'
+                        '<div class="label">Activity Leader</div>'
+                        f'<div class="value">{html.escape(leader_campus)}</div>'
+                        f'<div class="note">{leader_count:,} activities</div>'
+                    '</div>'
+                    '<div class="q1-insight-metric">'
+                        '<div class="label">Dominant Format</div>'
+                        f'<div class="value">{html.escape(leader_type)}</div>'
+                        f'<div class="note">{leader_type_count:,} · {leader_share:.1f}% of leader campus</div>'
+                    '</div>'
+                    '<div class="q1-insight-metric">'
+                        '<div class="label">Portfolio Share</div>'
+                        f'<div class="value">{leader_portfolio_share:.1f}%</div>'
+                        f'<div class="note">{html.escape(leader_campus)} share of all filtered activities</div>'
+                    '</div>'
+                    '<div class="q1-insight-metric">'
+                        '<div class="label">Activity Diversity</div>'
+                        f'<div class="value">{leader_type_diversity}</div>'
+                        f'<div class="note">{html.escape(concentration_note)}</div>'
+                    '</div>'
+                '</div>'
+                '<div class="q1-insight-action">'
+                    '<strong>Recommended Action:</strong> '
+                    f'{html.escape(action_text)}'
+                '</div>'
+            '</div>'
+        )
+
+        st.markdown(
+            q1_insight_html,
+            unsafe_allow_html=True,
+        )
+
+
+# ---------------------------------------------------------
+# Q1B — PROFESSIONAL EXECUTION MATRIX / PIVOT TABLE
+# ---------------------------------------------------------
+st.markdown(
+    '<div class="q1-table-heading">'
+        '<div class="title">Activity Execution Matrix</div>'
+        '<div class="sub">'
+        'Exact Campus → Activity Type → Event counts with execution status, grand totals and row-level management signals.'
+        '</div>'
+    '</div>',
+    unsafe_allow_html=True,
+)
+
 matrix_metrics = render_activity_execution_matrix(filtered)
 
 if matrix_metrics:
-    blank_share = _pct(matrix_metrics["blank"], matrix_metrics["grand_total"])
-
     if matrix_metrics["blank"] > 0:
         matrix_action = (
             f"Close the {matrix_metrics['blank']} blank-status records first. "
@@ -2736,122 +3159,6 @@ if matrix_metrics:
         matrix_action,
         "violet",
     )
-
-
-# ---------------------------------------------------------
-# Q1B — CAMPUS ACTIVITY PORTFOLIO CHART (MOVED LOWER)
-# ---------------------------------------------------------
-st.markdown('<div class="q1-chart-lower"></div>', unsafe_allow_html=True)
-
-with st.container(border=True):
-    chart_header(
-        "Campus Activity Portfolio",
-        "Activity volume and Activity Type mix by campus. Activity colours exactly match the matrix above.",
-    )
-
-    activity_mix = pd.DataFrame()
-    if {"Campus", "Activity Type"}.issubset(filtered.columns):
-        activity_mix = (
-            filtered.dropna(subset=["Campus", "Activity Type"])
-            .groupby(["Campus", "Activity Type"], observed=True)
-            .size()
-            .reset_index(name="Activities")
-        )
-
-    if activity_mix.empty:
-        st.info("No campus/activity-type data is available for the selected filters.")
-    else:
-        campus_totals = (
-            activity_mix.groupby("Campus", observed=True)["Activities"]
-            .sum()
-            .sort_values(ascending=False)
-        )
-        campus_order = campus_totals.index.tolist()
-
-        activity_colors = _activity_color_map()
-        for activity_type in activity_mix["Activity Type"].astype(str).unique():
-            activity_colors.setdefault(
-                activity_type,
-                _activity_fallback_color(activity_type),
-            )
-
-        fig = px.bar(
-            activity_mix,
-            x="Activities",
-            y="Campus",
-            color="Activity Type",
-            orientation="h",
-            barmode="stack",
-            text="Activities",
-            category_orders={"Campus": campus_order},
-            color_discrete_map=activity_colors,
-        )
-
-        fig.update_traces(
-            textposition="inside",
-            insidetextanchor="middle",
-            textfont=dict(size=9, color="#17324D"),
-            marker_line_width=0,
-            hovertemplate=(
-                "<b>%{y}</b><br>"
-                "Activity Type: %{fullData.name}<br>"
-                "Activities: %{x:.0f}<extra></extra>"
-            ),
-        )
-
-        fig.update_xaxes(
-            title="Activity Count",
-            rangemode="tozero",
-            dtick=1,
-            showgrid=False,
-        )
-        fig.update_yaxes(
-            title="",
-            categoryorder="array",
-            categoryarray=campus_order,
-            autorange="reversed",
-        )
-
-        fig = professional_chart(fig, 305, legend=True)
-        fig.update_layout(
-            legend_title_text="Activity Type",
-            bargap=.31,
-            margin=dict(l=8, r=12, t=8, b=10),
-        )
-
-        st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
-
-        leader_campus = campus_totals.index[0]
-        leader_count = int(campus_totals.iloc[0])
-
-        leader_mix = (
-            activity_mix[activity_mix["Campus"].eq(leader_campus)]
-            .sort_values("Activities", ascending=False)
-        )
-        leader_type = str(leader_mix.iloc[0]["Activity Type"])
-        leader_type_count = int(leader_mix.iloc[0]["Activities"])
-        leader_share = _pct(leader_type_count, leader_count)
-
-        campus_avg = float(campus_totals.mean()) if len(campus_totals) else 0
-        activity_gap = leader_count - campus_avg
-
-        ems_insight(
-            "EMS · Campus Activity Mix Insight",
-            (
-                f"{leader_campus} leads the selected portfolio with {leader_count} activities; "
-                f"{leader_type} is its largest activity type "
-                f"({leader_type_count}, {leader_share:.1f}%)."
-            ),
-            (
-                f"The leading campus is {activity_gap:.1f} activities above the current campus average, "
-                "showing where outreach workload and execution capacity are most concentrated."
-            ),
-            (
-                f"Validate whether {leader_type} is producing proportionate reach and outcomes. "
-                "Replicate the mix only where audience quality, owner capacity and campus context are comparable."
-            ),
-            "blue",
-        )
 
 
 # =========================================================
