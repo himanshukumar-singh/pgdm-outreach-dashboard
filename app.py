@@ -1108,6 +1108,355 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
         animation: none !important;
     }
 }
+
+/* =========================================================
+   Q1 — PROFESSIONAL ACTIVITY EXECUTION MATRIX
+   ========================================================= */
+.q1-matrix-shell {
+    position: relative;
+    overflow: hidden;
+    margin: .04rem 0 .48rem 0;
+    background:
+        radial-gradient(circle at 92% 8%, rgba(37,99,235,.055), transparent 23%),
+        linear-gradient(180deg, rgba(255,255,255,.99) 0%, rgba(249,251,254,.98) 100%);
+    border: 1px solid #DCE5EF;
+    border-radius: 15px;
+    box-shadow:
+        0 10px 28px rgba(15,42,69,.055),
+        inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+.q1-matrix-shell::before {
+    content: "";
+    position: absolute;
+    z-index: 6;
+    top: 0;
+    left: -30%;
+    width: 25%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        rgba(37,99,235,0),
+        rgba(37,99,235,.95),
+        rgba(20,184,166,.80),
+        rgba(124,58,237,.72),
+        rgba(37,99,235,0)
+    );
+    animation: q1MatrixSweep 6.8s ease-in-out infinite;
+}
+
+@keyframes q1MatrixSweep {
+    0%, 15%  { left: -30%; opacity: 0; }
+    27%      { opacity: 1; }
+    58%      { left: 108%; opacity: .95; }
+    68%,100% { left: 108%; opacity: 0; }
+}
+
+.q1-matrix-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: .66rem .78rem .50rem .78rem;
+    border-bottom: 1px solid #E4EBF3;
+    background:
+        linear-gradient(100deg, rgba(244,248,253,.90), rgba(255,255,255,.98));
+}
+
+.q1-matrix-title {
+    color: #102A43;
+    font-size: .94rem;
+    font-weight: 900;
+    line-height: 1.15;
+}
+
+.q1-matrix-sub {
+    color: #7A8DA3;
+    font-size: .60rem;
+    line-height: 1.35;
+    margin-top: .13rem;
+}
+
+.q1-matrix-badge {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: .28rem;
+    padding: .22rem .44rem;
+    border-radius: 999px;
+    color: #345D88;
+    background: linear-gradient(135deg,#EDF5FF,#F6F2FF);
+    border: 1px solid #DCE6F2;
+    box-shadow: 0 3px 9px rgba(15,42,69,.035);
+    font-size: .52rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.q1-matrix-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2F80ED;
+    box-shadow: 0 0 0 3px rgba(47,128,237,.10);
+}
+
+.q1-matrix-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #C7D4E2 #F5F8FB;
+}
+
+.q1-exec-table {
+    width: 100%;
+    min-width: 1230px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: Arial, sans-serif;
+    color: #405872;
+}
+
+.q1-exec-table thead tr:first-child th {
+    padding: .37rem .36rem;
+    color: #244563;
+    background: linear-gradient(180deg,#EAF3FC 0%,#E5EFF9 100%);
+    border-bottom: 1px solid #D6E2EE;
+    border-right: 1px solid #DDE6EF;
+    font-size: .57rem;
+    font-weight: 900;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.q1-exec-table thead tr:nth-child(2) th {
+    padding: .37rem .35rem;
+    color: #4A627B;
+    background: #F7FAFD;
+    border-bottom: 1px solid #DEE7F0;
+    border-right: 1px solid #E5EBF2;
+    font-size: .56rem;
+    font-weight: 850;
+    text-align: center;
+}
+
+.q1-exec-table th:last-child,
+.q1-exec-table td:last-child {
+    border-right: none;
+}
+
+.q1-exec-table tbody td {
+    padding: .31rem .35rem;
+    border-bottom: 1px solid #E8EEF5;
+    border-right: 1px solid #EDF1F6;
+    background: rgba(255,255,255,.98);
+    font-size: .55rem;
+    line-height: 1.20;
+    vertical-align: middle;
+}
+
+.q1-exec-table tbody tr {
+    transition:
+        background .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+}
+
+.q1-exec-table tbody tr:hover td {
+    background: #F8FBFF;
+}
+
+.q1-exec-table tbody tr:hover {
+    box-shadow: inset 3px 0 0 #4B7BEC;
+}
+
+.q1-campus-cell {
+    vertical-align: top !important;
+    padding-top: .43rem !important;
+    background:
+        linear-gradient(180deg,#F3F7FC 0%,#F8FAFD 100%) !important;
+}
+
+.q1-campus-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .28rem;
+    padding: .18rem .35rem;
+    border-radius: 999px;
+    background: #FFFFFF;
+    border: 1px solid #DCE6F0;
+    box-shadow: 0 3px 8px rgba(16,42,67,.035);
+    color: #294A69;
+    font-size: .55rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.q1-campus-pill::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#2563EB,#14B8A6);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.07);
+}
+
+.q1-activity-cell {
+    color: #29455F;
+    font-weight: 780;
+}
+
+.q1-activity-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: .34rem;
+    border-radius: 2px;
+    vertical-align: 0;
+    box-shadow: 0 0 0 2px rgba(15,42,69,.03);
+}
+
+.q1-event-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 130px;
+    padding: .15rem .31rem;
+    border-radius: 7px;
+    border: 1px solid #DEE7F0;
+    background: #F2F6FA;
+    color: #5B7087;
+    font-size: .54rem;
+    line-height: 1.10;
+    text-align: center;
+}
+
+.q1-event-chip.blank {
+    color: #98A6B5;
+    background: #FAFBFC;
+    border-style: dashed;
+}
+
+.q1-status-box {
+    position: relative;
+    overflow: hidden;
+    min-height: 22px;
+    border-radius: 6px;
+    background: #F8FAFC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #52677E;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+}
+
+.q1-status-box .fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 6px;
+    opacity: .19;
+}
+
+.q1-status-box .num {
+    position: relative;
+    z-index: 2;
+}
+
+.q1-status-box.cancelled .fill { background: #D65A63; }
+.q1-status-box.completed .fill { background: #2F9B6B; }
+.q1-status-box.confirmed .fill { background: #2F6FBC; }
+.q1-status-box.planned   .fill { background: #8FC2E8; }
+.q1-status-box.rescheduled .fill { background: #D99A32; }
+.q1-status-box.blank .fill { background: #94A3B8; }
+
+.q1-total-meter {
+    position: relative;
+    overflow: hidden;
+    min-height: 22px;
+    border-radius: 6px;
+    background: #FFF9EC;
+    border: 1px solid #F2DFB7;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 .31rem;
+    color: #795719;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+}
+
+.q1-total-meter .fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: linear-gradient(90deg,#F9CE65,#E9A72C);
+    opacity: .33;
+}
+
+.q1-total-meter .num {
+    position: relative;
+    z-index: 2;
+}
+
+.q1-row-insight {
+    color: #60758C;
+    font-size: .53rem !important;
+    line-height: 1.30 !important;
+}
+
+.q1-row-insight strong {
+    color: #294A69;
+    font-weight: 900;
+}
+
+.q1-exec-table tfoot td {
+    padding: .39rem .35rem;
+    color: #5A4921;
+    background: linear-gradient(180deg,#FFF9E8 0%,#FFF4D7 100%);
+    border-top: 1px solid #EAD5A5;
+    border-right: 1px solid #EFDFB9;
+    font-size: .56rem;
+    font-weight: 900;
+    text-align: center;
+}
+
+.q1-exec-table tfoot td:first-child {
+    text-align: left;
+}
+
+.q1-matrix-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .8rem;
+    padding: .37rem .72rem .40rem .72rem;
+    color: #7A8DA3;
+    background: #FAFCFE;
+    border-top: 1px solid #E5ECF3;
+    font-size: .52rem;
+}
+
+.q1-matrix-footer strong {
+    color: #36526E;
+    font-weight: 900;
+}
+
+.q1-chart-lower {
+    margin-top: .56rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .q1-matrix-shell::before {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -1709,6 +2058,375 @@ def _status_color_map():
     }
 
 
+def _activity_color_map():
+    """Shared Activity Type palette for Q1 table and Q1 chart."""
+    return {
+        "Education Fair": "#0068C9",
+        "Faculty Connect": "#83C9FF",
+        "Student Workshop": "#FF2B2B",
+        "Coaching Visit": "#FFABAB",
+        "College Visit": "#29B09D",
+        "Mentor Visit": "#6BDF9A",
+        "Campus Event": "#FF8700",
+    }
+
+
+def _activity_fallback_color(activity_type):
+    palette = [
+        "#4B7BEC",
+        "#14B8A6",
+        "#8B5CF6",
+        "#E98A3A",
+        "#3AA76D",
+        "#D65A63",
+        "#5B8DEF",
+        "#9B6BCE",
+    ]
+    key = str(activity_type)
+    return palette[sum(ord(ch) for ch in key) % len(palette)]
+
+
+def render_activity_execution_matrix(frame):
+    """
+    Professional Q1 pivot-style management table:
+    Campus | Activity Type | Event | Status counts | Grand Total | Insights
+    """
+    required = {"Campus", "Activity Type"}
+    if not required.issubset(frame.columns):
+        st.info("Campus / Activity Type data is not available for the activity execution matrix.")
+        return None
+
+    work = frame.copy()
+
+    for col in ["Campus", "Activity Type", "Event", "Status"]:
+        if col not in work.columns:
+            work[col] = pd.NA
+
+        work[col] = (
+            work[col]
+            .astype("string")
+            .str.strip()
+            .replace({
+                "": pd.NA,
+                "nan": pd.NA,
+                "None": pd.NA,
+                "<NA>": pd.NA,
+            })
+        )
+
+    work = work.dropna(subset=["Campus", "Activity Type"]).copy()
+
+    if work.empty:
+        st.info("No activity execution data is available for the selected filters.")
+        return None
+
+    work["Event"] = work["Event"].fillna("(blank)")
+    work["Status"] = work["Status"].fillna("(blank)")
+
+    # Exact business columns from the supplied reference table.
+    status_columns = [
+        "Cancelled",
+        "Completed",
+        "Confirmed",
+        "Planned",
+    ]
+
+    # If Rescheduled exists, preserve it rather than dropping real activity rows.
+    if work["Status"].eq("Rescheduled").any():
+        status_columns.append("Rescheduled")
+
+    status_columns.append("(blank)")
+
+    grouped = (
+        work.groupby(
+            ["Campus", "Activity Type", "Event", "Status"],
+            observed=True,
+            dropna=False,
+        )
+        .size()
+        .unstack(fill_value=0)
+        .reset_index()
+    )
+
+    for status in status_columns:
+        if status not in grouped.columns:
+            grouped[status] = 0
+
+    # Protect against any unexpected status values without losing records.
+    known_statuses = set(status_columns)
+    unexpected = [
+        col for col in grouped.columns
+        if col not in {"Campus", "Activity Type", "Event"}
+        and col not in known_statuses
+    ]
+    if unexpected:
+        grouped["(blank)"] = grouped["(blank)"] + grouped[unexpected].sum(axis=1)
+
+    grouped["Grand Total"] = grouped[status_columns].sum(axis=1)
+
+    # Match the supplied pivot-table campus order first, then append any extras.
+    preferred_campus_order = ["Indore", "Jaipur", "Lucknow", "Noida"]
+    present_campuses = grouped["Campus"].astype(str).unique().tolist()
+    campus_order = [
+        campus for campus in preferred_campus_order
+        if campus in present_campuses
+    ] + sorted(
+        [campus for campus in present_campuses if campus not in preferred_campus_order],
+        key=lambda x: str(x).lower(),
+    )
+
+    campus_rank = {campus: idx for idx, campus in enumerate(campus_order)}
+    grouped["_campus_rank"] = grouped["Campus"].map(campus_rank).fillna(999)
+
+    grouped = (
+        grouped.sort_values(
+            ["_campus_rank", "Campus", "Activity Type", "Event"],
+            ascending=[True, True, True, True],
+        )
+        .drop(columns="_campus_rank")
+        .reset_index(drop=True)
+    )
+
+    activity_colors = _activity_color_map()
+    max_row_total = max(int(grouped["Grand Total"].max()), 1)
+
+    status_css = {
+        "Cancelled": "cancelled",
+        "Completed": "completed",
+        "Confirmed": "confirmed",
+        "Planned": "planned",
+        "Rescheduled": "rescheduled",
+        "(blank)": "blank",
+    }
+
+    campus_rowspans = grouped.groupby("Campus", observed=True).size().to_dict()
+    campus_seen = set()
+
+    body_rows = []
+
+    for _, row in grouped.iterrows():
+        campus = str(row["Campus"])
+        activity_type = str(row["Activity Type"])
+        event_name = str(row["Event"])
+        row_total = int(row["Grand Total"])
+
+        campus_html = ""
+        if campus not in campus_seen:
+            campus_seen.add(campus)
+            campus_html = (
+                f'<td class="q1-campus-cell" rowspan="{campus_rowspans[campus]}">'
+                f'<span class="q1-campus-pill">{html.escape(campus)}</span>'
+                '</td>'
+            )
+
+        activity_color = activity_colors.get(
+            activity_type,
+            _activity_fallback_color(activity_type),
+        )
+
+        event_class = "blank" if event_name == "(blank)" else ""
+        event_html = (
+            f'<span class="q1-event-chip {event_class}">'
+            f'{html.escape(event_name)}'
+            '</span>'
+        )
+
+        status_cells = []
+        active_status_pairs = []
+
+        for status in status_columns:
+            count = int(row.get(status, 0))
+            share = _pct(count, row_total)
+            css_class = status_css.get(status, "blank")
+
+            status_cells.append(
+                '<td>'
+                f'<div class="q1-status-box {css_class}">'
+                f'<span class="fill" style="width:{min(share,100):.1f}%"></span>'
+                f'<span class="num">{count if count else ""}</span>'
+                '</div>'
+                '</td>'
+            )
+
+            if count:
+                active_status_pairs.append((status, count))
+
+        # Row-level professional operational insight.
+        blank_count = int(row.get("(blank)", 0))
+        completed = int(row.get("Completed", 0))
+        confirmed = int(row.get("Confirmed", 0))
+        planned = int(row.get("Planned", 0))
+        cancelled = int(row.get("Cancelled", 0))
+
+        if blank_count > 0:
+            insight_text = (
+                f'<strong>Data gap:</strong> {blank_count} of {row_total} '
+                f'activities have no status.'
+            )
+        elif planned >= max(completed, confirmed, cancelled) and planned > 0:
+            insight_text = (
+                f'<strong>Planning-heavy:</strong> {planned}/{row_total} planned; '
+                'focus on confirmation and execution.'
+            )
+        elif confirmed >= max(completed, planned, cancelled) and confirmed > 0:
+            insight_text = (
+                f'<strong>Ready pipeline:</strong> {confirmed}/{row_total} confirmed; '
+                'move these into completion.'
+            )
+        elif completed >= max(confirmed, planned, cancelled) and completed > 0:
+            completed_share = _pct(completed, row_total)
+            insight_text = (
+                f'<strong>Execution strong:</strong> {completed}/{row_total} completed '
+                f'({completed_share:.0f}%).'
+            )
+        elif cancelled > 0:
+            insight_text = (
+                f'<strong>Execution risk:</strong> {cancelled}/{row_total} cancelled; '
+                'review cause and rescheduling opportunity.'
+            )
+        elif active_status_pairs:
+            top_status, top_count = max(active_status_pairs, key=lambda x: x[1])
+            insight_text = (
+                f'<strong>{html.escape(top_status)} leads:</strong> '
+                f'{top_count}/{row_total} activities.'
+            )
+        else:
+            insight_text = '<strong>Review:</strong> No usable execution status is available.'
+
+        if event_name != "(blank)":
+            insight_text += f' Event: <strong>{html.escape(event_name)}</strong>.'
+
+        total_width = _pct(row_total, max_row_total)
+
+        body_rows.append(
+            '<tr>'
+            + campus_html
+            + '<td class="q1-activity-cell">'
+              f'<span class="q1-activity-dot" style="background:{activity_color}"></span>'
+              f'{html.escape(activity_type)}'
+              '</td>'
+            + f'<td>{event_html}</td>'
+            + "".join(status_cells)
+            + '<td>'
+              '<div class="q1-total-meter">'
+              f'<span class="fill" style="width:{min(total_width,100):.1f}%"></span>'
+              f'<span class="num">{row_total}</span>'
+              '</div>'
+              '</td>'
+            + f'<td class="q1-row-insight">{insight_text}</td>'
+            + '</tr>'
+        )
+
+    status_header_html = "".join(
+        f'<th>{html.escape(status)}</th>'
+        for status in status_columns
+    )
+
+    status_totals = {
+        status: int((work["Status"] == status).sum())
+        for status in status_columns
+    }
+
+    footer_status_html = "".join(
+        f'<td>{status_totals.get(status, 0):,}</td>'
+        for status in status_columns
+    )
+
+    grand_total = int(len(work))
+    blank_total = int((work["Status"] == "(blank)").sum())
+    completed_total = int((work["Status"] == "Completed").sum())
+    confirmed_total = int((work["Status"] == "Confirmed").sum())
+    planned_total = int((work["Status"] == "Planned").sum())
+    cancelled_total = int((work["Status"] == "Cancelled").sum())
+
+    campus_totals = (
+        work.groupby("Campus", observed=True)
+        .size()
+        .sort_values(ascending=False)
+    )
+    leader_campus = str(campus_totals.index[0])
+    leader_total = int(campus_totals.iloc[0])
+
+    completion_rate = _pct(completed_total, grand_total)
+    status_capture_rate = _pct(grand_total - blank_total, grand_total)
+
+    table_html = (
+        '<div class="q1-matrix-shell">'
+            '<div class="q1-matrix-head">'
+                '<div>'
+                    '<div class="q1-matrix-title">Activity Execution Matrix</div>'
+                    '<div class="q1-matrix-sub">'
+                    'Campus → Activity Type → Event, with execution status, totals and management insight.'
+                    '</div>'
+                '</div>'
+                f'<div class="q1-matrix-badge">{grand_total:,} filtered activities</div>'
+            '</div>'
+            '<div class="q1-matrix-scroll">'
+                '<table class="q1-exec-table">'
+                    '<colgroup>'
+                        '<col style="width:88px">'
+                        '<col style="width:150px">'
+                        '<col style="width:118px">'
+                        + "".join('<col style="width:76px">' for _ in status_columns)
+                        + '<col style="width:88px">'
+                        '<col style="width:275px">'
+                    '</colgroup>'
+                    '<thead>'
+                        '<tr>'
+                            '<th colspan="3">Activity Portfolio</th>'
+                            f'<th colspan="{len(status_columns) + 1}">Status</th>'
+                            '<th rowspan="2">Insights</th>'
+                        '</tr>'
+                        '<tr>'
+                            '<th>Campus</th>'
+                            '<th>Activity Type</th>'
+                            '<th>Event</th>'
+                            + status_header_html
+                            + '<th>Grand Total</th>'
+                        '</tr>'
+                    '</thead>'
+                    '<tbody>'
+                        + "".join(body_rows)
+                    + '</tbody>'
+                    '<tfoot>'
+                        '<tr>'
+                            '<td colspan="3">Grand Total</td>'
+                            + footer_status_html
+                            + f'<td>{grand_total:,}</td>'
+                            + (
+                                '<td>'
+                                f'{completion_rate:.1f}% completed · '
+                                f'{status_capture_rate:.1f}% status captured'
+                                '</td>'
+                            )
+                        + '</tr>'
+                    '</tfoot>'
+                '</table>'
+            '</div>'
+            '<div class="q1-matrix-footer">'
+                f'<span><strong>{leader_campus}</strong> leads activity volume with {leader_total:,}</span>'
+                f'<span><strong>{blank_total:,}</strong> blank status · '
+                f'<strong>{grand_total - blank_total:,}</strong> status-captured</span>'
+            '</div>'
+        '</div>'
+    )
+
+    st.markdown(table_html, unsafe_allow_html=True)
+
+    return {
+        "grand_total": grand_total,
+        "leader_campus": leader_campus,
+        "leader_total": leader_total,
+        "completed": completed_total,
+        "confirmed": confirmed_total,
+        "planned": planned_total,
+        "cancelled": cancelled_total,
+        "blank": blank_total,
+        "completion_rate": completion_rate,
+        "status_capture_rate": status_capture_rate,
+    }
+
+
 # =========================================================
 # HEADER — preserve existing title motion and styling
 # =========================================================
@@ -1969,13 +2687,66 @@ with k6:
 overview_section(
     "Q1 · Activity Portfolio",
     "Campus-wise Activities + Activity Type",
-    "Compare campus workload and identify which activity formats are driving the outreach plan.",
+    "Start with the execution matrix for exact counts, then use the chart below for visual campus-mix comparison.",
 )
+
+# ---------------------------------------------------------
+# Q1A — PROFESSIONAL EXECUTION MATRIX / PIVOT TABLE
+# ---------------------------------------------------------
+matrix_metrics = render_activity_execution_matrix(filtered)
+
+if matrix_metrics:
+    blank_share = _pct(matrix_metrics["blank"], matrix_metrics["grand_total"])
+
+    if matrix_metrics["blank"] > 0:
+        matrix_action = (
+            f"Close the {matrix_metrics['blank']} blank-status records first. "
+            "Status hygiene should be complete before comparing execution quality across campuses."
+        )
+    elif matrix_metrics["planned"] > matrix_metrics["completed"]:
+        matrix_action = (
+            "The planned pipeline is larger than completed execution. "
+            "Prioritize confirmation, owner readiness and closure for the highest-volume activity combinations."
+        )
+    elif matrix_metrics["confirmed"] > matrix_metrics["completed"]:
+        matrix_action = (
+            "Confirmed activities are ahead of completed activities. "
+            "Convert the ready pipeline into completed execution before adding avoidable new load."
+        )
+    else:
+        matrix_action = (
+            "Execution is comparatively mature. "
+            "Use the strongest completed activity combinations as the operating benchmark for other campuses."
+        )
+
+    ems_insight(
+        "EMS · Activity Execution Matrix Insight",
+        (
+            f"{matrix_metrics['leader_campus']} has the largest filtered workload "
+            f"with {matrix_metrics['leader_total']} activities. Overall, "
+            f"{matrix_metrics['completed']} are completed, "
+            f"{matrix_metrics['confirmed']} confirmed and "
+            f"{matrix_metrics['planned']} planned."
+        ),
+        (
+            f"Completion is {matrix_metrics['completion_rate']:.1f}% and status capture is "
+            f"{matrix_metrics['status_capture_rate']:.1f}%. "
+            f"{matrix_metrics['blank']} records currently have blank status."
+        ),
+        matrix_action,
+        "violet",
+    )
+
+
+# ---------------------------------------------------------
+# Q1B — CAMPUS ACTIVITY PORTFOLIO CHART (MOVED LOWER)
+# ---------------------------------------------------------
+st.markdown('<div class="q1-chart-lower"></div>', unsafe_allow_html=True)
 
 with st.container(border=True):
     chart_header(
         "Campus Activity Portfolio",
-        "Horizontal stacked bars show activity volume and the mix of Activity Type within each campus.",
+        "Activity volume and Activity Type mix by campus. Activity colours exactly match the matrix above.",
     )
 
     activity_mix = pd.DataFrame()
@@ -1997,6 +2768,13 @@ with st.container(border=True):
         )
         campus_order = campus_totals.index.tolist()
 
+        activity_colors = _activity_color_map()
+        for activity_type in activity_mix["Activity Type"].astype(str).unique():
+            activity_colors.setdefault(
+                activity_type,
+                _activity_fallback_color(activity_type),
+            )
+
         fig = px.bar(
             activity_mix,
             x="Activities",
@@ -2006,10 +2784,13 @@ with st.container(border=True):
             barmode="stack",
             text="Activities",
             category_orders={"Campus": campus_order},
+            color_discrete_map=activity_colors,
         )
+
         fig.update_traces(
             textposition="inside",
-            textfont=dict(size=9),
+            insidetextanchor="middle",
+            textfont=dict(size=9, color="#17324D"),
             marker_line_width=0,
             hovertemplate=(
                 "<b>%{y}</b><br>"
@@ -2017,20 +2798,32 @@ with st.container(border=True):
                 "Activities: %{x:.0f}<extra></extra>"
             ),
         )
-        fig.update_xaxes(title="Activity Count", rangemode="tozero", dtick=1)
+
+        fig.update_xaxes(
+            title="Activity Count",
+            rangemode="tozero",
+            dtick=1,
+            showgrid=False,
+        )
         fig.update_yaxes(
             title="",
             categoryorder="array",
             categoryarray=campus_order,
             autorange="reversed",
         )
-        fig = professional_chart(fig, 330, legend=True)
-        fig.update_layout(legend_title_text="Activity Type", bargap=.28)
+
+        fig = professional_chart(fig, 305, legend=True)
+        fig.update_layout(
+            legend_title_text="Activity Type",
+            bargap=.31,
+            margin=dict(l=8, r=12, t=8, b=10),
+        )
 
         st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
 
         leader_campus = campus_totals.index[0]
         leader_count = int(campus_totals.iloc[0])
+
         leader_mix = (
             activity_mix[activity_mix["Campus"].eq(leader_campus)]
             .sort_values("Activities", ascending=False)
@@ -2043,10 +2836,20 @@ with st.container(border=True):
         activity_gap = leader_count - campus_avg
 
         ems_insight(
-            "EMS · Campus Activity Insight",
-            f"{leader_campus} leads the selected portfolio with {leader_count} activities; {leader_type} is its largest activity type ({leader_type_count}, {leader_share:.1f}%).",
-            f"The leading campus is {activity_gap:.1f} activities above the current campus average, showing where execution capacity is most concentrated.",
-            f"Validate whether {leader_type} is producing adequate reach/outcomes; replicate the strongest activity mix only where campus audience and capacity are comparable.",
+            "EMS · Campus Activity Mix Insight",
+            (
+                f"{leader_campus} leads the selected portfolio with {leader_count} activities; "
+                f"{leader_type} is its largest activity type "
+                f"({leader_type_count}, {leader_share:.1f}%)."
+            ),
+            (
+                f"The leading campus is {activity_gap:.1f} activities above the current campus average, "
+                "showing where outreach workload and execution capacity are most concentrated."
+            ),
+            (
+                f"Validate whether {leader_type} is producing proportionate reach and outcomes. "
+                "Replicate the mix only where audience quality, owner capacity and campus context are comparable."
+            ),
             "blue",
         )
 
