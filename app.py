@@ -1,6 +1,7 @@
 import html
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import streamlit as st
 
 from common import (
@@ -1357,13 +1358,253 @@ CHART_CONFIG = {
 
 
 # =========================================================
-# LOAD DATA
+# LOAD + OVERVIEW-SPECIFIC NORMALIZATION
 # =========================================================
-df = load_data()
+df = load_data().copy()
+
+# Google Sheet headers are trimmed in common.clean_data(), but keep this page
+# defensive because the source workbook can be updated by different campuses.
+df.columns = df.columns.astype(str).str.strip()
+
+# Normalize Event values locally. The workbook header may appear as "Event ".
+if "Event" in df.columns:
+    df["Event"] = (
+        df["Event"]
+        .astype("string")
+        .str.strip()
+        .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA, "<NA>": pd.NA})
+    )
+
+# Lucknow currently uses a slightly different reach header. Combine aliases
+# into the canonical dashboard fields without changing the Google Sheet.
+reach_aliases = {
+    "Planned Student Reach": [
+        "Planned Student / faculty Reach",
+        "Planned Student / Faculty Reach",
+    ],
+    "Actual Student Reach": [
+        "Actual Student / Faculty Reach",
+        "Actual Student / faculty Reach",
+    ],
+}
+
+for canonical, aliases in reach_aliases.items():
+    if canonical in df.columns:
+        df[canonical] = pd.to_numeric(df[canonical], errors="coerce")
+    else:
+        df[canonical] = pd.Series(pd.NA, index=df.index, dtype="Float64")
+
+    for alias in aliases:
+        if alias in df.columns:
+            alias_values = pd.to_numeric(df[alias], errors="coerce")
+            df[canonical] = df[canonical].combine_first(alias_values)
+
+# Normalize fields needed by the Overview intelligence layer.
+for text_col in [
+    "Campus",
+    "Activity Type",
+    "Status",
+    "Target Segment",
+    "Activity Owner",
+    "Priority",
+    "Follow-up Required",
+    "Relationship Strength",
+    "Month",
+]:
+    if text_col in df.columns:
+        df[text_col] = (
+            df[text_col]
+            .astype("string")
+            .str.strip()
+            .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA, "<NA>": pd.NA})
+        )
+
+for title_col in ["Status", "Priority", "Relationship Strength", "Month"]:
+    if title_col in df.columns:
+        df[title_col] = df[title_col].str.title()
+
+for date_col in ["Activity Date", "Event Date", "Next Follow-up Date"]:
+    if date_col in df.columns:
+        df[date_col] = pd.to_datetime(df[date_col], dayfirst=True, errors="coerce")
 
 
 # =========================================================
-# HEADER
+# OVERVIEW-ONLY DESIGN ADDITIONS
+# Existing title/sidebar/live-dot/KPI/insight animations remain untouched.
+# =========================================================
+st.markdown(
+    """
+    <style>
+    .overview-section-kicker {
+        margin-top: .32rem;
+        margin-bottom: .04rem;
+        color: #2B6DE8;
+        font-size: .63rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .10em;
+    }
+
+    .overview-section-title {
+        color: #102A43;
+        font-size: 1.06rem;
+        font-weight: 900;
+        letter-spacing: -.01em;
+        margin-bottom: .04rem;
+    }
+
+    .overview-section-sub {
+        color: #7B8DA3;
+        font-size: .72rem;
+        line-height: 1.35;
+        margin-bottom: .34rem;
+    }
+
+    .overview-divider {
+        height: 1px;
+        width: 100%;
+        margin: .18rem 0 .46rem 0;
+        background: linear-gradient(90deg, #D7E4F4 0%, #EDF2F7 58%, rgba(237,242,247,0) 100%);
+    }
+
+    .ems-chip {
+        display: inline-block;
+        padding: .12rem .36rem;
+        margin-right: .28rem;
+        border-radius: 999px;
+        background: #EAF2FF;
+        border: 1px solid #D6E5FF;
+        color: #245EBA;
+        font-size: .55rem;
+        font-weight: 900;
+        letter-spacing: .025em;
+        text-transform: uppercase;
+    }
+
+    .filter-note {
+        color: #8495A9;
+        font-size: .60rem;
+        margin-top: -.10rem;
+        margin-bottom: .08rem;
+    }
+
+    div[data-testid="stButton"] button {
+        min-height: 2.60rem !important;
+        border-radius: 10px !important;
+        border: 1px solid #DCE6F1 !important;
+        color: #245EBA !important;
+        background: linear-gradient(145deg,#FFFFFF 0%,#F5F8FC 100%) !important;
+        font-size: .73rem !important;
+        font-weight: 850 !important;
+        box-shadow: 0 3px 10px rgba(15,42,69,.035) !important;
+        transition: transform .20s ease, box-shadow .20s ease !important;
+    }
+
+    div[data-testid="stButton"] button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 18px rgba(37,99,235,.11) !important;
+        border-color: #C7D9F5 !important;
+    }
+
+    .action-strip-title {
+        color: #102A43;
+        font-size: .98rem;
+        font-weight: 850;
+        margin-top: .10rem;
+        margin-bottom: .05rem;
+    }
+
+    .action-strip-sub {
+        color: #7D8FA5;
+        font-size: .69rem;
+        margin-bottom: .28rem;
+    }
+
+    @media (max-width: 1050px) {
+        .pro-kpi .value { font-size: 1.18rem !important; }
+        .mini-upcoming .value { font-size: 1.18rem !important; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+# =========================================================
+# OVERVIEW HELPERS
+# =========================================================
+def _options(frame, column):
+    if column not in frame.columns:
+        return ["All"]
+
+    values = (
+        frame[column]
+        .dropna()
+        .astype(str)
+        .str.strip()
+    )
+    values = values[values.ne("")]
+    return ["All"] + sorted(values.unique().tolist(), key=lambda x: x.lower())
+
+
+def _reset_overview_filters():
+    for key in [
+        "ov_campus",
+        "ov_activity",
+        "ov_event",
+        "ov_status",
+        "ov_segment",
+        "ov_owner",
+        "ov_priority",
+        "ov_date",
+    ]:
+        st.session_state.pop(key, None)
+
+
+def _safe_name(value, fallback="N/A"):
+    if value is None or pd.isna(value):
+        return fallback
+    value = str(value).strip()
+    return html.escape(value) if value else fallback
+
+
+def _pct(num, den):
+    return (float(num) / float(den) * 100.0) if den else 0.0
+
+
+def overview_section(kicker, title, subtitle):
+    st.markdown(
+        (
+            f'<div class="overview-section-kicker">{html.escape(kicker)}</div>'
+            f'<div class="overview-section-title">{html.escape(title)}</div>'
+            f'<div class="overview-section-sub">{html.escape(subtitle)}</div>'
+            '<div class="overview-divider"></div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def ems_insight(title, finding, impact, action, tone="blue"):
+    body = (
+        '<span class="ems-chip">Finding</span>' + html.escape(str(finding)) + '<br>'
+        '<span class="ems-chip">Impact</span>' + html.escape(str(impact)) + '<br>'
+        '<span class="ems-chip">Action</span>' + html.escape(str(action))
+    )
+    chart_insight(title, body, tone)
+
+
+def _status_color_map():
+    return {
+        "Completed": "#2F9B6B",
+        "Confirmed": "#2F6FBC",
+        "Planned": "#8FC2E8",
+        "Cancelled": "#D65A63",
+        "Rescheduled": "#D99A32",
+    }
+
+
+# =========================================================
+# HEADER — preserve existing title motion and styling
 # =========================================================
 header_html = (
     '<div class="overview-header">'
@@ -1372,75 +1613,82 @@ header_html = (
     '<div class="overview-title-wrap">'
     '<div class="overview-title">Outreach Overview</div>'
     '</div>'
-    ''
     '</div>'
     '<div class="overview-subtitle">'
-    'Campus outreach planning, execution, coverage and student-reach intelligence.'
+    'Campus outreach planning, event execution, reach performance and management intelligence.'
     '</div>'
     '<div class="overview-accent"></div>'
     '</div>'
 )
-
 st.markdown(header_html, unsafe_allow_html=True)
 
 
 # =========================================================
 # FILTERS
+# Order locked: Campus → Activity Type → Event → Status →
+# Target Segment → Owner → Priority → Date Range → Reset
 # =========================================================
+st.markdown('<div class="filter-panel-title">Filters</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="filter-panel-title">Filters</div>',
+    '<div class="filter-note">All charts, KPIs and EMS insights respond to the selected filters.</div>',
     unsafe_allow_html=True,
 )
 
-f1, f2, f3, f4, f5, f6, f7 = st.columns(
-    [1.0, 1.05, 1.08, 1.0, 1.0, .92, 1.18],
-    gap="small",
-)
+fr1 = st.columns([1.0, 1.18, 1.0, .95, 1.18], gap="small")
 
-with f1:
-    campus_values = (
-        ["All"] + sorted(df["Campus"].dropna().unique().tolist())
-        if "Campus" in df.columns else ["All"]
+with fr1[0]:
+    campus_filter = st.selectbox(
+        "Campus",
+        _options(df, "Campus"),
+        key="ov_campus",
     )
-    campus_filter = st.selectbox("Campus", campus_values)
 
-with f2:
-    activity_values = (
-        ["All"] + sorted(df["Activity Type"].dropna().unique().tolist())
-        if "Activity Type" in df.columns else ["All"]
+with fr1[1]:
+    activity_filter = st.selectbox(
+        "Activity Type",
+        _options(df, "Activity Type"),
+        key="ov_activity",
     )
-    activity_filter = st.selectbox("Activity Type", activity_values)
 
-with f3:
-    segment_values = (
-        ["All"] + sorted(df["Target Segment"].dropna().unique().tolist())
-        if "Target Segment" in df.columns else ["All"]
+with fr1[2]:
+    event_filter = st.selectbox(
+        "Event",
+        _options(df, "Event"),
+        key="ov_event",
     )
-    segment_filter = st.selectbox("Target Segment", segment_values)
 
-with f4:
-    owner_values = (
-        ["All"] + sorted(df["Activity Owner"].dropna().unique().tolist())
-        if "Activity Owner" in df.columns else ["All"]
+with fr1[3]:
+    status_filter = st.selectbox(
+        "Status",
+        _options(df, "Status"),
+        key="ov_status",
     )
-    owner_filter = st.selectbox("Owner", owner_values)
 
-with f5:
-    status_values = (
-        ["All"] + sorted(df["Status"].dropna().unique().tolist())
-        if "Status" in df.columns else ["All"]
+with fr1[4]:
+    segment_filter = st.selectbox(
+        "Target Segment",
+        _options(df, "Target Segment"),
+        key="ov_segment",
     )
-    status_filter = st.selectbox("Status", status_values)
 
-with f6:
-    priority_values = (
-        ["All"] + sorted(df["Priority"].dropna().unique().tolist())
-        if "Priority" in df.columns else ["All"]
+fr2 = st.columns([1.08, .90, 1.55, .58], gap="small")
+
+with fr2[0]:
+    owner_filter = st.selectbox(
+        "Owner",
+        _options(df, "Activity Owner"),
+        key="ov_owner",
     )
-    priority_filter = st.selectbox("Priority", priority_values)
 
-date_range = None
-with f7:
+with fr2[1]:
+    priority_filter = st.selectbox(
+        "Priority",
+        _options(df, "Priority"),
+        key="ov_priority",
+    )
+
+with fr2[2]:
+    date_range = None
     if "Activity Date" in df.columns and df["Activity Date"].notna().any():
         min_date = df["Activity Date"].min().date()
         max_date = df["Activity Date"].max().date()
@@ -1449,9 +1697,16 @@ with f7:
             value=(min_date, max_date),
             min_value=min_date,
             max_value=max_date,
+            key="ov_date",
         )
     else:
         st.text_input("Date Range", value="", disabled=True)
+
+with fr2[3]:
+    st.write("")
+    if st.button("↻ Reset", width="stretch", key="ov_reset"):
+        _reset_overview_filters()
+        st.rerun()
 
 
 # =========================================================
@@ -1459,23 +1714,19 @@ with f7:
 # =========================================================
 filtered = df.copy()
 
-if campus_filter != "All" and "Campus" in filtered.columns:
-    filtered = filtered[filtered["Campus"] == campus_filter]
+filter_map = [
+    ("Campus", campus_filter),
+    ("Activity Type", activity_filter),
+    ("Event", event_filter),
+    ("Status", status_filter),
+    ("Target Segment", segment_filter),
+    ("Activity Owner", owner_filter),
+    ("Priority", priority_filter),
+]
 
-if activity_filter != "All" and "Activity Type" in filtered.columns:
-    filtered = filtered[filtered["Activity Type"] == activity_filter]
-
-if segment_filter != "All" and "Target Segment" in filtered.columns:
-    filtered = filtered[filtered["Target Segment"] == segment_filter]
-
-if owner_filter != "All" and "Activity Owner" in filtered.columns:
-    filtered = filtered[filtered["Activity Owner"] == owner_filter]
-
-if status_filter != "All" and "Status" in filtered.columns:
-    filtered = filtered[filtered["Status"] == status_filter]
-
-if priority_filter != "All" and "Priority" in filtered.columns:
-    filtered = filtered[filtered["Priority"] == priority_filter]
+for column, selected in filter_map:
+    if selected != "All" and column in filtered.columns:
+        filtered = filtered[filtered[column].eq(selected)]
 
 if (
     date_range
@@ -1485,79 +1736,84 @@ if (
 ):
     start_date = pd.Timestamp(date_range[0])
     end_date = pd.Timestamp(date_range[1]) + pd.Timedelta(days=1)
-
     filtered = filtered[
-        (filtered["Activity Date"] >= start_date)
-        & (filtered["Activity Date"] < end_date)
+        filtered["Activity Date"].ge(start_date)
+        & filtered["Activity Date"].lt(end_date)
     ]
 
 if filtered.empty:
-    st.warning("No data is available for the selected filters.")
+    st.warning("No outreach data is available for the selected filters.")
     st.stop()
 
 
 # =========================================================
-# KPI CALCULATIONS
+# SHARED METRICS / EVENT SUBSET
 # =========================================================
 today = pd.Timestamp.today().normalize()
 
-total_activities = len(filtered)
-
-upcoming_mask = (
-    filtered["Activity Date"].ge(today)
-    if "Activity Date" in filtered.columns
+event_mask = (
+    filtered["Event"].notna()
+    if "Event" in filtered.columns
     else pd.Series(False, index=filtered.index)
 )
+event_df = filtered[event_mask].copy()
 
-if "Status" in filtered.columns:
-    upcoming_mask &= ~filtered["Status"].isin(CLOSED_STATUSES)
-
-upcoming_count = int(upcoming_mask.sum())
+total_activities = int(len(filtered))
+total_events = int(len(event_df))
 
 institutions = (
     int(filtered["Institution / Event Name"].dropna().nunique())
-    if "Institution / Event Name" in filtered.columns else 0
+    if "Institution / Event Name" in filtered.columns
+    else 0
 )
 
 cities = (
     int(filtered["City"].dropna().nunique())
-    if "City" in filtered.columns else 0
+    if "City" in filtered.columns
+    else 0
 )
 
-planned_reach = (
-    filtered["Planned Student Reach"].sum(min_count=1)
-    if "Planned Student Reach" in filtered.columns else 0
-)
+planned_reach_value = pd.to_numeric(
+    filtered.get("Planned Student Reach", pd.Series(index=filtered.index, dtype=float)),
+    errors="coerce",
+).sum(min_count=1)
 
-actual_reach = (
-    filtered["Actual Student Reach"].sum(min_count=1)
-    if "Actual Student Reach" in filtered.columns else 0
-)
+actual_reach_value = pd.to_numeric(
+    filtered.get("Actual Student Reach", pd.Series(index=filtered.index, dtype=float)),
+    errors="coerce",
+).sum(min_count=1)
 
-planned_reach = 0 if pd.isna(planned_reach) else int(planned_reach)
-actual_reach = 0 if pd.isna(actual_reach) else int(actual_reach)
+planned_reach = 0 if pd.isna(planned_reach_value) else int(planned_reach_value)
+actual_reach = 0 if pd.isna(actual_reach_value) else int(actual_reach_value)
+reach_achievement = _pct(actual_reach, planned_reach)
 
 
 # =========================================================
-# KPI ROW
+# EXECUTIVE SNAPSHOT
 # =========================================================
+overview_section(
+    "Executive Snapshot",
+    "Outreach Performance at a Glance",
+    "Core volume, event coverage and student-reach indicators for the current filter selection.",
+)
+
 k1, k2, k3, k4, k5, k6 = st.columns(6, gap="small")
 
 with k1:
     professional_kpi(
         "Total Activities",
         f"{total_activities:,}",
-        "All outreach activities",
+        "Filtered outreach activity volume",
         "●",
         "kpi-blue",
     )
 
 with k2:
     professional_kpi(
-        "Upcoming",
-        f"{upcoming_count:,}",
-        "Today onwards",
-        "↗",
+        "Total Events",
+        f"{total_events:,}",
+        "Records with Event populated",
+        "✦",
         "kpi-cyan",
     )
 
@@ -1565,7 +1821,7 @@ with k3:
     professional_kpi(
         "Institutions",
         f"{institutions:,}",
-        "Unique institutions",
+        "Unique institutions / event names",
         "◆",
         "kpi-violet",
     )
@@ -1574,7 +1830,7 @@ with k4:
     professional_kpi(
         "Cities Covered",
         f"{cities:,}",
-        "Outreach footprint",
+        "Current outreach footprint",
         "⌖",
         "kpi-teal",
     )
@@ -1583,7 +1839,7 @@ with k5:
     professional_kpi(
         "Planned Reach",
         f"{planned_reach:,}",
-        "Planned student reach",
+        "Planned student / faculty reach",
         "◎",
         "kpi-amber",
     )
@@ -1592,658 +1848,674 @@ with k6:
     professional_kpi(
         "Actual Reach",
         f"{actual_reach:,}",
-        "Entered actual reach",
+        f"{reach_achievement:.1f}% of planned reach" if planned_reach else "Actual reach entered",
         "✓",
         "kpi-green",
     )
 
 
 # =========================================================
-# CHART 1 — CAMPUS STATUS + MATCHED INSIGHT
+# Q1 — CAMPUS ACTIVITY PORTFOLIO
 # =========================================================
-row1_left, row1_right = st.columns([2.15, 1.0], gap="medium", vertical_alignment="top")
+overview_section(
+    "Q1 · Activity Portfolio",
+    "Campus-wise Activities + Activity Type",
+    "Compare campus workload and identify which activity formats are driving the outreach plan.",
+)
 
-with row1_left:
-    with st.container(border=True):
-        st.markdown('<span class="status-card-marker"></span>', unsafe_allow_html=True)
-        chart_header(
-            "Campus Activity Status",
-            "Activity volume and current execution status by campus.",
+with st.container(border=True):
+    chart_header(
+        "Campus Activity Portfolio",
+        "Horizontal stacked bars show activity volume and the mix of Activity Type within each campus.",
+    )
+
+    activity_mix = pd.DataFrame()
+    if {"Campus", "Activity Type"}.issubset(filtered.columns):
+        activity_mix = (
+            filtered.dropna(subset=["Campus", "Activity Type"])
+            .groupby(["Campus", "Activity Type"], observed=True)
+            .size()
+            .reset_index(name="Activities")
         )
 
-        status_data = pd.DataFrame()
+    if activity_mix.empty:
+        st.info("No campus/activity-type data is available for the selected filters.")
+    else:
+        campus_totals = (
+            activity_mix.groupby("Campus", observed=True)["Activities"]
+            .sum()
+            .sort_values(ascending=False)
+        )
+        campus_order = campus_totals.index.tolist()
 
-        if {"Campus", "Status"}.issubset(filtered.columns):
-            status_data = (
-                filtered.dropna(subset=["Campus", "Status"])
-                .groupby(["Campus", "Status"])
+        fig = px.bar(
+            activity_mix,
+            x="Activities",
+            y="Campus",
+            color="Activity Type",
+            orientation="h",
+            barmode="stack",
+            text="Activities",
+            category_orders={"Campus": campus_order},
+        )
+        fig.update_traces(
+            textposition="inside",
+            textfont=dict(size=9),
+            marker_line_width=0,
+            hovertemplate=(
+                "<b>%{y}</b><br>"
+                "Activity Type: %{fullData.name}<br>"
+                "Activities: %{x:.0f}<extra></extra>"
+            ),
+        )
+        fig.update_xaxes(title="Activity Count", rangemode="tozero", dtick=1)
+        fig.update_yaxes(
+            title="",
+            categoryorder="array",
+            categoryarray=campus_order,
+            autorange="reversed",
+        )
+        fig = professional_chart(fig, 330, legend=True)
+        fig.update_layout(legend_title_text="Activity Type", bargap=.28)
+
+        st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
+
+        leader_campus = campus_totals.index[0]
+        leader_count = int(campus_totals.iloc[0])
+        leader_mix = (
+            activity_mix[activity_mix["Campus"].eq(leader_campus)]
+            .sort_values("Activities", ascending=False)
+        )
+        leader_type = str(leader_mix.iloc[0]["Activity Type"])
+        leader_type_count = int(leader_mix.iloc[0]["Activities"])
+        leader_share = _pct(leader_type_count, leader_count)
+
+        campus_avg = float(campus_totals.mean()) if len(campus_totals) else 0
+        activity_gap = leader_count - campus_avg
+
+        ems_insight(
+            "EMS · Campus Activity Insight",
+            f"{leader_campus} leads the selected portfolio with {leader_count} activities; {leader_type} is its largest activity type ({leader_type_count}, {leader_share:.1f}%).",
+            f"The leading campus is {activity_gap:.1f} activities above the current campus average, showing where execution capacity is most concentrated.",
+            f"Validate whether {leader_type} is producing adequate reach/outcomes; replicate the strongest activity mix only where campus audience and capacity are comparable.",
+            "blue",
+        )
+
+
+# =========================================================
+# Q2 — CAMPUS EVENT INTELLIGENCE
+# =========================================================
+overview_section(
+    "Q2 · Event Intelligence",
+    "Campus-wise Events + Event Type + Status",
+    "Separate event portfolio volume from event execution health so management can see both scale and readiness.",
+)
+
+q2_left, q2_right = st.columns([1.05, .95], gap="medium", vertical_alignment="top")
+
+with q2_left:
+    with st.container(border=True):
+        chart_header(
+            "Event Portfolio by Campus",
+            "Event-filled records segmented by Event type.",
+        )
+
+        event_mix = pd.DataFrame()
+        if not event_df.empty and {"Campus", "Event"}.issubset(event_df.columns):
+            event_mix = (
+                event_df.dropna(subset=["Campus", "Event"])
+                .groupby(["Campus", "Event"], observed=True)
                 .size()
-                .reset_index(name="Activities")
+                .reset_index(name="Events")
             )
 
-        if not status_data.empty:
-            status_colors = {
-                "Confirmed": "#2F6FBC",
-                "Planned": "#8FC2E8",
-                "Completed": "#2F9B6B",
-                "Cancelled": "#D65A63",
-                "Rescheduled": "#D99A32",
-            }
-
-            # Horizontal grouped bars are easier to scan and keep small
-            # status counts readable as the dataset grows.
-            campus_order = [
-                campus
-                for campus in ["Lucknow", "Noida", "Jaipur", "Indore"]
-                if campus in status_data["Campus"].astype(str).unique()
-            ]
-
-            status_order = [
-                status
-                for status in [
-                    "Completed",
-                    "Confirmed",
-                    "Cancelled",
-                    "Rescheduled",
-                    "Planned",
-                ]
-                if status in status_data["Status"].astype(str).unique()
-            ]
+        if event_mix.empty:
+            st.info("No Event values are available for the selected filters.")
+        else:
+            event_totals = (
+                event_mix.groupby("Campus", observed=True)["Events"]
+                .sum()
+                .sort_values(ascending=False)
+            )
+            event_campus_order = event_totals.index.tolist()
 
             fig = px.bar(
-                status_data,
-                x="Activities",
+                event_mix,
+                x="Events",
                 y="Campus",
-                color="Status",
+                color="Event",
                 orientation="h",
-                barmode="group",
-                text="Activities",
-                color_discrete_map=status_colors,
-                category_orders={
-                    "Campus": campus_order,
-                    "Status": status_order,
-                },
+                barmode="stack",
+                text="Events",
+                category_orders={"Campus": event_campus_order},
             )
-
             fig.update_traces(
-                textposition="outside",
-                texttemplate="%{x:.0f}",
+                textposition="inside",
                 textfont=dict(size=9),
                 marker_line_width=0,
-                cliponaxis=False,
                 hovertemplate=(
                     "<b>%{y}</b><br>"
-                    "Status: %{fullData.name}<br>"
-                    "Activities: %{x:.0f}"
-                    "<extra></extra>"
+                    "Event Type: %{fullData.name}<br>"
+                    "Events: %{x:.0f}<extra></extra>"
                 ),
             )
-
-            status_max = int(
-                status_data["Activities"].max()
-            )
-
-            fig.update_xaxes(
-                title="Activities",
-                range=[
-                    0,
-                    max(1, status_max * 1.20),
-                ],
-                showticklabels=False,
-                ticks="",
-                showgrid=False,
-                zeroline=False,
-            )
-
+            fig.update_xaxes(title="Event Count", dtick=1, rangemode="tozero")
             fig.update_yaxes(
                 title="",
                 categoryorder="array",
-                categoryarray=campus_order,
+                categoryarray=event_campus_order,
                 autorange="reversed",
-                tickfont=dict(size=9),
-                automargin=True,
             )
+            fig = professional_chart(fig, 310, legend=True)
+            fig.update_layout(legend_title_text="Event")
+            st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
 
-            fig.update_layout(
-                bargap=0.30,
-                bargroupgap=0.10,
-                hoverlabel=dict(
-                    bgcolor="#FFFFFF",
-                    bordercolor="#D8E2EE",
-                    font=dict(
-                        size=11,
-                        color="#17324D",
-                    ),
-                ),
-                legend=dict(
-                    orientation="h",
-                    yanchor="bottom",
-                    y=1.02,
-                    xanchor="right",
-                    x=1,
-                    font=dict(size=9),
-                ),
-            )
-
-            st.plotly_chart(
-                professional_chart(fig, 305),
-                width="stretch",
-                config=CHART_CONFIG,
-            )
-
-            campus_totals = (
-                status_data.groupby("Campus")["Activities"]
-                .sum()
-                .sort_values(ascending=False)
-            )
-            top_campus = campus_totals.index[0]
-            top_campus_count = int(campus_totals.iloc[0])
-
-            confirmed_count = int(
-                status_data.loc[
-                    status_data["Status"].eq("Confirmed"),
-                    "Activities",
-                ].sum()
-            )
-            planned_count = int(
-                status_data.loc[
-                    status_data["Status"].eq("Planned"),
-                    "Activities",
-                ].sum()
-            )
-
-            pinned_status_insight(
-                "Campus Status Insight",
-                (
-                    f"{top_campus} has the highest outreach load with "
-                    f"{top_campus_count} activities. "
-                    f"{confirmed_count} activities are confirmed and "
-                    f"{planned_count} are still planned."
-                ),
-                "blue",
-            )
-
-
-
-with row1_right:
+with q2_right:
     with st.container(border=True):
-        st.markdown('<span class="status-card-marker"></span>', unsafe_allow_html=True)
         chart_header(
-            "Status Snapshot",
-            "Management snapshot from the same campus-status view.",
+            "Event Execution Status",
+            "100% status mix by campus; hover shows underlying event counts.",
         )
 
-        if not status_data.empty:
-            campus_totals = (
-                status_data.groupby("Campus")["Activities"]
+        event_status = pd.DataFrame()
+        if not event_df.empty and {"Campus", "Status"}.issubset(event_df.columns):
+            event_status = (
+                event_df.dropna(subset=["Campus", "Status"])
+                .groupby(["Campus", "Status"], observed=True)
+                .size()
+                .reset_index(name="Event Count")
+            )
+            if not event_status.empty:
+                event_status["Campus Total"] = event_status.groupby("Campus")["Event Count"].transform("sum")
+                event_status["Share %"] = (
+                    event_status["Event Count"]
+                    / event_status["Campus Total"].replace(0, pd.NA)
+                    * 100
+                ).fillna(0)
+                event_status["Label"] = event_status["Share %"].map(lambda x: f"{x:.0f}%" if x >= 8 else "")
+
+        if event_status.empty:
+            st.info("No event status data is available for the selected filters.")
+        else:
+            status_campus_order = (
+                event_status.groupby("Campus", observed=True)["Event Count"]
                 .sum()
                 .sort_values(ascending=False)
+                .index.tolist()
             )
 
-            top_campus = campus_totals.index[0]
-            top_value = int(campus_totals.iloc[0])
-
-            confirmed_total = int(
-                status_data.loc[
-                    status_data["Status"].eq("Confirmed"),
-                    "Activities",
-                ].sum()
+            fig = px.bar(
+                event_status,
+                x="Share %",
+                y="Campus",
+                color="Status",
+                orientation="h",
+                barmode="stack",
+                text="Label",
+                custom_data=["Event Count", "Campus Total"],
+                color_discrete_map=_status_color_map(),
+                category_orders={"Campus": status_campus_order},
             )
-            planned_total = int(
-                status_data.loc[
-                    status_data["Status"].eq("Planned"),
-                    "Activities",
-                ].sum()
-            )
-
-            completed_total = int(
-                status_data.loc[
-                    status_data["Status"].eq("Completed"),
-                    "Activities",
-                ].sum()
-            )
-
-            status_snapshot_stack(
-                [
-                    (
-                        "Top campus",
-                        top_campus,
-                        f"{top_value} outreach activities",
-                    ),
-                    (
-                        "Confirmed",
-                        f"{confirmed_total}",
-                        "Current confirmed activities",
-                    ),
-                    (
-                        "Still planned",
-                        f"{planned_total}",
-                        "Needs execution follow-through",
-                    ),
-                    (
-                        "Completed",
-                        f"{completed_total}",
-                        "Activities marked completed",
-                    ),
-                ]
-            )
-
-            status_totals = (
-                status_data.groupby("Status")["Activities"]
-                .sum()
-                .sort_values(ascending=False)
-            )
-
-            dominant_status = str(
-                status_totals.index[0]
-            )
-            dominant_count = int(
-                status_totals.iloc[0]
-            )
-            status_total = int(
-                status_totals.sum()
-            )
-
-            dominant_share = (
-                round(
-                    dominant_count
-                    / status_total
-                    * 100,
-                    1,
-                )
-                if status_total
-                else 0
-            )
-
-            pinned_status_insight(
-                "Status Snapshot Insight",
-                (
-                    f"{dominant_status} is the largest current status bucket "
-                    f"with {dominant_count} activities "
-                    f"({dominant_share}% of status-linked activities). "
-                    f"{completed_total} activities are completed."
+            fig.update_traces(
+                textposition="inside",
+                textfont=dict(size=9),
+                marker_line_width=0,
+                hovertemplate=(
+                    "<b>%{y}</b><br>"
+                    "Status: %{fullData.name}<br>"
+                    "Events: %{customdata[0]:.0f}<br>"
+                    "Campus Events: %{customdata[1]:.0f}<br>"
+                    "Share: %{x:.1f}%<extra></extra>"
                 ),
+            )
+            fig.update_xaxes(title="Status Share", range=[0, 100], ticksuffix="%")
+            fig.update_yaxes(
+                title="",
+                categoryorder="array",
+                categoryarray=status_campus_order,
+                autorange="reversed",
+            )
+            fig = professional_chart(fig, 310, legend=True)
+            fig.update_layout(legend_title_text="Status")
+            st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
+
+if event_df.empty:
+    ems_insight(
+        "EMS · Event Execution Insight",
+        "No Event records are visible under the current filter selection.",
+        "Event-volume and readiness comparisons cannot be assessed for this selection.",
+        "Clear the Event/Status filters or complete the Event field in the source sheet before using event-level management decisions.",
+        "amber",
+    )
+else:
+    event_by_campus = (
+        event_df.dropna(subset=["Campus"])
+        .groupby("Campus", observed=True)
+        .size()
+        .sort_values(ascending=False)
+        if "Campus" in event_df.columns
+        else pd.Series(dtype=int)
+    )
+    event_leader = str(event_by_campus.index[0]) if not event_by_campus.empty else "N/A"
+    event_leader_count = int(event_by_campus.iloc[0]) if not event_by_campus.empty else total_events
+
+    event_type_counts = event_df["Event"].value_counts() if "Event" in event_df.columns else pd.Series(dtype=int)
+    top_event_type = str(event_type_counts.index[0]) if not event_type_counts.empty else "N/A"
+
+    completed_events = int(event_df["Status"].eq("Completed").sum()) if "Status" in event_df.columns else 0
+    confirmed_events = int(event_df["Status"].eq("Confirmed").sum()) if "Status" in event_df.columns else 0
+    planned_events = int(event_df["Status"].eq("Planned").sum()) if "Status" in event_df.columns else 0
+    event_completion = _pct(completed_events, total_events)
+    forward_load = confirmed_events + planned_events
+    forward_share = _pct(forward_load, total_events)
+
+    ems_insight(
+        "EMS · Event Execution Insight",
+        f"{event_leader} has the highest visible event volume ({event_leader_count}); {top_event_type} is the most common Event type. Completed events represent {event_completion:.1f}% of visible events.",
+        f"{forward_load} events ({forward_share:.1f}%) are still Confirmed/Planned, which indicates the forward execution load that needs owner and resource readiness.",
+        f"Prioritize the Confirmed/Planned event queue for {event_leader}; verify owners, resource persons and dates before adding more event volume.",
+        "teal",
+    )
+
+
+# =========================================================
+# Q3 — MONTHLY ACTIVITY + EVENT MOMENTUM
+# =========================================================
+overview_section(
+    "Q3 · Monthly Momentum",
+    "Monthly Activity Count + Event Count",
+    "Track seasonality and whether event execution is moving at the same pace as the overall outreach plan.",
+)
+
+with st.container(border=True):
+    chart_header(
+        "Monthly Outreach Momentum",
+        "Columns = all activities; line = records where Event is populated.",
+    )
+
+    monthly = pd.DataFrame()
+    if "Activity Date" in filtered.columns and filtered["Activity Date"].notna().any():
+        monthly_base = filtered.dropna(subset=["Activity Date"]).copy()
+        monthly_base["Month Start"] = monthly_base["Activity Date"].dt.to_period("M").dt.to_timestamp()
+
+        activity_month = (
+            monthly_base.groupby("Month Start", observed=True)
+            .size()
+            .rename("Activities")
+        )
+
+        event_month = (
+            monthly_base[monthly_base["Event"].notna()]
+            .groupby("Month Start", observed=True)
+            .size()
+            .rename("Events")
+            if "Event" in monthly_base.columns
+            else pd.Series(dtype=int, name="Events")
+        )
+
+        monthly = (
+            pd.concat([activity_month, event_month], axis=1)
+            .fillna(0)
+            .reset_index()
+            .sort_values("Month Start")
+        )
+        monthly["Activities"] = monthly["Activities"].astype(int)
+        monthly["Events"] = monthly["Events"].astype(int)
+        monthly["Month"] = monthly["Month Start"].dt.strftime("%b %Y")
+
+    if monthly.empty:
+        st.info("Monthly trend cannot be calculated because Activity Date is unavailable for this selection.")
+    else:
+        fig = go.Figure()
+        fig.add_trace(
+            go.Bar(
+                x=monthly["Month"],
+                y=monthly["Activities"],
+                name="Activities",
+                marker_color="#2F6FBC",
+                opacity=.88,
+                text=monthly["Activities"],
+                textposition="outside",
+                textfont=dict(size=9),
+                hovertemplate="<b>%{x}</b><br>Activities: %{y:.0f}<extra></extra>",
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=monthly["Month"],
+                y=monthly["Events"],
+                name="Events",
+                mode="lines+markers+text",
+                line=dict(color="#7C3AED", width=3),
+                marker=dict(size=8, color="#7C3AED", line=dict(color="#FFFFFF", width=1.5)),
+                text=monthly["Events"],
+                textposition="top center",
+                textfont=dict(size=9, color="#6D43C5"),
+                hovertemplate="<b>%{x}</b><br>Events: %{y:.0f}<extra></extra>",
+            )
+        )
+        fig.update_xaxes(title="", showgrid=False)
+        fig.update_yaxes(title="Count", rangemode="tozero", dtick=1)
+        fig = professional_chart(fig, 335, legend=True)
+        fig.update_layout(bargap=.42)
+        st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
+
+        peak_activity_row = monthly.loc[monthly["Activities"].idxmax()]
+        peak_event_row = monthly.loc[monthly["Events"].idxmax()]
+        latest_row = monthly.iloc[-1]
+        previous_row = monthly.iloc[-2] if len(monthly) > 1 else None
+
+        if previous_row is not None and previous_row["Activities"]:
+            momentum_change = (latest_row["Activities"] - previous_row["Activities"]) / previous_row["Activities"] * 100
+            direction = "increased" if momentum_change >= 0 else "decreased"
+            momentum_sentence = f"Latest monthly activity volume has {direction} by {abs(momentum_change):.1f}% versus the previous visible month."
+        else:
+            momentum_sentence = "Only one comparable month is visible under the current filters."
+
+        ems_insight(
+            "EMS · Monthly Momentum Insight",
+            f"{peak_activity_row['Month']} is the peak activity month with {int(peak_activity_row['Activities'])} activities; {peak_event_row['Month']} has the highest event count ({int(peak_event_row['Events'])}).",
+            momentum_sentence,
+            "Use the peak-month activity mix as the capacity baseline; if event growth lags activity growth, review whether the added activity volume is generating sufficiently high-impact engagement.",
+            "violet",
+        )
+
+
+# =========================================================
+# REACH PERFORMANCE
+# =========================================================
+overview_section(
+    "Reach Performance",
+    "Campus Planned vs Actual Reach",
+    "A bullet-style comparison shows whether outreach execution is translating into the intended student/faculty reach.",
+)
+
+with st.container(border=True):
+    chart_header(
+        "Campus Reach Achievement",
+        "Wide bar = Planned Reach; overlay = Actual Reach. Percentage label shows achievement against plan.",
+    )
+
+    reach_data = pd.DataFrame()
+    if "Campus" in filtered.columns:
+        reach_base = filtered.copy()
+        reach_base["Planned Student Reach"] = pd.to_numeric(reach_base["Planned Student Reach"], errors="coerce")
+        reach_base["Actual Student Reach"] = pd.to_numeric(reach_base["Actual Student Reach"], errors="coerce")
+
+        reach_data = (
+            reach_base.groupby("Campus", observed=True)[["Planned Student Reach", "Actual Student Reach"]]
+            .sum(min_count=1)
+            .reset_index()
+            .rename(columns={
+                "Planned Student Reach": "Planned Reach",
+                "Actual Student Reach": "Actual Reach",
+            })
+        )
+        reach_data = reach_data[
+            reach_data[["Planned Reach", "Actual Reach"]].notna().any(axis=1)
+        ].copy()
+        reach_data[["Planned Reach", "Actual Reach"]] = reach_data[["Planned Reach", "Actual Reach"]].fillna(0)
+        reach_data["Achievement %"] = reach_data.apply(
+            lambda r: _pct(r["Actual Reach"], r["Planned Reach"]), axis=1
+        )
+        reach_data = reach_data.sort_values(["Planned Reach", "Actual Reach"], ascending=False)
+
+    if reach_data.empty or reach_data[["Planned Reach", "Actual Reach"]].sum().sum() == 0:
+        st.info("No Planned/Actual Reach values are available for the selected filters.")
+    else:
+        campus_order = reach_data["Campus"].tolist()
+        actual_text = [
+            f"{int(v):,}  ·  {p:.0f}%"
+            for v, p in zip(reach_data["Actual Reach"], reach_data["Achievement %"])
+        ]
+
+        fig = go.Figure()
+        fig.add_trace(
+            go.Bar(
+                x=reach_data["Planned Reach"],
+                y=reach_data["Campus"],
+                name="Planned Reach",
+                orientation="h",
+                width=.64,
+                marker_color="#D9E6F4",
+                hovertemplate="<b>%{y}</b><br>Planned Reach: %{x:,.0f}<extra></extra>",
+            )
+        )
+        fig.add_trace(
+            go.Bar(
+                x=reach_data["Actual Reach"],
+                y=reach_data["Campus"],
+                name="Actual Reach",
+                orientation="h",
+                width=.34,
+                marker_color="#0F9F8F",
+                text=actual_text,
+                textposition="outside",
+                textfont=dict(size=9, color="#0C776C"),
+                customdata=reach_data[["Planned Reach", "Achievement %"]].values,
+                hovertemplate=(
+                    "<b>%{y}</b><br>"
+                    "Actual Reach: %{x:,.0f}<br>"
+                    "Planned Reach: %{customdata[0]:,.0f}<br>"
+                    "Achievement: %{customdata[1]:.1f}%<extra></extra>"
+                ),
+            )
+        )
+        fig.update_layout(barmode="overlay")
+        fig.update_xaxes(title="Reach", rangemode="tozero")
+        fig.update_yaxes(
+            title="",
+            categoryorder="array",
+            categoryarray=campus_order,
+            autorange="reversed",
+        )
+        fig = professional_chart(fig, 320, legend=True)
+        st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
+
+        reliable_reach = reach_data[reach_data["Planned Reach"] > 0].copy()
+        if not reliable_reach.empty:
+            best_reach_row = reliable_reach.sort_values(["Achievement %", "Actual Reach"], ascending=False).iloc[0]
+            weakest_reach_row = reliable_reach.sort_values(["Achievement %", "Planned Reach"], ascending=[True, False]).iloc[0]
+
+            best_campus = str(best_reach_row["Campus"])
+            best_pct = float(best_reach_row["Achievement %"])
+            weak_campus = str(weakest_reach_row["Campus"])
+            weak_pct = float(weakest_reach_row["Achievement %"])
+
+            ems_insight(
+                "EMS · Reach Efficiency Insight",
+                f"{best_campus} has the strongest visible reach achievement at {best_pct:.1f}% of plan; {weak_campus} is currently lowest at {weak_pct:.1f}%.",
+                f"The gap between the best and lowest campus is {best_pct - weak_pct:.1f} percentage points, indicating different execution efficiency or data-completion levels.",
+                f"Review activity type, audience quality and actual-reach data capture for {weak_campus} before increasing its planned volume.",
                 "teal",
             )
 
 
-
 # =========================================================
-# CHART ROW 2 — REACH + ACTIVITY MIX, EACH WITH INSIGHT
+# EXECUTION & ACTION HEALTH
 # =========================================================
-c1, c2 = st.columns(2, gap="medium")
-
-with c1:
-    with st.container(border=True):
-        chart_header(
-            "Planned vs Actual Student Reach",
-            "Campus-wise reach comparison; blank actual values remain missing.",
-        )
-
-        if {
-            "Campus",
-            "Planned Student Reach",
-            "Actual Student Reach",
-        }.issubset(filtered.columns):
-
-            reach = (
-                filtered.groupby("Campus", as_index=False)
-                .agg(
-                    Planned=(
-                        "Planned Student Reach",
-                        lambda s: s.sum(min_count=1),
-                    ),
-                    Actual=(
-                        "Actual Student Reach",
-                        lambda s: s.sum(min_count=1),
-                    ),
-                )
-            )
-
-            long = (
-                reach.melt(
-                    "Campus",
-                    var_name="Reach Type",
-                    value_name="Students",
-                )
-                .dropna(subset=["Students"])
-            )
-
-            if not long.empty:
-                fig = px.bar(
-                    long,
-                    x="Campus",
-                    y="Students",
-                    color="Reach Type",
-                    barmode="group",
-                    text="Students",
-                    color_discrete_map={
-                        "Planned": "#3169C6",
-                        "Actual": "#22A58C",
-                    },
-                    category_orders={
-                        "Campus": ["Lucknow", "Noida", "Jaipur", "Indore"]
-                    },
-                )
-
-                fig.update_traces(
-                    textposition="outside",
-                    texttemplate="%{y:,.0f}",
-                    textfont=dict(size=9),
-                    marker_line_width=0,
-                    cliponaxis=False,
-                )
-
-                max_reach_value = float(
-                    long["Students"].max()
-                )
-
-                fig.update_xaxes(title="")
-                fig.update_yaxes(
-                    title="Students",
-                    range=[
-                        0,
-                        max(
-                            1,
-                            max_reach_value * 1.18,
-                        ),
-                    ],
-                    showticklabels=False,
-                    ticks="",
-                    showgrid=False,
-                    zeroline=False,
-                )
-
-                st.plotly_chart(
-                    professional_chart(fig, 300),
-                    width="stretch",
-                    config=CHART_CONFIG,
-                )
-
-                planned_known = reach.dropna(subset=["Planned"])
-                actual_known = reach.dropna(subset=["Actual"])
-
-                top_planned_text = "No planned reach available"
-                if not planned_known.empty:
-                    top_row = planned_known.loc[
-                        planned_known["Planned"].idxmax()
-                    ]
-                    top_planned_text = (
-                        f'{top_row["Campus"]} has the highest planned reach '
-                        f'({int(top_row["Planned"]):,}).'
-                    )
-
-                missing_actual = int(reach["Actual"].isna().sum())
-
-                chart_insight(
-                    "Reach Insight",
-                    (
-                        f"{top_planned_text} Actual reach is currently missing "
-                        f"for {missing_actual} campus(es) in this view, so blanks "
-                        f"are not interpreted as zero performance."
-                    ),
-                    "teal",
-                )
-
-
-with c2:
-    with st.container(border=True):
-        chart_header(
-            "Outreach Activity Mix",
-            "Relative use of workshops, visits and other outreach formats.",
-        )
-
-        if "Activity Type" in filtered.columns:
-            mix = (
-                filtered["Activity Type"]
-                .dropna()
-                .value_counts()
-                .rename_axis("Activity Type")
-                .reset_index(name="Activities")
-                .sort_values("Activities")
-            )
-
-            if not mix.empty:
-                professional_blues = [
-                    "#D7E7F4",
-                    "#C1D9ED",
-                    "#A8CAE6",
-                    "#88B6DB",
-                    "#679FCF",
-                    "#4C88C4",
-                    "#3371B4",
-                    "#245E9F",
-                    "#194B83",
-                    "#123B69",
-                ]
-
-                if len(mix) == 1:
-                    colors = ["#245E9F"]
-                else:
-                    colors = [
-                        professional_blues[
-                            round(
-                                i
-                                * (len(professional_blues) - 1)
-                                / (len(mix) - 1)
-                            )
-                        ]
-                        for i in range(len(mix))
-                    ]
-
-                fig = px.bar(
-                    mix,
-                    x="Activities",
-                    y="Activity Type",
-                    orientation="h",
-                    text="Activities",
-                )
-                fig.update_traces(
-                    marker_color=colors,
-                    textposition="outside",
-                    texttemplate="%{x:,.0f}",
-                    textfont=dict(size=9),
-                    marker_line_width=0,
-                    cliponaxis=False,
-                    hovertemplate=(
-                        "<b>%{y}</b><br>"
-                        "Activities: %{x:,.0f}"
-                        "<extra></extra>"
-                    ),
-                )
-
-                fig.update_xaxes(
-                    title="Activities",
-                    rangemode="tozero",
-                    showticklabels=False,
-                    ticks="",
-                    showgrid=False,
-                    zeroline=False,
-                )
-
-                fig.update_yaxes(
-                    title="",
-                    tickfont=dict(
-                        size=9,
-                        color="#5F748B",
-                    ),
-                    automargin=True,
-                )
-
-                fig.update_layout(
-                    bargap=0.34,
-                )
-
-                fig.update_yaxes(
-                    title="",
-                    tickfont=dict(
-                        size=8.5,
-                        color="#5F748B",
-                    ),
-                    automargin=True,
-                )
-
-                st.plotly_chart(
-                    professional_chart(
-                        fig,
-                        300,
-                        legend=False,
-                    ),
-                    width="stretch",
-                    config=CHART_CONFIG,
-                )
-
-                mix_desc = mix.sort_values(
-                    "Activities",
-                    ascending=False,
-                )
-                top_type = mix_desc.iloc[0]["Activity Type"]
-                top_count = int(mix_desc.iloc[0]["Activities"])
-                mix_total = int(mix_desc["Activities"].sum())
-                share = (
-                    round(top_count / mix_total * 100, 1)
-                    if mix_total else 0
-                )
-
-                chart_insight(
-                    "Activity Mix Insight",
-                    (
-                        f"{top_type} is the dominant outreach format with "
-                        f"{top_count} activities ({share}% of the selected mix). "
-                        f"The current plan uses {len(mix_desc)} distinct activity types."
-                    ),
-                    "violet",
-                )
-
-
-# =========================================================
-# UPCOMING ACTIVITIES — INSIGHTS + COMPACT TABLE
-# =========================================================
-st.markdown(
-    '<div class="table-title">Upcoming Outreach Activities</div>'
-    '<div class="table-subtitle">'
-    'Next scheduled field actions from the live Google Sheet.'
-    '</div>',
-    unsafe_allow_html=True,
+overview_section(
+    "Execution & Action Health",
+    "Immediate Operational Signals",
+    "Compact operational indicators surface current execution load, follow-up risk and near-term event readiness.",
 )
 
-upcoming_df = pd.DataFrame()
+status_series = filtered["Status"] if "Status" in filtered.columns else pd.Series(index=filtered.index, dtype="string")
+completed_count = int(status_series.eq("Completed").sum())
+confirmed_count = int(status_series.eq("Confirmed").sum())
+planned_count = int(status_series.eq("Planned").sum())
 
-if "Activity Date" in filtered.columns:
-    upcoming_df = filtered[
-        filtered["Activity Date"].ge(today)
-    ].copy()
+open_mask = ~status_series.isin(CLOSED_STATUSES) if "Status" in filtered.columns else pd.Series(True, index=filtered.index)
+high_priority_open = (
+    int((filtered["Priority"].eq("High") & open_mask).sum())
+    if "Priority" in filtered.columns
+    else 0
+)
 
-    if "Status" in upcoming_df.columns:
-        upcoming_df = upcoming_df[
-            ~upcoming_df["Status"].isin(CLOSED_STATUSES)
-        ]
+followup_required = (
+    int(filtered["Follow-up Required"].str.casefold().eq("yes").sum())
+    if "Follow-up Required" in filtered.columns
+    else 0
+)
 
-    upcoming_df = upcoming_df.sort_values("Activity Date")
-
-
-# ---------- Table-level insights ----------
-t1, t2, t3, t4 = st.columns(4, gap="small")
-
-if not upcoming_df.empty:
-    next_date = upcoming_df["Activity Date"].min()
-
-    next7_count = int(
-        upcoming_df[
-            upcoming_df["Activity Date"].le(
-                today + pd.Timedelta(days=7)
-            )
-        ].shape[0]
-    )
-
-    high_priority_count = (
-        int(upcoming_df["Priority"].eq("High").sum())
-        if "Priority" in upcoming_df.columns
-        else 0
-    )
-
-    top_owner = "N/A"
-    if (
-        "Activity Owner" in upcoming_df.columns
-        and upcoming_df["Activity Owner"].notna().any()
-    ):
-        top_owner = (
-            upcoming_df["Activity Owner"]
-            .value_counts()
-            .idxmax()
-        )
-
-    with t1:
-        mini_insight(
-            "Next activity",
-            next_date.strftime("%d %b"),
-            next_date.strftime("%Y"),
-            "🗓",
-            "mini-blue",
-        )
-
-    with t2:
-        mini_insight(
-            "Next 7 days",
-            f"{next7_count}",
-            "Scheduled outreach activities",
-            "↗",
-            "mini-cyan",
-        )
-
-    with t3:
-        mini_insight(
-            "High priority",
-            f"{high_priority_count}",
-            "Upcoming high-priority actions",
-            "◎",
-            "mini-amber",
-        )
-
-    with t4:
-        mini_insight(
-            "Most loaded owner",
-            top_owner,
-            "Based on upcoming activity count",
-            "👤",
-            "mini-violet",
-        )
-
-if upcoming_df.empty:
-    st.info(
-        "Selected filters ke liye koi upcoming outreach activity nahi hai."
-    )
-else:
-    display_columns = [
-        "Activity Date",
-        "Campus",
-        "Institution / Event Name",
-        "City",
-        "Activity Type",
-        "Activity Owner",
-        "Priority",
-        "Status",
-        "Planned Student Reach",
-        "Actual Student Reach",
-    ]
-
-    display_columns = [
-        col for col in display_columns
-        if col in upcoming_df.columns
-    ]
-
-    render_upcoming_table(
-        upcoming_df,
-        display_columns,
-    )
-
-    chart_insight(
-        "Upcoming Activity Insight",
+overdue_followup = 0
+if "Next Follow-up Date" in filtered.columns:
+    overdue_followup = int(
         (
-            f"{len(upcoming_df)} upcoming activities are visible for the selected "
-            f"filters. {high_priority_count} are High priority and {next7_count} "
-            f"fall within the next 7 days. Use this table as the immediate "
-            f"execution checklist for campus outreach teams."
-        ),
-        "amber",
+            filtered["Next Follow-up Date"].notna()
+            & filtered["Next Follow-up Date"].lt(today)
+            & open_mask
+        ).sum()
     )
+
+upcoming_event_count = 0
+if not event_df.empty:
+    event_dates = (
+        event_df["Event Date"].combine_first(event_df["Activity Date"])
+        if {"Event Date", "Activity Date"}.issubset(event_df.columns)
+        else event_df["Event Date"] if "Event Date" in event_df.columns
+        else event_df["Activity Date"] if "Activity Date" in event_df.columns
+        else pd.Series(pd.NaT, index=event_df.index)
+    )
+    event_open = (
+        ~event_df["Status"].isin(CLOSED_STATUSES)
+        if "Status" in event_df.columns
+        else pd.Series(True, index=event_df.index)
+    )
+    upcoming_event_count = int(
+        (
+            event_dates.ge(today)
+            & event_dates.le(today + pd.Timedelta(days=30))
+            & event_open
+        ).sum()
+    )
+
+ah1, ah2, ah3, ah4, ah5, ah6 = st.columns(6, gap="small")
+with ah1:
+    mini_insight("Completed", f"{completed_count:,}", "Executed activities", "✓", "mini-blue")
+with ah2:
+    mini_insight("Confirmed", f"{confirmed_count:,}", "Ready / committed", "●", "mini-cyan")
+with ah3:
+    mini_insight("Planned", f"{planned_count:,}", "Future planned load", "↗", "mini-violet")
+with ah4:
+    mini_insight("High Priority Open", f"{high_priority_open:,}", "Needs active ownership", "!", "mini-amber")
+with ah5:
+    mini_insight("Follow-up Required", f"{followup_required:,}", "Marked Yes in source", "↻", "mini-blue")
+with ah6:
+    mini_insight("Upcoming Events", f"{upcoming_event_count:,}", "Next 30 days", "✦", "mini-cyan")
+
+completion_rate = _pct(completed_count, total_activities)
+open_count = int(open_mask.sum()) if len(open_mask) else 0
+
+if overdue_followup > 0:
+    ops_action = f"Escalate {overdue_followup} overdue follow-up(s) first, then lock ownership for high-priority open activities."
+elif high_priority_open > 0:
+    ops_action = f"Review the {high_priority_open} high-priority open activities and confirm next action/date for each owner."
+elif upcoming_event_count > 0:
+    ops_action = f"Protect execution quality for the {upcoming_event_count} event(s) scheduled in the next 30 days."
+else:
+    ops_action = "No immediate follow-up risk is visible; focus on improving reach capture and closing planned activities."
+
+ems_insight(
+    "EMS · Execution Health Insight",
+    f"{completed_count} of {total_activities} activities are Completed ({completion_rate:.1f}%); {open_count} records remain outside the closed-status set.",
+    f"There are {high_priority_open} high-priority open activities, {followup_required} records marked for follow-up and {overdue_followup} overdue follow-up dates.",
+    ops_action,
+    "amber",
+)
+
+
+# =========================================================
+# MANAGEMENT INTELLIGENCE
+# =========================================================
+overview_section(
+    "Management Intelligence",
+    "Executive Signals & Next Best Action",
+    "Four management cards convert the filtered report into concise decision signals.",
+)
+
+# Activity leader
+activity_leader = "N/A"
+activity_leader_count = 0
+if "Campus" in filtered.columns and filtered["Campus"].notna().any():
+    activity_leader_series = filtered["Campus"].value_counts()
+    activity_leader = str(activity_leader_series.index[0])
+    activity_leader_count = int(activity_leader_series.iloc[0])
+
+# Event leader
+event_leader_card = "N/A"
+event_leader_card_count = 0
+if not event_df.empty and "Campus" in event_df.columns and event_df["Campus"].notna().any():
+    event_leader_series = event_df["Campus"].value_counts()
+    event_leader_card = str(event_leader_series.index[0])
+    event_leader_card_count = int(event_leader_series.iloc[0])
+
+# Best reach campus
+best_reach_card = "N/A"
+best_reach_card_pct = 0.0
+if "reach_data" in locals() and not reach_data.empty:
+    valid_reach_card = reach_data[reach_data["Planned Reach"] > 0]
+    if not valid_reach_card.empty:
+        rr = valid_reach_card.sort_values(["Achievement %", "Actual Reach"], ascending=False).iloc[0]
+        best_reach_card = str(rr["Campus"])
+        best_reach_card_pct = float(rr["Achievement %"])
+
+# Immediate action label
+if overdue_followup > 0:
+    immediate_action_label = "Follow-up Escalation"
+    immediate_action_note = f"{overdue_followup} overdue follow-up(s)"
+elif high_priority_open > 0:
+    immediate_action_label = "High Priority Queue"
+    immediate_action_note = f"{high_priority_open} open high-priority activities"
+elif upcoming_event_count > 0:
+    immediate_action_label = "Upcoming Event Readiness"
+    immediate_action_note = f"{upcoming_event_count} event(s) in next 30 days"
+else:
+    immediate_action_label = "Reach Optimisation"
+    immediate_action_note = "Improve actual-reach capture / efficiency"
+
+m1, m2, m3, m4 = st.columns(4, gap="small")
+with m1:
+    mini_insight(
+        "Activity Leader",
+        activity_leader,
+        f"{activity_leader_count} filtered activities",
+        "🏆",
+        "mini-blue",
+    )
+with m2:
+    mini_insight(
+        "Event Leader",
+        event_leader_card,
+        f"{event_leader_card_count} visible events",
+        "✦",
+        "mini-violet",
+    )
+with m3:
+    mini_insight(
+        "Best Reach Achievement",
+        best_reach_card,
+        f"{best_reach_card_pct:.1f}% of planned reach" if best_reach_card != "N/A" else "Reach data unavailable",
+        "◎",
+        "mini-cyan",
+    )
+with m4:
+    mini_insight(
+        "Immediate Action",
+        immediate_action_label,
+        immediate_action_note,
+        "⚡",
+        "mini-amber",
+    )
+
+chart_insight(
+    "Executive Management Summary",
+    (
+        f"<b>Activity:</b> {_safe_name(activity_leader)} leads volume with {activity_leader_count} activities. "
+        f"<b>Events:</b> {_safe_name(event_leader_card)} leads event volume with {event_leader_card_count}. "
+        f"<b>Reach:</b> {_safe_name(best_reach_card)} is the strongest visible reach-achievement campus "
+        f"({best_reach_card_pct:.1f}%). <b>Next action:</b> {html.escape(immediate_action_label)} — "
+        f"{html.escape(immediate_action_note)}."
+    ),
+    "violet",
+)
