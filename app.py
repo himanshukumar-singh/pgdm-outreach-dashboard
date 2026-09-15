@@ -1879,7 +1879,6 @@ reach_achievement = _pct(actual_reach, planned_reach)
 # EXECUTIVE SNAPSHOT
 # =========================================================
 overview_section(
-    "Executive Snapshot",
     "Outreach Performance at a Glance",
     "Core volume, event coverage and student-reach indicators for the current filter selection.",
 )
