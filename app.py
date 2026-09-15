@@ -3527,6 +3527,116 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)::aft
     }
 }
 
+
+/* =========================================================
+   Q1 — EXACT CHART / INSIGHT HEIGHT ALIGNMENT
+   ========================================================= */
+
+:root {
+    --q1-equal-panel-height: 575px;
+}
+
+/* Make both Streamlit columns stretch to the same vertical size */
+div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker) {
+    align-items: stretch !important;
+}
+
+/* Left chart card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker) {
+    height: var(--q1-equal-panel-height) !important;
+    min-height: var(--q1-equal-panel-height) !important;
+    max-height: var(--q1-equal-panel-height) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+/* Left card inner Streamlit block */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+> div[data-testid="stVerticalBlock"] {
+    height: 100% !important;
+    min-height: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Matrix consumes remaining space cleanly */
+.q1-css-matrix {
+    height: 465px !important;
+    min-height: 465px !important;
+    max-height: 465px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.q1-css-grid {
+    flex: 1 1 auto !important;
+    height: auto !important;
+}
+
+/* Keep rows visually balanced */
+.q1-css-corner,
+.q1-css-campus,
+.q1-css-activity,
+.q1-css-cell {
+    min-height: 48px !important;
+}
+
+/* Right insight card: exact same outer height */
+.q1-brand-insight {
+    height: var(--q1-equal-panel-height) !important;
+    min-height: var(--q1-equal-panel-height) !important;
+    max-height: var(--q1-equal-panel-height) !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Let the white management body use all remaining space */
+.q1-brand-body {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+}
+
+.q1-brand-action {
+    margin-top: auto !important;
+}
+
+/* =========================================================
+   Q1 — CLEAN BUBBLES: NO WHITE GLOSS PATCH
+   ========================================================= */
+
+/* Remove the white glossy highlight blob */
+.q1-motion-bubble::before {
+    display: none !important;
+}
+
+/* Cleaner premium depth without white glare */
+.q1-motion-bubble {
+    border: 1px solid rgba(255,255,255,.55) !important;
+    box-shadow:
+        0 10px 16px rgba(23,57,90,.24),
+        0 4px 8px rgba(47,35,31,.14),
+        inset 0 1px 2px rgba(255,255,255,.20),
+        inset 0 -3px 6px rgba(23,57,90,.10) !important;
+}
+
+/* Bubble hover remains dimensional but not glossy */
+.q1-motion-bubble:hover {
+    box-shadow:
+        0 19px 29px rgba(23,57,90,.34),
+        0 7px 12px rgba(229,140,43,.16),
+        inset 0 1px 2px rgba(255,255,255,.22),
+        inset 0 -4px 7px rgba(23,57,90,.12) !important;
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --q1-equal-panel-height: 555px;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -4960,10 +5070,7 @@ else:
                                 f'title="{html.escape(tooltip)}" '
                                 f'style="width:{size_px:.1f}px;'
                                 f'height:{size_px:.1f}px;'
-                                f'background:radial-gradient(circle at 32% 24%,'
-                                f'rgba(255,255,255,.74) 0 9%,'
-                                f'{activity_color} 34%,'
-                                f'{activity_color} 100%);'
+                                f'background:{activity_color};'
                                 f'color:{text_color};'
                                 f'--bubble-delay:{delay:.2f}s;'
                                 f'--bubble-duration:{duration:.2f}s;">'
