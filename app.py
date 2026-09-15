@@ -4410,6 +4410,524 @@ div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker)
     }
 }
 
+
+/* =========================================================
+   CAMPUS EVENT & EXECUTION INTELLIGENCE — FULL WIDTH
+   ========================================================= */
+
+.event-board {
+    position: relative;
+    overflow: hidden;
+    margin: .55rem 0 .62rem 0;
+    border-radius: 17px;
+    border: 1px solid #DDD5CD;
+    background:
+        radial-gradient(circle at 92% 6%, rgba(107,63,125,.060), transparent 25%),
+        radial-gradient(circle at 6% 92%, rgba(229,140,43,.050), transparent 24%),
+        linear-gradient(130deg,#FFFDFC 0%,#FAF7F2 52%,#FCF9F6 100%);
+    box-shadow:
+        0 16px 38px rgba(49,42,38,.075),
+        inset 0 1px 0 rgba(255,255,255,.96);
+    animation: eventBoardBreath 7s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease;
+}
+
+.event-board:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 22px 48px rgba(49,42,38,.105),
+        inset 0 1px 0 rgba(255,255,255,.98);
+}
+
+.event-board::before {
+    content: "";
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: -28%;
+    width: 25%;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        rgba(229,140,43,0),
+        #E58C2B,
+        #F1B45C,
+        #6B3F7D,
+        rgba(107,63,125,0)
+    );
+    animation: eventBoardSweep 7.2s ease-in-out infinite;
+}
+
+@keyframes eventBoardBreath {
+    0%,100% {
+        box-shadow:
+            0 16px 38px rgba(49,42,38,.070),
+            inset 0 1px 0 rgba(255,255,255,.96);
+    }
+    50% {
+        box-shadow:
+            0 20px 44px rgba(67,48,41,.100),
+            inset 0 1px 0 rgba(255,255,255,.98);
+    }
+}
+
+@keyframes eventBoardSweep {
+    0%,18%  { left:-28%; opacity:0; }
+    30%     { opacity:1; }
+    58%     { left:110%; opacity:.95; }
+    70%,100%{ left:110%; opacity:0; }
+}
+
+.event-board-head {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .66rem .78rem .58rem .82rem;
+    background:
+        linear-gradient(100deg,#17395A 0%,#204B6F 62%,#6B3F7D 135%);
+}
+
+.event-board-kicker {
+    color: #F2AD4C;
+    font-size: .49rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+.event-board-title {
+    color: #FFFFFF;
+    font-size: 1.02rem;
+    font-weight: 950;
+    letter-spacing: -.015em;
+    margin-top: .08rem;
+}
+
+.event-board-sub {
+    color: rgba(255,255,255,.72);
+    font-size: .53rem;
+    line-height: 1.32;
+    margin-top: .09rem;
+}
+
+.event-board-head-stats {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.event-board-stat {
+    min-width: 78px;
+    padding: .29rem .42rem;
+    border-radius: 10px;
+    background: rgba(255,255,255,.94);
+    border: 1px solid rgba(255,255,255,.72);
+    box-shadow: 0 5px 12px rgba(0,0,0,.08);
+}
+
+.event-board-stat .label {
+    color: #7D8793;
+    font-size: .41rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+}
+
+.event-board-stat .value {
+    color: #17395A;
+    font-size: .68rem;
+    font-weight: 950;
+    margin-top: .07rem;
+}
+
+.event-board-body {
+    padding: .58rem .62rem .62rem .62rem;
+}
+
+.event-board-grid {
+    display: grid;
+    grid-template-columns: .86fr 1.44fr;
+    gap: 10px;
+}
+
+.event-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 13px;
+    border: 1px solid #E4DED7;
+    background:
+        linear-gradient(145deg,#FFFFFF 0%,#FBF8F3 100%);
+    box-shadow:
+        0 7px 17px rgba(55,46,42,.045),
+        inset 0 1px 0 rgba(255,255,255,.95);
+    padding: .50rem .54rem .52rem .54rem;
+    transition:
+        transform .20s ease,
+        box-shadow .20s ease,
+        border-color .20s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-3px);
+    border-color: #D7C8BA;
+    box-shadow:
+        0 14px 28px rgba(55,45,40,.090),
+        inset 0 1px 0 rgba(255,255,255,.98);
+}
+
+.event-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 42%;
+    height: 2px;
+    border-radius: 999px;
+}
+
+.event-volume-card::before {
+    background: linear-gradient(90deg,#E58C2B,#F1B45C,rgba(241,180,92,0));
+}
+
+.event-status-card::before {
+    background: linear-gradient(90deg,#159786,#2D6CDF,#6B3F7D,rgba(107,63,125,0));
+}
+
+.event-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    margin-bottom: .44rem;
+}
+
+.event-card-title {
+    color: #17395A;
+    font-size: .61rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+}
+
+.event-card-meta {
+    color: #927457;
+    font-size: .46rem;
+    font-weight: 850;
+}
+
+.event-volume-row {
+    display: grid;
+    grid-template-columns: 66px 1fr 34px;
+    gap: 7px;
+    align-items: center;
+    min-height: 34px;
+    padding: .13rem .12rem;
+    border-radius: 8px;
+    transition: background .18s ease;
+}
+
+.event-volume-row:hover {
+    background: #FFF8EE;
+}
+
+.event-campus-name {
+    color: #425C76;
+    font-size: .52rem;
+    font-weight: 900;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-volume-track {
+    position: relative;
+    overflow: hidden;
+    height: 11px;
+    border-radius: 999px;
+    background: #EEE8E1;
+    box-shadow: inset 0 1px 2px rgba(46,37,33,.08);
+}
+
+.event-volume-fill {
+    height: 100%;
+    border-radius: 999px;
+    background:
+        linear-gradient(90deg,#E58C2B 0%,#F1B45C 45%,#6B3F7D 100%);
+    background-size: 180% 100%;
+    box-shadow: 0 0 8px rgba(229,140,43,.18);
+    animation: eventVolumeFlow 5s ease-in-out infinite;
+}
+
+@keyframes eventVolumeFlow {
+    0%,100% { background-position: 0% 50%; }
+    50%     { background-position: 100% 50%; }
+}
+
+.event-volume-count {
+    color: #17395A;
+    font-size: .57rem;
+    font-weight: 950;
+    text-align: right;
+}
+
+.event-share {
+    display: block;
+    color: #9AA4AE;
+    font-size: .39rem;
+    font-weight: 750;
+    margin-top: .03rem;
+}
+
+.event-status-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+}
+
+.event-status-table th {
+    color: #87919D;
+    font-size: .41rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+    padding: 0 .24rem .08rem .24rem;
+    text-align: center;
+}
+
+.event-status-table th:first-child {
+    text-align: left;
+}
+
+.event-status-table td {
+    padding: .14rem .24rem;
+    vertical-align: middle;
+    font-size: .48rem;
+}
+
+.event-status-campus {
+    color: #425C76;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.event-status-total {
+    color: #17395A;
+    font-size: .54rem !important;
+    font-weight: 950;
+    text-align: center;
+}
+
+.event-stack {
+    display: flex;
+    width: 100%;
+    height: 15px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #EEE8E1;
+    box-shadow:
+        inset 0 1px 2px rgba(46,37,33,.08),
+        0 2px 4px rgba(50,42,38,.025);
+}
+
+.event-stack-seg {
+    height: 100%;
+    min-width: 0;
+    animation: eventStatusPulse 5.8s ease-in-out infinite;
+    transition:
+        filter .18s ease,
+        transform .18s ease;
+}
+
+.event-stack-seg:hover {
+    filter: brightness(1.10) saturate(1.08);
+}
+
+@keyframes eventStatusPulse {
+    0%,100% { filter: brightness(1); }
+    50%     { filter: brightness(1.04); }
+}
+
+.event-status-number {
+    text-align: center;
+    color: #51687E;
+    font-size: .48rem !important;
+    font-weight: 900;
+}
+
+.event-status-number.zero {
+    color: #C0C7CE;
+    font-weight: 700;
+}
+
+.event-completion-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    padding: .15rem .25rem;
+    border-radius: 999px;
+    font-size: .43rem;
+    font-weight: 950;
+    color: #2F7A55;
+    background: #EBF7F0;
+    border: 1px solid #D1EADD;
+}
+
+.event-status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-top: .35rem;
+    padding-top: .34rem;
+    border-top: 1px solid #ECE5DD;
+}
+
+.event-status-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #718094;
+    font-size: .42rem;
+    font-weight: 800;
+}
+
+.event-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.88);
+}
+
+.event-insight-strip {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 8px;
+    margin-top: 9px;
+}
+
+.event-insight-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 68px;
+    padding: .40rem .44rem;
+    border-radius: 11px;
+    border: 1px solid #E5DED7;
+    background:
+        linear-gradient(145deg,#FFFFFF 0%,#FBF8F3 100%);
+    box-shadow: 0 5px 13px rgba(55,46,42,.035);
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+    animation: eventInsightFloat 6.2s ease-in-out infinite;
+}
+
+.event-insight-card:nth-child(2) { animation-delay:.35s; }
+.event-insight-card:nth-child(3) { animation-delay:.70s; }
+.event-insight-card:nth-child(4) { animation-delay:1.05s; }
+
+.event-insight-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 40%;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        var(--event-accent,#E58C2B),
+        rgba(255,255,255,0)
+    );
+}
+
+.event-insight-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 11px 22px rgba(55,44,39,.080);
+}
+
+@keyframes eventInsightFloat {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-1.5px); }
+}
+
+.event-insight-label {
+    color: #87919D;
+    font-size: .42rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.event-insight-value {
+    color: #17395A;
+    font-size: .69rem;
+    font-weight: 950;
+    margin-top: .08rem;
+}
+
+.event-insight-note {
+    color: #8A949F;
+    font-size: .43rem;
+    line-height: 1.22;
+    margin-top: .07rem;
+}
+
+.event-action-box {
+    margin-top: 8px;
+    padding: .45rem .50rem;
+    border-radius: 11px;
+    border: 1px solid #E7D8C7;
+    border-left: 4px solid #E58C2B;
+    background:
+        radial-gradient(circle at 97% 10%, rgba(107,63,125,.05), transparent 26%),
+        linear-gradient(90deg,#FFF7EC 0%,#FFFDFC 100%);
+    color: #5E6C79;
+    font-size: .49rem;
+    line-height: 1.34;
+}
+
+.event-action-box strong {
+    color: #17395A;
+    font-weight: 950;
+}
+
+.event-empty-state {
+    padding: 1.2rem;
+    border-radius: 12px;
+    border: 1px dashed #DDCFC0;
+    background: #FFFDFC;
+    color: #8995A1;
+    text-align: center;
+    font-size: .55rem;
+}
+
+@media (max-width: 1150px) {
+    .event-board-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .event-insight-strip {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .event-board,
+    .event-board::before,
+    .event-volume-fill,
+    .event-stack-seg,
+    .event-insight-card {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -5654,570 +6172,72 @@ with k6:
 
 
 # =========================================================
-# ACTIVITY TYPE × CAMPUS — EXECUTIVE VISUAL + INSIGHT
+# CAMPUS EVENT & EXECUTION INTELLIGENCE
 # =========================================================
 
-st.markdown(
-    '<div class="q1-executive-row-spacer"></div>',
-    unsafe_allow_html=True,
-)
-
-activity_mix = pd.DataFrame()
-
-if {"Campus", "Activity Type"}.issubset(filtered.columns):
-    activity_mix = (
-        filtered.dropna(subset=["Campus", "Activity Type"])
-        .groupby(["Activity Type", "Campus"], observed=True)
-        .size()
-        .reset_index(name="Activities")
-    )
-
-if activity_mix.empty:
-    st.info("No campus/activity-type data is available for the selected filters.")
-else:
-    activity_colors = _activity_color_map()
-
-    for activity_type in activity_mix["Activity Type"].astype(str).unique():
-        activity_colors.setdefault(
-            activity_type,
-            _activity_fallback_color(activity_type),
-        )
-
-    campus_totals = (
-        activity_mix.groupby("Campus", observed=True)["Activities"]
-        .sum()
-        .sort_values(ascending=False)
-    )
-    activity_totals = (
-        activity_mix.groupby("Activity Type", observed=True)["Activities"]
-        .sum()
-        .sort_values(ascending=False)
-    )
-
-    campus_order = campus_totals.index.tolist()
-    activity_order = activity_totals.index.tolist()
-
-    leader_campus = str(campus_totals.index[0])
-    leader_count = int(campus_totals.iloc[0])
-
-    leader_type = str(activity_totals.index[0])
-    leader_type_count = int(activity_totals.iloc[0])
-
-    total_q1_activities = int(activity_mix["Activities"].sum())
-    leader_portfolio_share = _pct(
-        leader_count,
-        total_q1_activities,
-    )
-    leader_type_share = _pct(
-        leader_type_count,
-        total_q1_activities,
-    )
-
-    active_campuses = int(activity_mix["Campus"].nunique())
-    active_formats = int(activity_mix["Activity Type"].nunique())
-
-    # Most concentrated Campus × Activity Type cell.
-    peak_cell = (
-        activity_mix
-        .sort_values("Activities", ascending=False)
-        .iloc[0]
-    )
-    peak_cell_count = int(peak_cell["Activities"])
-    peak_cell_campus = str(peak_cell["Campus"])
-    peak_cell_type = str(peak_cell["Activity Type"])
-
-    lowest_campus = str(campus_totals.index[-1])
-    lowest_campus_count = int(campus_totals.iloc[-1])
-
-    # -----------------------------------------------------
-    # MATRIX CHART + BRAND MANAGEMENT INSIGHT
-    # -----------------------------------------------------
-    q1_chart_col, q1_insight_col = st.columns(
-        [2.45, 1.00],
-        gap="medium",
-        vertical_alignment="top",
-    )
-
-    with q1_chart_col:
-        with st.container(border=True):
-            st.markdown(
-                '<span class="q1-brand-chart-marker"></span>',
-                unsafe_allow_html=True,
-            )
-
-            st.markdown(
-                (
-                    '<div class="q1-brand-heading">'
-                    '<div class="eyebrow">Activity Portfolio</div>'
-                    '<div class="title">Activity Type × Campus Matrix</div>'
-                    '<div class="sub">'
-                    'Rows show Activity Type and columns show Campus. '
-                    'Bubble size represents activity count; every count updates automatically with the live sheet.'
-                    '</div>'
-                    '</div>'
-                    '<div class="q1-brand-rule"></div>'
-                ),
-                unsafe_allow_html=True,
-            )
-
-            # Native HTML/CSS matrix is used here instead of Plotly markers.
-            # This makes bubble shadow and continuous motion work reliably
-            # inside Streamlit.
-            max_count = max(
-                int(activity_mix["Activities"].max()),
-                1,
-            )
-
-            # Quick lookup: (activity_type, campus) -> count
-            bubble_lookup = {
-                (str(row["Activity Type"]), str(row["Campus"])): int(row["Activities"])
-                for _, row in activity_mix.iterrows()
-            }
-
-            def _hex_luminance(hex_color):
-                value = str(hex_color).lstrip("#")
-                if len(value) != 6:
-                    return 1.0
-                r = int(value[0:2], 16) / 255.0
-                g = int(value[2:4], 16) / 255.0
-                b = int(value[4:6], 16) / 255.0
-                return (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
-
-            grid_columns = (
-                "118px "
-                + " ".join(["minmax(105px, 1fr)"] * len(campus_order))
-            )
-
-            matrix_parts = [
-                '<div class="q1-css-matrix">',
-                f'<div class="q1-css-grid" style="grid-template-columns:{grid_columns};">',
-                '<div class="q1-css-corner"></div>',
-            ]
-
-            # Campus column headers
-            for campus in campus_order:
-                matrix_parts.append(
-                    f'<div class="q1-css-campus">{html.escape(str(campus))}</div>'
-                )
-
-            bubble_index = 0
-
-            # Activity Type rows
-            for activity_type in activity_order:
-                matrix_parts.append(
-                    f'<div class="q1-css-activity">{html.escape(str(activity_type))}</div>'
-                )
-
-                activity_color = activity_colors.get(
-                    activity_type,
-                    _activity_fallback_color(activity_type),
-                )
-
-                luminance = _hex_luminance(activity_color)
-                text_color = "#FFFFFF" if luminance < .47 else "#17395A"
-
-                for campus in campus_order:
-                    count = bubble_lookup.get(
-                        (str(activity_type), str(campus)),
-                        0,
-                    )
-
-                    matrix_parts.append('<div class="q1-css-cell">')
-
-                    if count > 0:
-                        # sqrt scaling gives a professional bubble-size relationship
-                        size_px = 22 + (
-                            math.sqrt(count / max_count) * 38
-                        )
-
-                        delay = -((bubble_index % 9) * .31)
-                        duration = 3.8 + ((bubble_index % 5) * .22)
-
-                        tooltip = (
-                            f"{activity_type} · {campus}: {count} activities"
-                        )
-
-                        matrix_parts.append(
-                            (
-                                '<div class="q1-motion-bubble" '
-                                f'title="{html.escape(tooltip)}" '
-                                f'style="width:{size_px:.1f}px;'
-                                f'height:{size_px:.1f}px;'
-                                f'background:{activity_color};'
-                                f'color:{text_color};'
-                                f'--bubble-delay:{delay:.2f}s;'
-                                f'--bubble-duration:{duration:.2f}s;">'
-                                f'<span class="q1-bubble-count">{count}</span>'
-                                '</div>'
-                            )
-                        )
-                        bubble_index += 1
-
-                    matrix_parts.append('</div>')
-
-            matrix_parts.extend([
-                '</div>',
-                (
-                    '<div class="q1-css-matrix-foot">'
-                    '<span>Bubble size = activity count · hover for detail</span>'
-                    '<span><strong>Live:</strong> shadow + motion update with filtered data</span>'
-                    '</div>'
-                ),
-                '</div>',
-            ])
-
-            st.markdown(
-                "".join(matrix_parts),
-                unsafe_allow_html=True,
-            )
-
-    with q1_insight_col:
-        # -----------------------------------------------------
-        # CAMPUS-WISE EVENT + STATUS PANEL
-        # Only records with Event populated are treated as events.
-        # -----------------------------------------------------
-        event_frame = filtered.copy()
-
-        if "Event" in event_frame.columns:
-            event_text = (
-                event_frame["Event"]
-                .astype("string")
-                .str.strip()
-            )
-            event_mask = (
-                event_text.notna()
-                & event_text.ne("")
-                & event_text.ne("<NA>")
-                & event_text.ne("nan")
-                & event_text.ne("None")
-            )
-            event_frame = event_frame[event_mask].copy()
-        else:
-            event_frame = event_frame.iloc[0:0].copy()
-
-        total_events_panel = int(len(event_frame))
-
-        event_panel_parts = [
-            '<div class="q1-event-status-panel">',
-            '<div class="q1-event-head">',
-            '<div class="q1-event-kicker">Campus · Event Intelligence</div>',
-            '<div class="q1-event-title">Events & Execution Status</div>',
-            '<div class="q1-event-sub">'
-            'Campus-wise event volume and status mix for the current filter selection.'
-            '</div>',
-            '</div>',
-            '<div class="q1-event-body">',
-        ]
-
-        if event_frame.empty:
-            event_panel_parts.extend([
-                '<div class="q1-event-empty">',
-                'No Event records are available for the selected filters.',
-                '</div>',
-            ])
-        else:
-            # ---------------- Event count by campus ----------------
-            event_by_campus = (
-                event_frame.groupby("Campus", observed=True)
-                .size()
-                .sort_values(ascending=False)
-            )
-
-            max_event_count = max(
-                int(event_by_campus.max()),
-                1,
-            )
-
-            event_panel_parts.extend([
-                '<div class="q1-mini-section">',
-                '<div class="q1-mini-heading">',
-                '<span class="title">Event Volume by Campus</span>',
-                f'<span class="meta">{total_events_panel:,} events</span>',
-                '</div>',
-            ])
-
-            for campus, event_count in event_by_campus.items():
-                event_count = int(event_count)
-                width_pct = (
-                    event_count / max_event_count * 100.0
-                    if max_event_count
-                    else 0
-                )
-
-                event_panel_parts.append(
-                    (
-                        '<div class="q1-event-row">'
-                        f'<div class="q1-event-campus">{html.escape(str(campus))}</div>'
-                        '<div class="q1-event-bar-track">'
-                        f'<div class="q1-event-bar-fill" style="width:{width_pct:.1f}%"></div>'
-                        '</div>'
-                        f'<div class="q1-event-count">{event_count}</div>'
-                        '</div>'
-                    )
-                )
-
-            event_panel_parts.append('</div>')
-
-            # ---------------- Event status by campus ----------------
-            if "Status" in event_frame.columns:
-                status_work = event_frame.copy()
-                status_work["Status"] = (
-                    status_work["Status"]
-                    .astype("string")
-                    .str.strip()
-                    .replace({
-                        "": pd.NA,
-                        "nan": pd.NA,
-                        "None": pd.NA,
-                        "<NA>": pd.NA,
-                    })
-                    .fillna("(blank)")
-                )
-
-                event_status = (
-                    status_work.groupby(
-                        ["Campus", "Status"],
-                        observed=True,
-                        dropna=False,
-                    )
-                    .size()
-                    .reset_index(name="Count")
-                )
-
-                preferred_status_order = [
-                    "Completed",
-                    "Confirmed",
-                    "Planned",
-                    "Cancelled",
-                    "Rescheduled",
-                    "(blank)",
-                ]
-
-                present_statuses = event_status["Status"].astype(str).unique().tolist()
-
-                status_order = [
-                    status for status in preferred_status_order
-                    if status in present_statuses
-                ] + sorted(
-                    [
-                        status for status in present_statuses
-                        if status not in preferred_status_order
-                    ],
-                    key=lambda x: str(x).lower(),
-                )
-
-                status_colors = _status_color_map().copy()
-                status_colors["(blank)"] = "#A4AFBA"
-
-                fallback_status_colors = [
-                    "#7453C6",
-                    "#159786",
-                    "#D18A24",
-                    "#2D6CDF",
-                    "#C65C65",
-                ]
-
-                for idx, status in enumerate(status_order):
-                    status_colors.setdefault(
-                        status,
-                        fallback_status_colors[
-                            idx % len(fallback_status_colors)
-                        ],
-                    )
-
-                event_panel_parts.extend([
-                    '<div class="q1-mini-section">',
-                    '<div class="q1-mini-heading">',
-                    '<span class="title">Event Status by Campus</span>',
-                    '<span class="meta">execution mix</span>',
-                    '</div>',
-                ])
-
-                for campus in event_by_campus.index.tolist():
-                    campus_status = event_status[
-                        event_status["Campus"].eq(campus)
-                    ]
-
-                    campus_total = int(
-                        campus_status["Count"].sum()
-                    )
-
-                    segments = []
-
-                    for status in status_order:
-                        match = campus_status[
-                            campus_status["Status"].eq(status)
-                        ]
-
-                        count = (
-                            int(match["Count"].sum())
-                            if not match.empty
-                            else 0
-                        )
-
-                        if count <= 0:
-                            continue
-
-                        width_pct = (
-                            count / campus_total * 100.0
-                            if campus_total
-                            else 0
-                        )
-
-                        tooltip = (
-                            f"{campus} · {status}: {count}"
-                        )
-
-                        segments.append(
-                            (
-                                '<span class="q1-status-seg" '
-                                f'title="{html.escape(tooltip)}" '
-                                f'style="width:{width_pct:.2f}%;'
-                                f'background:{status_colors[status]};">'
-                                '</span>'
-                            )
-                        )
-
-                    event_panel_parts.append(
-                        (
-                            '<div class="q1-status-row">'
-                            f'<div class="q1-event-campus">{html.escape(str(campus))}</div>'
-                            f'<div class="q1-status-stack">{"".join(segments)}</div>'
-                            '</div>'
-                        )
-                    )
-
-                # Legend
-                event_panel_parts.append(
-                    '<div class="q1-status-legend">'
-                )
-
-                for status in status_order:
-                    event_panel_parts.append(
-                        (
-                            '<span class="q1-status-key">'
-                            f'<span class="q1-status-dot" style="background:{status_colors[status]}"></span>'
-                            f'{html.escape(str(status))}'
-                            '</span>'
-                        )
-                    )
-
-                event_panel_parts.extend([
-                    '</div>',
-                    '</div>',
-                ])
-
-                # Dynamic footer signal
-                completed_events = int(
-                    status_work["Status"].eq("Completed").sum()
-                )
-                confirmed_events = int(
-                    status_work["Status"].eq("Confirmed").sum()
-                )
-                planned_events = int(
-                    status_work["Status"].eq("Planned").sum()
-                )
-                blank_events = int(
-                    status_work["Status"].eq("(blank)").sum()
-                )
-
-                leading_event_campus = str(
-                    event_by_campus.index[0]
-                )
-                leading_event_count = int(
-                    event_by_campus.iloc[0]
-                )
-
-                if blank_events > 0:
-                    footer_text = (
-                        f"<strong>{leading_event_campus}</strong> leads event volume "
-                        f"with {leading_event_count}. "
-                        f"<strong>{blank_events}</strong> event records have blank status; "
-                        "close these data gaps before execution review."
-                    )
-                elif planned_events + confirmed_events > completed_events:
-                    footer_text = (
-                        f"<strong>{leading_event_campus}</strong> leads event volume "
-                        f"with {leading_event_count}. "
-                        f"There are <strong>{confirmed_events + planned_events}</strong> "
-                        "confirmed/planned events in the execution pipeline."
-                    )
-                else:
-                    footer_text = (
-                        f"<strong>{leading_event_campus}</strong> leads event volume "
-                        f"with {leading_event_count}. "
-                        f"<strong>{completed_events}</strong> events are completed."
-                    )
-
-                event_panel_parts.append(
-                    f'<div class="q1-event-footer">{footer_text}</div>'
-                )
-
-        event_panel_parts.extend([
-            '</div>',
-            '</div>',
-        ])
-
-        st.markdown(
-            "".join(event_panel_parts),
-            unsafe_allow_html=True,
-        )
-
-
-# ---------------------------------------------------------
-# MANAGEMENT SIGNAL — FULL-WIDTH SUMMARY BELOW BOTH CHARTS
-# ---------------------------------------------------------
-event_summary_frame = filtered.copy()
-
-if "Event" in event_summary_frame.columns:
-    event_summary_text = (
-        event_summary_frame["Event"]
+event_view = filtered.copy()
+
+if "Event" in event_view.columns:
+    event_clean = (
+        event_view["Event"]
         .astype("string")
         .str.strip()
+        .replace({
+            "": pd.NA,
+            "nan": pd.NA,
+            "None": pd.NA,
+            "<NA>": pd.NA,
+        })
     )
-    event_summary_mask = (
-        event_summary_text.notna()
-        & event_summary_text.ne("")
-        & event_summary_text.ne("<NA>")
-        & event_summary_text.ne("nan")
-        & event_summary_text.ne("None")
-    )
-    event_summary_frame = event_summary_frame[
-        event_summary_mask
-    ].copy()
+    event_view = event_view[event_clean.notna()].copy()
 else:
-    event_summary_frame = event_summary_frame.iloc[0:0].copy()
+    event_view = event_view.iloc[0:0].copy()
 
-summary_event_count = int(len(event_summary_frame))
-
-if not event_summary_frame.empty:
-    summary_event_campus = (
-        event_summary_frame.groupby("Campus", observed=True)
-        .size()
-        .sort_values(ascending=False)
-    )
-
-    summary_event_leader = str(
-        summary_event_campus.index[0]
-    )
-    summary_event_leader_count = int(
-        summary_event_campus.iloc[0]
+if event_view.empty:
+    st.markdown(
+        (
+            '<div class="event-board">'
+                '<div class="event-board-head">'
+                    '<div>'
+                        '<div class="event-board-kicker">Campus · Event Intelligence</div>'
+                        '<div class="event-board-title">Campus Event & Execution Intelligence</div>'
+                        '<div class="event-board-sub">'
+                            'Campus-wise event volume and execution status for the current filter selection.'
+                        '</div>'
+                    '</div>'
+                '</div>'
+                '<div class="event-board-body">'
+                    '<div class="event-empty-state">'
+                        'No Event records are available for the selected filters.'
+                    '</div>'
+                '</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
     )
 else:
-    summary_event_leader = "N/A"
-    summary_event_leader_count = 0
+    # -----------------------------------------------------
+    # Core event metrics
+    # -----------------------------------------------------
+    event_view["Campus"] = (
+        event_view["Campus"]
+        .astype("string")
+        .str.strip()
+        .replace({
+            "": pd.NA,
+            "nan": pd.NA,
+            "None": pd.NA,
+            "<NA>": pd.NA,
+        })
+    )
 
-summary_completed = 0
-summary_confirmed = 0
-summary_planned = 0
-summary_blank = 0
+    event_view = event_view.dropna(subset=["Campus"]).copy()
 
-if (
-    not event_summary_frame.empty
-    and "Status" in event_summary_frame.columns
-):
-    event_summary_status = (
-        event_summary_frame["Status"]
+    if "Status" not in event_view.columns:
+        event_view["Status"] = pd.NA
+
+    event_view["Status"] = (
+        event_view["Status"]
         .astype("string")
         .str.strip()
         .replace({
@@ -6229,368 +6249,401 @@ if (
         .fillna("(blank)")
     )
 
-    summary_completed = int(
-        event_summary_status.eq("Completed").sum()
-    )
-    summary_confirmed = int(
-        event_summary_status.eq("Confirmed").sum()
-    )
-    summary_planned = int(
-        event_summary_status.eq("Planned").sum()
-    )
-    summary_blank = int(
-        event_summary_status.eq("(blank)").sum()
-    )
-
-summary_pipeline = (
-    summary_confirmed
-    + summary_planned
-)
-
-if total_q1_activities:
-    event_share_of_activity = _pct(
-        summary_event_count,
-        total_q1_activities,
-    )
-else:
-    event_share_of_activity = 0.0
-
-if summary_event_count:
-    event_completion_rate = _pct(
-        summary_completed,
-        summary_event_count,
-    )
-else:
-    event_completion_rate = 0.0
-
-# Dynamic management readout
-if summary_blank > 0:
-    management_finding = (
-        f"{leader_campus} leads overall activity volume with {leader_count} activities, "
-        f"while {summary_event_leader} leads event volume with {summary_event_leader_count}. "
-        f"{summary_blank} event records still have blank status."
-    )
-    management_action = (
-        f"Close the {summary_blank} missing event-status records first. "
-        f"Then review whether {leader_type} and the leading event campus are producing "
-        "proportionate reach and execution outcomes."
-    )
-elif summary_pipeline > summary_completed:
-    management_finding = (
-        f"{leader_campus} leads activity volume with {leader_count} activities. "
-        f"{summary_event_leader} leads events with {summary_event_leader_count}; "
-        f"{summary_pipeline} events are currently confirmed/planned versus "
-        f"{summary_completed} completed."
-    )
-    management_action = (
-        "Prioritize conversion of the confirmed/planned event pipeline into completed execution. "
-        f"Protect owner capacity in {leader_campus} and validate whether {leader_type} remains "
-        "the most effective outreach format."
-    )
-else:
-    management_finding = (
-        f"{leader_campus} leads activity volume with {leader_count} activities, "
-        f"and {summary_event_leader} leads event volume with {summary_event_leader_count}. "
-        f"Event completion currently stands at {event_completion_rate:.1f}%."
-    )
-    management_action = (
-        "Use the strongest completed event/activity combinations as the execution benchmark. "
-        f"Review {lowest_campus} ({lowest_campus_count} activities) to confirm whether the lower "
-        "volume is strategic or represents an outreach opportunity."
-    )
-
-management_summary_html = (
-    '<div class="q1-management-summary">'
-        '<div class="q1-summary-head">'
-            '<div>'
-                '<div class="q1-summary-kicker">Jaipuria · Management Intelligence</div>'
-                '<div class="q1-summary-title">Management Signal</div>'
-                '<div class="q1-summary-sub">'
-                    'Combined interpretation of the Activity Type × Campus matrix and campus-wise Event / Status execution.'
-                '</div>'
-            '</div>'
-            '<div class="q1-summary-status">DYNAMIC INSIGHT</div>'
-        '</div>'
-
-        '<div class="q1-summary-grid">'
-            '<div class="q1-summary-card orange">'
-                '<div class="label">Activity Leader</div>'
-                f'<div class="value">{html.escape(leader_campus)}</div>'
-                f'<div class="note">{leader_count:,} activities · {leader_portfolio_share:.1f}% of filtered activity</div>'
-            '</div>'
-
-            '<div class="q1-summary-card violet">'
-                '<div class="label">Dominant Format</div>'
-                f'<div class="value">{html.escape(leader_type)}</div>'
-                f'<div class="note">{leader_type_count:,} activities · {leader_type_share:.1f}% of filtered activity</div>'
-            '</div>'
-
-            '<div class="q1-summary-card teal">'
-                '<div class="label">Event Leader</div>'
-                f'<div class="value">{html.escape(summary_event_leader)}</div>'
-                f'<div class="note">{summary_event_leader_count:,} events · {summary_event_count:,} total events</div>'
-            '</div>'
-
-            '<div class="q1-summary-card blue">'
-                '<div class="label">Event Execution</div>'
-                f'<div class="value">{event_completion_rate:.1f}% completed</div>'
-                f'<div class="note">{summary_completed} completed · {summary_pipeline} confirmed/planned</div>'
-            '</div>'
-        '</div>'
-
-        '<div class="q1-summary-bottom">'
-            '<div class="q1-summary-finding">'
-                '<strong>Finding:</strong> '
-                f'{html.escape(management_finding)} '
-                f'Events represent {event_share_of_activity:.1f}% of filtered activity volume.'
-            '</div>'
-
-            '<div class="q1-summary-action">'
-                '<strong>Recommended Action:</strong> '
-                f'{html.escape(management_action)}'
-            '</div>'
-        '</div>'
-    '</div>'
-)
-
-st.markdown(
-    management_summary_html,
-    unsafe_allow_html=True,
-)
-
-
-# ---------------------------------------------------------
-# DETAILED EXECUTION MATRIX
-# ---------------------------------------------------------
-st.markdown(
-    (
-        '<div class="q1-table-heading">'
-        '<div class="title">Activity Execution Matrix</div>'
-        '<div class="sub">'
-        'Exact Campus → Activity Type → Event counts with execution status, '
-        'grand totals and row-level management signals.'
-        '</div>'
-        '</div>'
-    ),
-    unsafe_allow_html=True,
-)
-
-matrix_metrics = render_activity_execution_matrix(filtered)
-
-if matrix_metrics:
-    if matrix_metrics["blank"] > 0:
-        matrix_action = (
-            f"Close the {matrix_metrics['blank']} blank-status records first. "
-            "Status hygiene should be complete before comparing execution quality across campuses."
-        )
-    elif matrix_metrics["planned"] > matrix_metrics["completed"]:
-        matrix_action = (
-            "The planned pipeline is larger than completed execution. "
-            "Prioritize confirmation, owner readiness and closure for the highest-volume activity combinations."
-        )
-    elif matrix_metrics["confirmed"] > matrix_metrics["completed"]:
-        matrix_action = (
-            "Confirmed activities are ahead of completed activities. "
-            "Convert the ready pipeline into completed execution before adding avoidable new load."
-        )
-    else:
-        matrix_action = (
-            "Execution is comparatively mature. "
-            "Use the strongest completed activity combinations as the operating benchmark for other campuses."
-        )
-
-    ems_insight(
-        "EMS · Activity Execution Matrix Insight",
-        (
-            f"{matrix_metrics['leader_campus']} has the largest filtered workload "
-            f"with {matrix_metrics['leader_total']} activities. Overall, "
-            f"{matrix_metrics['completed']} are completed, "
-            f"{matrix_metrics['confirmed']} confirmed and "
-            f"{matrix_metrics['planned']} planned."
-        ),
-        (
-            f"Completion is {matrix_metrics['completion_rate']:.1f}% and status capture is "
-            f"{matrix_metrics['status_capture_rate']:.1f}%. "
-            f"{matrix_metrics['blank']} records currently have blank status."
-        ),
-        matrix_action,
-        "violet",
-    )
-
-
-# =========================================================
-# Q2 — CAMPUS EVENT INTELLIGENCE
-# =========================================================
-overview_section(
-    "Q2 · Event Intelligence",
-    "Campus-wise Events + Event Type + Status",
-    "Separate event portfolio volume from event execution health so management can see both scale and readiness.",
-)
-
-q2_left, q2_right = st.columns([1.05, .95], gap="medium", vertical_alignment="top")
-
-with q2_left:
-    with st.container(border=True):
-        chart_header(
-            "Event Portfolio by Campus",
-            "Event-filled records segmented by Event type.",
-        )
-
-        event_mix = pd.DataFrame()
-        if not event_df.empty and {"Campus", "Event"}.issubset(event_df.columns):
-            event_mix = (
-                event_df.dropna(subset=["Campus", "Event"])
-                .groupby(["Campus", "Event"], observed=True)
-                .size()
-                .reset_index(name="Events")
-            )
-
-        if event_mix.empty:
-            st.info("No Event values are available for the selected filters.")
-        else:
-            event_totals = (
-                event_mix.groupby("Campus", observed=True)["Events"]
-                .sum()
-                .sort_values(ascending=False)
-            )
-            event_campus_order = event_totals.index.tolist()
-
-            fig = px.bar(
-                event_mix,
-                x="Events",
-                y="Campus",
-                color="Event",
-                orientation="h",
-                barmode="stack",
-                text="Events",
-                category_orders={"Campus": event_campus_order},
-            )
-            fig.update_traces(
-                textposition="inside",
-                textfont=dict(size=9),
-                marker_line_width=0,
-                hovertemplate=(
-                    "<b>%{y}</b><br>"
-                    "Event Type: %{fullData.name}<br>"
-                    "Events: %{x:.0f}<extra></extra>"
-                ),
-            )
-            fig.update_xaxes(title="Event Count", dtick=1, rangemode="tozero")
-            fig.update_yaxes(
-                title="",
-                categoryorder="array",
-                categoryarray=event_campus_order,
-                autorange="reversed",
-            )
-            fig = professional_chart(fig, 310, legend=True)
-            fig.update_layout(legend_title_text="Event")
-            st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
-
-with q2_right:
-    with st.container(border=True):
-        chart_header(
-            "Event Execution Status",
-            "100% status mix by campus; hover shows underlying event counts.",
-        )
-
-        event_status = pd.DataFrame()
-        if not event_df.empty and {"Campus", "Status"}.issubset(event_df.columns):
-            event_status = (
-                event_df.dropna(subset=["Campus", "Status"])
-                .groupby(["Campus", "Status"], observed=True)
-                .size()
-                .reset_index(name="Event Count")
-            )
-            if not event_status.empty:
-                event_status["Campus Total"] = event_status.groupby("Campus")["Event Count"].transform("sum")
-                event_status["Share %"] = (
-                    event_status["Event Count"]
-                    / event_status["Campus Total"].replace(0, pd.NA)
-                    * 100
-                ).fillna(0)
-                event_status["Label"] = event_status["Share %"].map(lambda x: f"{x:.0f}%" if x >= 8 else "")
-
-        if event_status.empty:
-            st.info("No event status data is available for the selected filters.")
-        else:
-            status_campus_order = (
-                event_status.groupby("Campus", observed=True)["Event Count"]
-                .sum()
-                .sort_values(ascending=False)
-                .index.tolist()
-            )
-
-            fig = px.bar(
-                event_status,
-                x="Share %",
-                y="Campus",
-                color="Status",
-                orientation="h",
-                barmode="stack",
-                text="Label",
-                custom_data=["Event Count", "Campus Total"],
-                color_discrete_map=_status_color_map(),
-                category_orders={"Campus": status_campus_order},
-            )
-            fig.update_traces(
-                textposition="inside",
-                textfont=dict(size=9),
-                marker_line_width=0,
-                hovertemplate=(
-                    "<b>%{y}</b><br>"
-                    "Status: %{fullData.name}<br>"
-                    "Events: %{customdata[0]:.0f}<br>"
-                    "Campus Events: %{customdata[1]:.0f}<br>"
-                    "Share: %{x:.1f}%<extra></extra>"
-                ),
-            )
-            fig.update_xaxes(title="Status Share", range=[0, 100], ticksuffix="%")
-            fig.update_yaxes(
-                title="",
-                categoryorder="array",
-                categoryarray=status_campus_order,
-                autorange="reversed",
-            )
-            fig = professional_chart(fig, 310, legend=True)
-            fig.update_layout(legend_title_text="Status")
-            st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
-
-if event_df.empty:
-    ems_insight(
-        "EMS · Event Execution Insight",
-        "No Event records are visible under the current filter selection.",
-        "Event-volume and readiness comparisons cannot be assessed for this selection.",
-        "Clear the Event/Status filters or complete the Event field in the source sheet before using event-level management decisions.",
-        "amber",
-    )
-else:
-    event_by_campus = (
-        event_df.dropna(subset=["Campus"])
-        .groupby("Campus", observed=True)
+    event_totals = (
+        event_view.groupby("Campus", observed=True)
         .size()
         .sort_values(ascending=False)
-        if "Campus" in event_df.columns
-        else pd.Series(dtype=int)
     )
-    event_leader = str(event_by_campus.index[0]) if not event_by_campus.empty else "N/A"
-    event_leader_count = int(event_by_campus.iloc[0]) if not event_by_campus.empty else total_events
 
-    event_type_counts = event_df["Event"].value_counts() if "Event" in event_df.columns else pd.Series(dtype=int)
-    top_event_type = str(event_type_counts.index[0]) if not event_type_counts.empty else "N/A"
+    event_status = (
+        event_view.groupby(
+            ["Campus", "Status"],
+            observed=True,
+            dropna=False,
+        )
+        .size()
+        .reset_index(name="Count")
+    )
 
-    completed_events = int(event_df["Status"].eq("Completed").sum()) if "Status" in event_df.columns else 0
-    confirmed_events = int(event_df["Status"].eq("Confirmed").sum()) if "Status" in event_df.columns else 0
-    planned_events = int(event_df["Status"].eq("Planned").sum()) if "Status" in event_df.columns else 0
-    event_completion = _pct(completed_events, total_events)
-    forward_load = confirmed_events + planned_events
-    forward_share = _pct(forward_load, total_events)
+    total_event_count = int(len(event_view))
+    active_event_campuses = int(event_view["Campus"].nunique())
 
-    ems_insight(
-        "EMS · Event Execution Insight",
-        f"{event_leader} has the highest visible event volume ({event_leader_count}); {top_event_type} is the most common Event type. Completed events represent {event_completion:.1f}% of visible events.",
-        f"{forward_load} events ({forward_share:.1f}%) are still Confirmed/Planned, which indicates the forward execution load that needs owner and resource readiness.",
-        f"Prioritize the Confirmed/Planned event queue for {event_leader}; verify owners, resource persons and dates before adding more event volume.",
-        "teal",
+    preferred_status_order = [
+        "Completed",
+        "Confirmed",
+        "Planned",
+        "Cancelled",
+        "Rescheduled",
+        "(blank)",
+    ]
+
+    present_statuses = (
+        event_status["Status"]
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    status_order = [
+        status
+        for status in preferred_status_order
+        if status in present_statuses
+    ] + sorted(
+        [
+            status
+            for status in present_statuses
+            if status not in preferred_status_order
+        ],
+        key=lambda x: str(x).lower(),
+    )
+
+    status_colors = _status_color_map().copy()
+    status_colors["(blank)"] = "#A4AFBA"
+
+    fallback_status_colors = [
+        "#7453C6",
+        "#159786",
+        "#D18A24",
+        "#2D6CDF",
+        "#C65C65",
+    ]
+
+    for idx, status in enumerate(status_order):
+        status_colors.setdefault(
+            status,
+            fallback_status_colors[
+                idx % len(fallback_status_colors)
+            ],
+        )
+
+    completed_total = int(
+        event_view["Status"].eq("Completed").sum()
+    )
+    confirmed_total = int(
+        event_view["Status"].eq("Confirmed").sum()
+    )
+    planned_total = int(
+        event_view["Status"].eq("Planned").sum()
+    )
+    cancelled_total = int(
+        event_view["Status"].eq("Cancelled").sum()
+    )
+    blank_total = int(
+        event_view["Status"].eq("(blank)").sum()
+    )
+
+    completion_rate = _pct(
+        completed_total,
+        total_event_count,
+    )
+
+    pipeline_total = (
+        confirmed_total
+        + planned_total
+    )
+
+    event_leader = str(
+        event_totals.index[0]
+    )
+    event_leader_count = int(
+        event_totals.iloc[0]
+    )
+    event_leader_share = _pct(
+        event_leader_count,
+        total_event_count,
+    )
+
+    max_event_count = max(
+        int(event_totals.max()),
+        1,
+    )
+
+    # -----------------------------------------------------
+    # Header
+    # -----------------------------------------------------
+    event_board_parts = [
+        '<div class="event-board">',
+        '<div class="event-board-head">',
+        '<div>',
+        '<div class="event-board-kicker">Campus · Event Intelligence</div>',
+        '<div class="event-board-title">Campus Event & Execution Intelligence</div>',
+        '<div class="event-board-sub">'
+        'Campus-wise event volume and status execution in one executive view.'
+        '</div>',
+        '</div>',
+        '<div class="event-board-head-stats">',
+        '<div class="event-board-stat">'
+        '<div class="label">Total Events</div>'
+        f'<div class="value">{total_event_count:,}</div>'
+        '</div>',
+        '<div class="event-board-stat">'
+        '<div class="label">Event Campuses</div>'
+        f'<div class="value">{active_event_campuses}</div>'
+        '</div>',
+        '<div class="event-board-stat">'
+        '<div class="label">Completion</div>'
+        f'<div class="value">{completion_rate:.1f}%</div>'
+        '</div>',
+        '</div>',
+        '</div>',
+        '<div class="event-board-body">',
+        '<div class="event-board-grid">',
+    ]
+
+    # -----------------------------------------------------
+    # LEFT: Event volume by campus
+    # -----------------------------------------------------
+    event_board_parts.extend([
+        '<div class="event-card event-volume-card">',
+        '<div class="event-card-head">',
+        '<div class="event-card-title">Event Volume by Campus</div>',
+        f'<div class="event-card-meta">{total_event_count:,} total events</div>',
+        '</div>',
+    ])
+
+    for campus, count_value in event_totals.items():
+        count_value = int(count_value)
+        width_pct = (
+            count_value
+            / max_event_count
+            * 100.0
+        )
+        share_pct = _pct(
+            count_value,
+            total_event_count,
+        )
+
+        event_board_parts.append(
+            (
+                '<div class="event-volume-row">'
+                    '<div>'
+                        f'<div class="event-campus-name">{html.escape(str(campus))}</div>'
+                        f'<span class="event-share">{share_pct:.1f}% share</span>'
+                    '</div>'
+                    '<div class="event-volume-track">'
+                        f'<div class="event-volume-fill" style="width:{width_pct:.1f}%"></div>'
+                    '</div>'
+                    f'<div class="event-volume-count">{count_value}</div>'
+                '</div>'
+            )
+        )
+
+    event_board_parts.append('</div>')
+
+    # -----------------------------------------------------
+    # RIGHT: Campus event status matrix
+    # -----------------------------------------------------
+    visible_count_columns = [
+        status
+        for status in [
+            "Completed",
+            "Confirmed",
+            "Planned",
+            "Cancelled",
+            "(blank)",
+        ]
+        if status in status_order
+    ]
+
+    event_board_parts.extend([
+        '<div class="event-card event-status-card">',
+        '<div class="event-card-head">',
+        '<div class="event-card-title">Event Status by Campus</div>',
+        '<div class="event-card-meta">execution mix + exact counts</div>',
+        '</div>',
+        '<table class="event-status-table">',
+        '<thead><tr>',
+        '<th>Campus</th>',
+        '<th>Total</th>',
+        '<th style="min-width:210px;">Status Distribution</th>',
+    ])
+
+    for status in visible_count_columns:
+        label = "Blank" if status == "(blank)" else status
+        event_board_parts.append(
+            f'<th>{html.escape(label)}</th>'
+        )
+
+    event_board_parts.extend([
+        '<th>Completion</th>',
+        '</tr></thead>',
+        '<tbody>',
+    ])
+
+    for campus in event_totals.index.tolist():
+        campus_status = event_status[
+            event_status["Campus"].eq(campus)
+        ]
+
+        campus_total = int(
+            campus_status["Count"].sum()
+        )
+
+        count_lookup = {
+            str(row["Status"]): int(row["Count"])
+            for _, row in campus_status.iterrows()
+        }
+
+        completed_count = int(
+            count_lookup.get("Completed", 0)
+        )
+        campus_completion = _pct(
+            completed_count,
+            campus_total,
+        )
+
+        stack_segments = []
+
+        for status in status_order:
+            count_value = int(
+                count_lookup.get(status, 0)
+            )
+
+            if count_value <= 0:
+                continue
+
+            width_pct = _pct(
+                count_value,
+                campus_total,
+            )
+
+            tooltip = (
+                f"{campus} · {status}: {count_value}"
+            )
+
+            stack_segments.append(
+                (
+                    '<span class="event-stack-seg" '
+                    f'title="{html.escape(tooltip)}" '
+                    f'style="width:{width_pct:.2f}%;'
+                    f'background:{status_colors[status]};">'
+                    '</span>'
+                )
+            )
+
+        event_board_parts.extend([
+            '<tr>',
+            f'<td class="event-status-campus">{html.escape(str(campus))}</td>',
+            f'<td class="event-status-total">{campus_total}</td>',
+            f'<td><div class="event-stack">{"".join(stack_segments)}</div></td>',
+        ])
+
+        for status in visible_count_columns:
+            count_value = int(
+                count_lookup.get(status, 0)
+            )
+            zero_class = " zero" if count_value == 0 else ""
+
+            event_board_parts.append(
+                f'<td class="event-status-number{zero_class}">{count_value}</td>'
+            )
+
+        event_board_parts.extend([
+            '<td style="text-align:center;">'
+            f'<span class="event-completion-pill">{campus_completion:.1f}%</span>'
+            '</td>',
+            '</tr>',
+        ])
+
+    event_board_parts.extend([
+        '</tbody>',
+        '</table>',
+        '<div class="event-status-legend">',
+    ])
+
+    for status in status_order:
+        label = "Blank Status" if status == "(blank)" else status
+
+        event_board_parts.append(
+            (
+                '<span class="event-status-key">'
+                f'<span class="event-status-dot" style="background:{status_colors[status]}"></span>'
+                f'{html.escape(label)}'
+                '</span>'
+            )
+        )
+
+    event_board_parts.extend([
+        '</div>',
+        '</div>',
+        '</div>',  # grid
+    ])
+
+    # -----------------------------------------------------
+    # Management signal based ONLY on Event + Status
+    # -----------------------------------------------------
+    if blank_total > 0:
+        action_text = (
+            f"Close the {blank_total} blank event-status record"
+            f"{'s' if blank_total != 1 else ''} first. "
+            f"{event_leader} currently leads event volume with "
+            f"{event_leader_count} events ({event_leader_share:.1f}% share). "
+            "Complete status hygiene before comparing execution quality."
+        )
+        risk_note = "Status hygiene"
+    elif pipeline_total > completed_total:
+        action_text = (
+            f"There are {pipeline_total} confirmed/planned events versus "
+            f"{completed_total} completed. Prioritize conversion of the ready "
+            "event pipeline into completed execution, starting with the highest-volume campus."
+        )
+        risk_note = "Pipeline conversion"
+    elif completion_rate < 50:
+        action_text = (
+            f"Event completion is {completion_rate:.1f}%. "
+            "Review owner readiness, confirmations and event closure cadence "
+            "before adding more event volume."
+        )
+        risk_note = "Execution focus"
+    else:
+        action_text = (
+            f"Event completion is {completion_rate:.1f}% and "
+            f"{event_leader} leads event volume. "
+            "Use the strongest campus execution pattern as the benchmark for upcoming events."
+        )
+        risk_note = "Scale best practice"
+
+    event_board_parts.extend([
+        '<div class="event-insight-strip">',
+
+        '<div class="event-insight-card" style="--event-accent:#E58C2B;">'
+        '<div class="event-insight-label">Event Leader</div>'
+        f'<div class="event-insight-value">{html.escape(event_leader)}</div>'
+        f'<div class="event-insight-note">{event_leader_count} events · {event_leader_share:.1f}% share</div>'
+        '</div>',
+
+        '<div class="event-insight-card" style="--event-accent:#2F9B6B;">'
+        '<div class="event-insight-label">Completed</div>'
+        f'<div class="event-insight-value">{completed_total}</div>'
+        f'<div class="event-insight-note">{completion_rate:.1f}% of all filtered events</div>'
+        '</div>',
+
+        '<div class="event-insight-card" style="--event-accent:#2D6CDF;">'
+        '<div class="event-insight-label">Ready Pipeline</div>'
+        f'<div class="event-insight-value">{pipeline_total}</div>'
+        f'<div class="event-insight-note">{confirmed_total} confirmed · {planned_total} planned</div>'
+        '</div>',
+
+        '<div class="event-insight-card" style="--event-accent:#6B3F7D;">'
+        '<div class="event-insight-label">Management Focus</div>'
+        f'<div class="event-insight-value">{html.escape(risk_note)}</div>'
+        f'<div class="event-insight-note">{cancelled_total} cancelled · {blank_total} blank status</div>'
+        '</div>',
+
+        '</div>',
+
+        '<div class="event-action-box">'
+        '<strong>Recommended Action:</strong> '
+        f'{html.escape(action_text)}'
+        '</div>',
+
+        '</div>',  # body
+        '</div>',  # board
+    ])
+
+    st.markdown(
+        "".join(event_board_parts),
+        unsafe_allow_html=True,
     )
 
 
