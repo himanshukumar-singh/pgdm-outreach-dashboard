@@ -1649,6 +1649,194 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
     }
 }
 
+
+/* =========================================================
+   Q1 — EXECUTIVE VISUAL ROW REFINEMENT
+   ========================================================= */
+
+/* Remove any extra dead-space before the Q1 visual row */
+.q1-executive-row-spacer {
+    height: 2px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Left chart card — premium executive container */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-chart-marker) {
+    min-height: 352px !important;
+    height: 352px !important;
+    overflow: hidden !important;
+    padding: .72rem .82rem .48rem .82rem !important;
+    background:
+        radial-gradient(circle at 94% 8%, rgba(37,99,235,.045), transparent 25%),
+        linear-gradient(180deg,#FFFFFF 0%,#FBFCFE 100%) !important;
+    border: 1px solid #DCE5EF !important;
+    border-radius: 15px !important;
+    box-shadow:
+        0 10px 26px rgba(15,42,69,.055),
+        inset 0 1px 0 rgba(255,255,255,.96) !important;
+    position: relative !important;
+}
+
+/* Subtle moving top accent for chart card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-chart-marker)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -28%;
+    width: 24%;
+    height: 2px;
+    z-index: 5;
+    background: linear-gradient(
+        90deg,
+        rgba(37,99,235,0),
+        rgba(37,99,235,.95),
+        rgba(20,184,166,.72),
+        rgba(124,58,237,.55),
+        rgba(37,99,235,0)
+    );
+    animation: q1ChartSweep 6.6s ease-in-out infinite;
+}
+
+@keyframes q1ChartSweep {
+    0%,16%  { left:-28%; opacity:0; }
+    28%     { opacity:1; }
+    56%     { left:110%; opacity:.95; }
+    68%,100%{ left:110%; opacity:0; }
+}
+
+.q1-chart-marker {
+    display:none;
+}
+
+.q1-chart-heading {
+    margin: 0 0 .16rem 0;
+    padding: 0;
+}
+
+.q1-chart-heading .title {
+    color:#102A43;
+    font-size:.96rem;
+    font-weight:900;
+    line-height:1.14;
+    letter-spacing:-.01em;
+}
+
+.q1-chart-heading .sub {
+    color:#7B8DA3;
+    font-size:.58rem;
+    line-height:1.35;
+    margin-top:.12rem;
+    max-width:92%;
+}
+
+.q1-chart-separator {
+    height:1px;
+    margin:.34rem 0 .10rem 0;
+    background:linear-gradient(
+        90deg,
+        #D9E4F0 0%,
+        #ECF1F6 68%,
+        rgba(236,241,246,0) 100%
+    );
+}
+
+/* Keep Plotly safely below the heading block */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-chart-marker)
+div[data-testid="stPlotlyChart"] {
+    margin-top: .08rem !important;
+}
+
+/* Right insight card — exact same height/alignment as chart */
+.q1-exec-insight {
+    min-height:352px !important;
+    height:352px !important;
+    padding:.72rem .72rem .62rem .72rem !important;
+    border-radius:15px !important;
+    box-sizing:border-box !important;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    background:
+        radial-gradient(circle at 88% 7%, rgba(37,99,235,.105), transparent 24%),
+        radial-gradient(circle at 10% 91%, rgba(20,184,166,.075), transparent 30%),
+        linear-gradient(145deg,#F9FBFF 0%,#FFFFFF 57%,#F8FBFD 100%) !important;
+    border:1px solid #DCE6F1 !important;
+    box-shadow:
+        0 10px 26px rgba(15,42,69,.055),
+        inset 0 1px 0 rgba(255,255,255,.96) !important;
+}
+
+.q1-insight-kicker {
+    font-size:.51rem !important;
+    letter-spacing:.105em !important;
+}
+
+.q1-insight-title {
+    font-size:.93rem !important;
+    margin-top:.08rem !important;
+    margin-bottom:.08rem !important;
+}
+
+.q1-insight-sub {
+    font-size:.54rem !important;
+    margin-bottom:.40rem !important;
+}
+
+.q1-insight-grid {
+    gap:6px !important;
+}
+
+.q1-insight-metric {
+    min-height:60px !important;
+    padding:.39rem .43rem !important;
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.94),rgba(248,251,255,.90)) !important;
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+}
+
+.q1-insight-metric:hover {
+    transform:translateY(-2px);
+    border-color:#CCDDF1;
+    box-shadow:0 7px 16px rgba(15,42,69,.06);
+}
+
+.q1-insight-metric .value {
+    font-size:.79rem !important;
+}
+
+.q1-insight-metric .note {
+    font-size:.46rem !important;
+}
+
+.q1-insight-action {
+    margin-top:auto !important;
+    padding:.43rem .48rem !important;
+    font-size:.51rem !important;
+    line-height:1.34 !important;
+    background:
+        linear-gradient(90deg,#EEF5FF 0%,#F8FBFF 100%) !important;
+}
+
+/* Keep the full left/right row aligned from the same top edge */
+div[data-testid="stHorizontalBlock"]:has(.q1-chart-marker) {
+    align-items:stretch !important;
+}
+
+/* Professional table spacing after the visual row */
+.q1-table-heading {
+    margin-top:.58rem !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-chart-marker)::before {
+        animation:none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -2874,16 +3062,16 @@ with k6:
 
 
 # =========================================================
-# Q1 — CAMPUS ACTIVITY PORTFOLIO
+# CAMPUS ACTIVITY PORTFOLIO — EXECUTIVE VISUAL + INSIGHT
 # =========================================================
-overview_section(
-    "Q1 · Activity Portfolio",
-    "Campus-wise Activities + Activity Type",
-    "Visual campus mix first, followed by the detailed execution matrix for exact status-level review.",
+
+st.markdown(
+    '<div class="q1-executive-row-spacer"></div>',
+    unsafe_allow_html=True,
 )
 
 # ---------------------------------------------------------
-# PREPARE Q1 DATA ONCE
+# PREPARE ACTIVITY DATA ONCE
 # ---------------------------------------------------------
 activity_mix = pd.DataFrame()
 
@@ -2929,9 +3117,11 @@ else:
     activity_gap = leader_count - campus_avg
 
     total_q1_activities = int(campus_totals.sum())
-    leader_portfolio_share = _pct(leader_count, total_q1_activities)
+    leader_portfolio_share = _pct(
+        leader_count,
+        total_q1_activities,
+    )
 
-    # Diversity = count of distinct activity formats at leader campus.
     leader_type_diversity = int(
         activity_mix[
             activity_mix["Campus"].eq(leader_campus)
@@ -2939,10 +3129,10 @@ else:
     )
 
     # -----------------------------------------------------
-    # Q1A — CHART + PROFESSIONAL INSIGHT (ABOVE TABLE)
+    # CHART + PROFESSIONAL EMS INSIGHT — SAME HEIGHT/ALIGNMENT
     # -----------------------------------------------------
     q1_chart_col, q1_insight_col = st.columns(
-        [2.55, 1.00],
+        [2.45, 1.00],
         gap="medium",
         vertical_alignment="top",
     )
@@ -2950,16 +3140,21 @@ else:
     with q1_chart_col:
         with st.container(border=True):
             st.markdown(
-                '<span class="q1-top-marker"></span>',
+                '<span class="q1-chart-marker"></span>',
                 unsafe_allow_html=True,
             )
 
             st.markdown(
-                '<div class="q1-visual-title">Campus Activity Portfolio</div>'
-                '<div class="q1-visual-sub">'
-                'Activity Type mix by campus. Numeric axis labels are intentionally hidden; '
-                'the actual counts remain inside each activity segment and update automatically.'
-                '</div>',
+                (
+                    '<div class="q1-chart-heading">'
+                    '<div class="title">Campus Activity Portfolio</div>'
+                    '<div class="sub">'
+                    'Campus-wise activity mix with actual counts inside each segment. '
+                    'The numeric axis is hidden and auto-scales as the daily activity count grows.'
+                    '</div>'
+                    '</div>'
+                    '<div class="q1-chart-separator"></div>'
+                ),
                 unsafe_allow_html=True,
             )
 
@@ -2971,7 +3166,9 @@ else:
                 orientation="h",
                 barmode="stack",
                 text="Activities",
-                category_orders={"Campus": campus_order},
+                category_orders={
+                    "Campus": campus_order,
+                },
                 color_discrete_map=activity_colors,
             )
 
@@ -2992,10 +3189,7 @@ else:
                 ),
             )
 
-            # Important:
-            # Do NOT fix the axis maximum. Plotly scales automatically as daily
-            # activity counts increase. Numeric tick labels are hidden so the
-            # visual never looks cramped as the data grows.
+            # Dynamic auto-scaling, no visible numeric ticks.
             fig.update_xaxes(
                 title="",
                 rangemode="tozero",
@@ -3015,20 +3209,33 @@ else:
                 fixedrange=True,
             )
 
+            # Extra top margin ensures legend never overlaps/hides the heading.
             fig = professional_chart(
                 fig,
-                300,
+                270,
                 legend=True,
             )
 
             fig.update_layout(
                 legend_title_text="Activity Type",
-                bargap=.32,
+                bargap=.30,
                 margin=dict(
-                    l=8,
-                    r=10,
-                    t=8,
-                    b=5,
+                    l=6,
+                    r=8,
+                    t=48,
+                    b=4,
+                ),
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.03,
+                    xanchor="right",
+                    x=1,
+                    font=dict(size=9),
+                    title=dict(
+                        text="Activity Type",
+                        font=dict(size=9),
+                    ),
                 ),
             )
 
@@ -3049,18 +3256,18 @@ else:
         if leader_portfolio_share >= 40:
             action_text = (
                 f"{leader_campus} carries a high share of the current portfolio. "
-                f"Validate owner capacity and whether {leader_type} is creating proportionate reach/outcomes "
+                f"Validate owner capacity and whether {leader_type} is producing proportionate reach/outcomes "
                 "before adding more activity volume."
             )
         elif leader_share >= 55:
             action_text = (
-                f"{leader_type} is heavily concentrated within {leader_campus}. "
-                "Review activity-format dependency and diversify only where the audience opportunity supports it."
+                f"{leader_type} is highly concentrated within {leader_campus}. "
+                "Review activity-format dependency and diversify only where audience opportunity supports it."
             )
         else:
             action_text = (
                 f"{leader_campus} has a relatively balanced activity mix. "
-                "Use reach and execution outcomes to identify which format should receive incremental effort."
+                "Use reach and execution outcomes to decide which format should receive incremental effort."
             )
 
         q1_insight_html = (
@@ -3106,15 +3313,18 @@ else:
 
 
 # ---------------------------------------------------------
-# Q1B — PROFESSIONAL EXECUTION MATRIX / PIVOT TABLE
+# DETAILED EXECUTION MATRIX
 # ---------------------------------------------------------
 st.markdown(
-    '<div class="q1-table-heading">'
+    (
+        '<div class="q1-table-heading">'
         '<div class="title">Activity Execution Matrix</div>'
         '<div class="sub">'
-        'Exact Campus → Activity Type → Event counts with execution status, grand totals and row-level management signals.'
+        'Exact Campus → Activity Type → Event counts with execution status, '
+        'grand totals and row-level management signals.'
         '</div>'
-    '</div>',
+        '</div>'
+    ),
     unsafe_allow_html=True,
 )
 
