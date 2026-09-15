@@ -3611,8 +3611,6 @@ st.markdown(header_html, unsafe_allow_html=True)
 # Target Segment → Owner → Priority → Date Range → Reset
 # =========================================================
 st.markdown('<div class="filter-panel-title">Filters</div>', unsafe_allow_html=True)
-st.markdown(
-    '<div class="filter-note">All charts, KPIs and EMS insights respond to the selected filters.</div>',
     unsafe_allow_html=True,
 )
 
