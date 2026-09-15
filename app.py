@@ -6600,16 +6600,6 @@ with st.container(border=True):
             _reset_overview_filters()
             st.rerun()
 
-    st.markdown(
-        (
-            '<div class="custom-filter-foot">'
-                '<span class="custom-filter-foot-dot">i</span>'
-                '<span>Filter across campus, activity, event, execution status, audience, owner, priority and date range. All dashboard metrics update instantly.</span>'
-            '</div>'
-        ),
-        unsafe_allow_html=True,
-    )
-
 
 # =========================================================
 # APPLY FILTERS
