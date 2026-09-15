@@ -5286,6 +5286,78 @@ div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker)
     }
 }
 
+
+/* =========================================================
+   ACTIVITY × CAMPUS MATRIX — TOTAL + EVENT MINI BUBBLES
+   ========================================================= */
+.q1-css-cell { padding: 3px 5px !important; }
+.q1-cell-bubble-cluster {
+    position: relative; z-index: 4; width: 100%; min-height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; flex-wrap: wrap; padding: 2px 4px; box-sizing: border-box;
+}
+.q1-cell-bubble-cluster .q1-motion-bubble { flex: 0 0 auto; }
+.q1-event-mini-bubble {
+    position: relative; z-index: 5; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: .47rem; font-weight: 950; line-height: 1;
+    color: #FFFFFF; border: 1.5px solid rgba(255,255,255,.90);
+    box-shadow: 0 7px 12px rgba(23,57,90,.20), 0 3px 6px rgba(47,35,31,.12),
+                inset 0 1px 2px rgba(255,255,255,.22), inset 0 -2px 4px rgba(23,57,90,.09);
+    animation: q1EventMiniFloat var(--event-duration,4.1s) ease-in-out infinite,
+               q1EventMiniGlow 6s ease-in-out infinite;
+    animation-delay: var(--event-delay,0s), calc(var(--event-delay,0s) + .25s);
+    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    cursor: default; will-change: transform, box-shadow;
+}
+.q1-event-mini-bubble:hover {
+    animation-play-state: paused; transform: translateY(-4px) scale(1.14);
+    box-shadow: 0 13px 20px rgba(23,57,90,.29), 0 5px 9px rgba(229,140,43,.14),
+                inset 0 1px 2px rgba(255,255,255,.24);
+    filter: saturate(1.08) brightness(1.04);
+}
+@keyframes q1EventMiniFloat {
+    0%,100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-3px) scale(1.06); }
+}
+@keyframes q1EventMiniGlow {
+    0%,100% { filter: brightness(1); }
+    50% { filter: brightness(1.035); }
+}
+.q1-more-events {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; padding: 0 4px; border-radius: 999px;
+    color: #6B3F7D; background: #F7F0F9; border: 1px dashed #D8C4DE;
+    font-size: .42rem; font-weight: 950; box-shadow: 0 3px 7px rgba(55,44,39,.04);
+}
+.q1-event-bubble-legend {
+    position: relative; z-index: 2; display: flex; align-items: center; flex-wrap: wrap;
+    gap: 5px 10px; margin-top: .28rem; padding: .30rem .38rem .05rem .38rem;
+    border-top: 1px solid #E9E1D9;
+}
+.q1-event-legend-title {
+    color: #6C7D8E; font-size: .43rem; font-weight: 950;
+    text-transform: uppercase; letter-spacing: .045em; margin-right: 2px;
+}
+.q1-event-legend-item {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: #697A8C; font-size: .43rem; font-weight: 800;
+}
+.q1-event-legend-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.85);
+}
+.activity-bubble-board .q1-css-cell,
+.activity-bubble-board .q1-css-activity,
+.activity-bubble-board .q1-css-campus,
+.activity-bubble-board .q1-css-corner { min-height: 48px !important; }
+.activity-bubble-board .q1-css-matrix {
+    height: 455px !important; min-height: 455px !important; max-height: 455px !important;
+}
+@media (prefers-reduced-motion: reduce) {
+    .q1-event-mini-bubble { animation: none !important; }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -6531,9 +6603,11 @@ with k6:
 
 # =========================================================
 # ACTIVITY TYPE × CAMPUS BUBBLE MATRIX
+# Main bubble = total activity count
+# Small bubbles = Event-wise counts inside the same cell
 # =========================================================
-
 activity_mix = pd.DataFrame()
+event_mix = pd.DataFrame()
 
 if {"Campus", "Activity Type"}.issubset(filtered.columns):
     activity_mix = (
@@ -6543,39 +6617,64 @@ if {"Campus", "Activity Type"}.issubset(filtered.columns):
         .reset_index(name="Activities")
     )
 
-if not activity_mix.empty:
-    activity_colors = _activity_color_map()
-
-    for activity_type in activity_mix["Activity Type"].astype(str).unique():
-        activity_colors.setdefault(
-            activity_type,
-            _activity_fallback_color(activity_type),
+if {"Campus", "Activity Type", "Event"}.issubset(filtered.columns):
+    event_source = filtered.copy()
+    event_source["Event"] = (
+        event_source["Event"].astype("string").str.strip().replace({
+            "": pd.NA, "nan": pd.NA, "None": pd.NA, "<NA>": pd.NA, "(blank)": pd.NA,
+        })
+    )
+    event_source = event_source.dropna(subset=["Campus", "Activity Type", "Event"])
+    if not event_source.empty:
+        event_mix = (
+            event_source.groupby(["Activity Type", "Campus", "Event"], observed=True)
+            .size().reset_index(name="Event Count")
         )
 
+if not activity_mix.empty:
+    activity_colors = _activity_color_map()
+    for activity_type in activity_mix["Activity Type"].astype(str).unique():
+        activity_colors.setdefault(activity_type, _activity_fallback_color(activity_type))
+
     campus_totals_activity = (
-        activity_mix.groupby("Campus", observed=True)["Activities"]
-        .sum()
-        .sort_values(ascending=False)
+        activity_mix.groupby("Campus", observed=True)["Activities"].sum().sort_values(ascending=False)
     )
-
     activity_totals = (
-        activity_mix.groupby("Activity Type", observed=True)["Activities"]
-        .sum()
-        .sort_values(ascending=False)
+        activity_mix.groupby("Activity Type", observed=True)["Activities"].sum().sort_values(ascending=False)
     )
-
     campus_order = campus_totals_activity.index.tolist()
     activity_order = activity_totals.index.tolist()
-
-    max_count = max(
-        int(activity_mix["Activities"].max()),
-        1,
-    )
-
+    max_count = max(int(activity_mix["Activities"].max()), 1)
     bubble_lookup = {
         (str(row["Activity Type"]), str(row["Campus"])): int(row["Activities"])
         for _, row in activity_mix.iterrows()
     }
+
+    event_palette = [
+        "#6B3F7D", "#E58C2B", "#2D6CDF", "#159786", "#D65A63",
+        "#7453C6", "#2A8B5A", "#D18A24", "#4E7A9E", "#B85B87",
+    ]
+    event_color_map = {}
+    event_lookup = {}
+    if not event_mix.empty:
+        event_order = (
+            event_mix.groupby("Event", observed=True)["Event Count"].sum()
+            .sort_values(ascending=False).index.astype(str).tolist()
+        )
+        event_color_map = {
+            event_name: event_palette[idx % len(event_palette)]
+            for idx, event_name in enumerate(event_order)
+        }
+        max_event_count = max(int(event_mix["Event Count"].max()), 1)
+        for (activity_type, campus), group in event_mix.groupby(
+            ["Activity Type", "Campus"], observed=True
+        ):
+            event_lookup[(str(activity_type), str(campus))] = (
+                group.sort_values(["Event Count", "Event"], ascending=[False, True]).reset_index(drop=True)
+            )
+    else:
+        event_order = []
+        max_event_count = 1
 
     def _hex_luminance(hex_color):
         value = str(hex_color).lstrip("#")
@@ -6586,10 +6685,9 @@ if not activity_mix.empty:
         b = int(value[4:6], 16) / 255.0
         return (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
 
-    grid_columns = (
-        "118px "
-        + " ".join(["minmax(105px, 1fr)"] * len(campus_order))
-    )
+    grid_columns = "118px " + " ".join(["minmax(125px, 1fr)"] * len(campus_order))
+    total_activity_count = int(activity_mix["Activities"].sum())
+    total_event_records = int(event_mix["Event Count"].sum()) if not event_mix.empty else 0
 
     matrix_parts = [
         '<div class="activity-bubble-board">',
@@ -6597,11 +6695,10 @@ if not activity_mix.empty:
         '<div>',
         '<div class="activity-bubble-kicker">Activity Portfolio</div>',
         '<div class="activity-bubble-title">Activity Type × Campus Matrix</div>',
-        '<div class="activity-bubble-sub">'
-        'Rows show Activity Type and columns show Campus. Bubble size represents activity count.'
+        '<div class="activity-bubble-sub">Large bubble = total activity count. Small bubbles = Event-wise counts inside the same Campus × Activity Type cell.</div>',
         '</div>',
-        '</div>',
-        f'<div class="activity-bubble-badge">{int(activity_mix["Activities"].sum()):,} activities</div>',
+        f'<div class="activity-bubble-badge">{total_activity_count:,} activities' +
+        (f' · {total_event_records:,} event records' if total_event_records else '') + '</div>',
         '</div>',
         '<div class="q1-css-matrix">',
         f'<div class="q1-css-grid" style="grid-template-columns:{grid_columns};">',
@@ -6609,78 +6706,96 @@ if not activity_mix.empty:
     ]
 
     for campus in campus_order:
-        matrix_parts.append(
-            f'<div class="q1-css-campus">{html.escape(str(campus))}</div>'
-        )
+        matrix_parts.append(f'<div class="q1-css-campus">{html.escape(str(campus))}</div>')
 
     bubble_index = 0
+    event_bubble_index = 0
 
     for activity_type in activity_order:
-        matrix_parts.append(
-            f'<div class="q1-css-activity">{html.escape(str(activity_type))}</div>'
-        )
-
-        activity_color = activity_colors.get(
-            activity_type,
-            _activity_fallback_color(activity_type),
-        )
-
-        luminance = _hex_luminance(activity_color)
-        text_color = "#FFFFFF" if luminance < .47 else "#17395A"
+        matrix_parts.append(f'<div class="q1-css-activity">{html.escape(str(activity_type))}</div>')
+        activity_color = activity_colors.get(activity_type, _activity_fallback_color(activity_type))
+        total_text_color = "#FFFFFF" if _hex_luminance(activity_color) < .47 else "#17395A"
 
         for campus in campus_order:
-            count = bubble_lookup.get(
-                (str(activity_type), str(campus)),
-                0,
-            )
-
+            total_count = bubble_lookup.get((str(activity_type), str(campus)), 0)
             matrix_parts.append('<div class="q1-css-cell">')
 
-            if count > 0:
-                size_px = 22 + (
-                    math.sqrt(count / max_count) * 38
-                )
+            if total_count > 0:
+                matrix_parts.append('<div class="q1-cell-bubble-cluster">')
+                cell_events = event_lookup.get((str(activity_type), str(campus)))
 
+                if cell_events is not None and not cell_events.empty:
+                    visible_events = cell_events.head(4)
+                    hidden_events = max(len(cell_events) - len(visible_events), 0)
+
+                    for _, event_row in visible_events.iterrows():
+                        event_name = str(event_row["Event"])
+                        event_count = int(event_row["Event Count"])
+                        event_color = event_color_map.get(event_name, "#6B3F7D")
+                        event_text_color = "#FFFFFF" if _hex_luminance(event_color) < .58 else "#17395A"
+                        event_size = 18 + (math.sqrt(event_count / max_event_count) * 15)
+                        event_delay = -((event_bubble_index % 11) * .23)
+                        event_duration = 3.7 + ((event_bubble_index % 5) * .19)
+                        event_tooltip = (
+                            f"Campus: {campus} | Activity Type: {activity_type} | "
+                            f"Event: {event_name} | Event Count: {event_count}"
+                        )
+                        matrix_parts.append(
+                            '<div class="q1-event-mini-bubble" '
+                            f'title="{html.escape(event_tooltip)}" '
+                            f'style="width:{event_size:.1f}px;height:{event_size:.1f}px;'
+                            f'background:{event_color};color:{event_text_color};'
+                            f'--event-delay:{event_delay:.2f}s;--event-duration:{event_duration:.2f}s;">'
+                            f'{event_count}</div>'
+                        )
+                        event_bubble_index += 1
+
+                    if hidden_events > 0:
+                        hidden_names = ", ".join(cell_events.iloc[4:]["Event"].astype(str).tolist())
+                        matrix_parts.append(
+                            f'<span class="q1-more-events" title="{html.escape(hidden_names)}">+{hidden_events}</span>'
+                        )
+
+                size_px = 22 + (math.sqrt(total_count / max_count) * 38)
                 delay = -((bubble_index % 9) * .31)
                 duration = 3.8 + ((bubble_index % 5) * .22)
-
-                tooltip = (
-                    f"{activity_type} · {campus}: {count} activities"
-                )
-
+                total_tooltip = f"{activity_type} · {campus}: {total_count} total activities"
                 matrix_parts.append(
-                    (
-                        '<div class="q1-motion-bubble" '
-                        f'title="{html.escape(tooltip)}" '
-                        f'style="width:{size_px:.1f}px;'
-                        f'height:{size_px:.1f}px;'
-                        f'background:{activity_color};'
-                        f'color:{text_color};'
-                        f'--bubble-delay:{delay:.2f}s;'
-                        f'--bubble-duration:{duration:.2f}s;">'
-                        f'<span class="q1-bubble-count">{count}</span>'
-                        '</div>'
-                    )
+                    '<div class="q1-motion-bubble" '
+                    f'title="{html.escape(total_tooltip)}" '
+                    f'style="width:{size_px:.1f}px;height:{size_px:.1f}px;'
+                    f'background:{activity_color};color:{total_text_color};'
+                    f'--bubble-delay:{delay:.2f}s;--bubble-duration:{duration:.2f}s;">'
+                    f'<span class="q1-bubble-count">{total_count}</span></div>'
                 )
-
                 bubble_index += 1
+                matrix_parts.append('</div>')
 
             matrix_parts.append('</div>')
 
     matrix_parts.extend([
         '</div>',
         '<div class="q1-css-matrix-foot">',
-        '<span>Bubble size = activity count · hover for detail</span>',
-        '<span><strong>Live:</strong> updates with current filters</span>',
-        '</div>',
-        '</div>',
+        '<span><strong>Large bubble:</strong> total activity count · <strong>Small bubbles:</strong> Event-wise count</span>',
+        '<span><strong>Hover:</strong> Event name + exact count</span>',
         '</div>',
     ])
 
-    st.markdown(
-        "".join(matrix_parts),
-        unsafe_allow_html=True,
-    )
+    if event_order:
+        matrix_parts.append(
+            '<div class="q1-event-bubble-legend"><span class="q1-event-legend-title">Event bubbles</span>'
+        )
+        for event_name in event_order:
+            event_color = event_color_map[event_name]
+            matrix_parts.append(
+                '<span class="q1-event-legend-item">'
+                f'<span class="q1-event-legend-dot" style="background:{event_color};"></span>'
+                f'{html.escape(event_name)}</span>'
+            )
+        matrix_parts.append('</div>')
+
+    matrix_parts.extend(['</div>', '</div>'])
+    st.markdown("".join(matrix_parts), unsafe_allow_html=True)
 
 
 # =========================================================
