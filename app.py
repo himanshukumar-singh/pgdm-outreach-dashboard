@@ -6409,152 +6409,224 @@ st.markdown(
 }
 
 /* =========================================================
-   FILTER PANEL — premium one-line control deck
+   FILTER PANEL — APPROVED REFERENCE DESIGN
    ========================================================= */
 .ov-filter-shell-marker,
 .ov-snapshot-shell-marker { display:none; }
 
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) {
     position:relative !important;
-    overflow:hidden !important;
-    margin:.18rem 0 .46rem 0 !important;
-    padding:.48rem .62rem .58rem .62rem !important;
-    border-radius:15px !important;
-    border:1px solid #E4DDD5 !important;
+    overflow:visible !important;
+    margin:.12rem 0 .44rem 0 !important;
+    padding:.34rem .64rem .48rem .64rem !important;
+    border-radius:12px !important;
+    border:1px solid #DEE6F2 !important;
     background:
-        radial-gradient(circle at 96% 12%, rgba(107,63,125,.045), transparent 24%),
-        linear-gradient(120deg,#FFFDFC 0%,#FBF8F3 52%,#FCF9F6 100%) !important;
-    box-shadow:0 10px 28px rgba(56,45,40,.055), inset 0 1px 0 rgba(255,255,255,.98) !important;
+        radial-gradient(circle at 98% 8%, rgba(112,74,224,.055), transparent 25%),
+        linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%) !important;
+    box-shadow:
+        0 8px 24px rgba(26,55,96,.060),
+        inset 0 1px 0 rgba(255,255,255,.98) !important;
 }
 
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)::before {
     content:"";
     position:absolute;
     z-index:4;
-    top:0;
-    left:-24%;
-    width:22%;
+    top:-1px;
+    left:12px;
+    right:12px;
     height:2px;
-    background:linear-gradient(90deg,transparent,#E58C2B,#6B3F7D,transparent);
-    animation:ovFilterSweep 7.5s ease-in-out infinite;
-}
-@keyframes ovFilterSweep {
-    0%,18% { left:-24%; opacity:0; }
-    28% { opacity:1; }
-    58% { left:108%; opacity:.95; }
-    70%,100% { left:108%; opacity:0; }
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(37,99,235,.10) 0%, rgba(37,99,235,.62) 22%, rgba(112,74,224,.52) 70%, rgba(229,140,43,.60) 100%);
+    opacity:.55;
 }
 
 .ov-filter-head {
     display:flex;
     align-items:center;
-    gap:.50rem;
-    margin:.02rem .05rem .28rem .05rem;
+    gap:.42rem;
+    margin:0 .02rem .22rem .02rem;
 }
 .ov-filter-icon {
-    width:25px;
-    height:25px;
-    border-radius:8px;
+    width:20px;
+    height:20px;
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    color:#245FC5;
-    background:linear-gradient(145deg,#EEF4FF,#F6F0FF);
-    border:1px solid #DCE5F5;
-    font-size:.78rem;
-    box-shadow:0 4px 10px rgba(36,95,197,.07);
+    color:#1769E8;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+    flex:0 0 20px;
+}
+.ov-filter-icon svg {
+    width:19px;
+    height:19px;
+    display:block;
+    stroke:#1769E8;
+    fill:#1769E8;
 }
 .ov-filter-title {
-    color:var(--ov-navy);
-    font-size:.89rem;
+    color:#102E57;
+    font-size:.88rem;
     font-weight:950;
+    line-height:1;
+    letter-spacing:-.01em;
 }
-.ov-filter-help {
-    color:#7C8DA2;
-    font-size:.56rem;
-    padding-left:.48rem;
-    border-left:1px solid #D8E0E9;
-}
+.ov-filter-help { display:none !important; }
 
-/* Streamlit row containing the filters */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stHorizontalBlock"] {
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stHorizontalBlock"] {
     align-items:end !important;
-    gap:.48rem !important;
+    gap:.42rem !important;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stSelectbox"] label,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stDateInput"] label,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stTextInput"] label {
-    color:#36526F !important;
-    font-size:.57rem !important;
-    font-weight:900 !important;
-    margin:0 0 .12rem .06rem !important;
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stColumn"]:has(.ov-control-icon) {
+    position:relative !important;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-baseweb="select"] > div,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stDateInput"] input,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stTextInput"] input {
-    min-height:2.28rem !important;
-    height:2.28rem !important;
-    border-radius:10px !important;
-    border:1px solid #DDE5EF !important;
-    background:linear-gradient(180deg,#FFFFFF 0%,#F8FAFD 100%) !important;
-    box-shadow:0 4px 12px rgba(28,54,86,.035), inset 0 1px 0 rgba(255,255,255,.98) !important;
-    color:#183A60 !important;
-    font-size:.65rem !important;
-    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stSelectbox"] label,
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stDateInput"] label,
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stTextInput"] label {
+    color:#173A66 !important;
+    font-size:.55rem !important;
+    font-weight:850 !important;
+    letter-spacing:.005em !important;
+    margin:0 0 .10rem .03rem !important;
+    line-height:1.05 !important;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-baseweb="select"] > div:hover,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stDateInput"] input:hover {
-    transform:translateY(-2px) !important;
-    border-color:#B8CBE7 !important;
-    box-shadow:0 9px 18px rgba(36,95,197,.08), 0 0 0 1px rgba(107,63,125,.035) inset !important;
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-baseweb="select"] > div,
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stDateInput"] input,
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stTextInput"] input {
+    min-height:2.10rem !important;
+    height:2.10rem !important;
+    border-radius:8px !important;
+    border:1px solid #DCE7F8 !important;
+    background:linear-gradient(180deg,#F8FBFF 0%,#F1F6FD 100%) !important;
+    color:#173A66 !important;
+    font-size:.63rem !important;
+    font-weight:650 !important;
+    box-shadow:0 2px 7px rgba(32,74,135,.035), inset 0 1px 0 rgba(255,255,255,.98) !important;
+    transition:border-color .16s ease, box-shadow .16s ease, transform .16s ease !important;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-baseweb="select"] svg,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stDateInput"] svg {
-    color:#6B3F7D !important;
-    width:17px !important;
-    height:17px !important;
-    transition:transform .18s ease !important;
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stColumn"]:has(.ov-control-icon) div[data-baseweb="select"] > div {
+    padding-left:1.70rem !important;
 }
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-baseweb="select"]:hover svg {
-    transform:translateY(1px) scale(1.08);
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stColumn"]:has(.ov-control-icon) div[data-testid="stDateInput"] input {
+    padding-left:1.72rem !important;
 }
 
-.overview-filter-reset-spacer { height:1.08rem !important; }
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-baseweb="select"] > div:hover,
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stDateInput"] input:hover {
+    transform:translateY(-1px) !important;
+    border-color:#B9D1F6 !important;
+    box-shadow:0 6px 14px rgba(40,103,210,.075), 0 0 0 1px rgba(95,74,218,.025) inset !important;
+}
 
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stButton"] button {
-    min-height:2.28rem !important;
-    height:2.28rem !important;
-    border-radius:10px !important;
-    border:1px solid #284C72 !important;
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-baseweb="select"] > div:focus-within,
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stDateInput"] input:focus {
+    border-color:#8EB6F3 !important;
+    box-shadow:0 0 0 2px rgba(37,99,235,.08), 0 6px 16px rgba(37,99,235,.07) !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-baseweb="select"] svg {
+    color:#1769E8 !important;
+    fill:#1769E8 !important;
+    width:15px !important;
+    height:15px !important;
+    transition:transform .16s ease !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-baseweb="select"]:hover svg {
+    transform:translateY(1px) scale(1.05);
+}
+
+.ov-control-icon {
+    position:absolute;
+    z-index:12;
+    left:.48rem;
+    bottom:.565rem;
+    width:15px;
+    height:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    color:#6355E7;
+}
+.ov-control-icon svg {
+    width:14px;
+    height:14px;
+    stroke:#6355E7;
+    stroke-width:1.9;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    filter:drop-shadow(0 1px 1px rgba(91,78,214,.08));
+}
+.ov-control-icon.ov-date-icon svg { stroke:#316FE8; }
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stSelectbox"],
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stDateInput"],
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stTextInput"] {
+    margin-bottom:0 !important;
+}
+
+.overview-filter-reset-spacer {
+    height:1.03rem !important;
+    margin:0 !important;
+    padding:0 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stButton"] { margin:0 !important; }
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stButton"] button {
+    min-height:2.10rem !important;
+    height:2.10rem !important;
+    padding:0 .58rem !important;
+    border-radius:8px !important;
+    border:1px solid #17477F !important;
     color:#FFFFFF !important;
-    font-size:.62rem !important;
-    font-weight:900 !important;
-    background:linear-gradient(120deg,#11365C 0%,#24507A 58%,#5E3D79 135%) !important;
-    background-size:170% 100% !important;
-    box-shadow:0 8px 18px rgba(17,54,92,.18) !important;
+    font-size:.63rem !important;
+    font-weight:850 !important;
+    letter-spacing:.005em !important;
+    background:linear-gradient(115deg,#0E3D70 0%,#0F4C88 58%,#243C78 100%) !important;
+    background-size:160% 100% !important;
+    box-shadow:0 6px 14px rgba(13,61,112,.20), inset 0 1px 0 rgba(255,255,255,.16) !important;
     animation:ovResetFlow 6s ease-in-out infinite !important;
+    transition:transform .16s ease, box-shadow .16s ease !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stButton"] button:hover {
+    transform:translateY(-1px) !important;
+    box-shadow:0 9px 18px rgba(13,61,112,.26), inset 0 1px 0 rgba(255,255,255,.20) !important;
 }
 @keyframes ovResetFlow {
     0%,100% { background-position:0% 50%; }
     50% { background-position:100% 50%; }
+}
+
+div[data-baseweb="popover"] ul[role="listbox"] {
+    border-radius:10px !important;
+    border:1px solid #DCE6F4 !important;
+    background:#FFFFFF !important;
+    box-shadow:0 14px 30px rgba(21,55,97,.12) !important;
+    overflow:hidden !important;
+}
+div[data-baseweb="popover"] li[role="option"] {
+    color:#244766 !important;
+    font-size:.67rem !important;
+    min-height:2rem !important;
+}
+div[data-baseweb="popover"] li[role="option"]:hover { background:#EEF5FF !important; }
+
+@media (min-width:1100px) {
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stHorizontalBlock"] {
+        flex-wrap:nowrap !important;
+    }
 }
 
 /* =========================================================
@@ -7166,20 +7238,27 @@ with st.container(border=True):
     st.markdown(
         (
             '<div class="ov-filter-head">'
-                '<span class="ov-filter-icon">⌘</span>'
+                '<span class="ov-filter-icon">'
+                    '<svg viewBox="0 0 24 24" aria-hidden="true">'
+                        '<path d="M3 5h18l-7 8v5.5l-4 2V13L3 5z"></path>'
+                    '</svg>'
+                '</span>'
                 '<span class="ov-filter-title">Filters</span>'
-                '<span class="ov-filter-help">Refine the outreach view across campus, activity, event and execution dimensions.</span>'
             '</div>'
         ),
         unsafe_allow_html=True,
     )
 
     filter_cols = st.columns(
-        [0.82, 1.00, 0.78, 0.82, 1.02, 0.90, 0.70, 1.24, 0.66],
+        [0.84, 1.02, 0.82, 0.84, 1.05, 0.92, 0.72, 1.30, 0.70],
         gap="small",
     )
 
     with filter_cols[0]:
+        st.markdown(
+            '<span class="ov-control-icon ov-campus-icon"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 20V8l6-4 6 4v12M9 11h2M13 11h2M9 15h2M13 15h2"></path></svg></span>',
+            unsafe_allow_html=True,
+        )
         campus_filter = st.selectbox(
             "Campus",
             _options(df, "Campus"),
@@ -7187,6 +7266,10 @@ with st.container(border=True):
         )
 
     with filter_cols[1]:
+        st.markdown(
+            '<span class="ov-control-icon ov-activity-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"></path></svg></span>',
+            unsafe_allow_html=True,
+        )
         activity_filter = st.selectbox(
             "Activity Type",
             _options(df, "Activity Type"),
@@ -7194,6 +7277,10 @@ with st.container(border=True):
         )
 
     with filter_cols[2]:
+        st.markdown(
+            '<span class="ov-control-icon ov-event-icon"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 2v4M16 2v4M5 9h14M9 13l2 2 4-4"></path></svg></span>',
+            unsafe_allow_html=True,
+        )
         event_filter = st.selectbox(
             "Event",
             _options(df, "Event"),
@@ -7201,6 +7288,10 @@ with st.container(border=True):
         )
 
     with filter_cols[3]:
+        st.markdown(
+            '<span class="ov-control-icon ov-status-icon"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"></path></svg></span>',
+            unsafe_allow_html=True,
+        )
         status_filter = st.selectbox(
             "Status",
             _options(df, "Status"),
@@ -7208,6 +7299,10 @@ with st.container(border=True):
         )
 
     with filter_cols[4]:
+        st.markdown(
+            '<span class="ov-control-icon ov-segment-icon"><svg viewBox="0 0 24 24"><path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM16 10a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM3 20v-2a5 5 0 0 1 10 0v2M14 20v-1.5a4 4 0 0 1 7-2.7"></path></svg></span>',
+            unsafe_allow_html=True,
+        )
         segment_filter = st.selectbox(
             "Target Segment",
             _options(df, "Target Segment"),
@@ -7215,6 +7310,10 @@ with st.container(border=True):
         )
 
     with filter_cols[5]:
+        st.markdown(
+            '<span class="ov-control-icon ov-owner-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg></span>',
+            unsafe_allow_html=True,
+        )
         owner_filter = st.selectbox(
             "Owner",
             _options(df, "Activity Owner"),
@@ -7222,6 +7321,10 @@ with st.container(border=True):
         )
 
     with filter_cols[6]:
+        st.markdown(
+            '<span class="ov-control-icon ov-priority-icon"><svg viewBox="0 0 24 24"><path d="M12 3l7 9-7 9-7-9 7-9z"></path><path d="M8 12h8"></path></svg></span>',
+            unsafe_allow_html=True,
+        )
         priority_filter = st.selectbox(
             "Priority",
             _options(df, "Priority"),
@@ -7229,6 +7332,10 @@ with st.container(border=True):
         )
 
     with filter_cols[7]:
+        st.markdown(
+            '<span class="ov-control-icon ov-date-icon"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 2v4M16 2v4M5 9h14"></path></svg></span>',
+            unsafe_allow_html=True,
+        )
         date_range = None
         if "Activity Date" in df.columns and df["Activity Date"].notna().any():
             min_date = df["Activity Date"].min().date()
