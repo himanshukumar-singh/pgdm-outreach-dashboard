@@ -102,8 +102,8 @@ header[data-testid="stHeader"] {
 
 /* ---------- Header ---------- */
 .overview-header {
-    transform: translateY(-14px);
-    margin-bottom: -8px;
+    transform: translateY(-27px);
+    margin-bottom: -20px;
 }
 
 .overview-eyebrow {
@@ -292,17 +292,38 @@ header[data-testid="stHeader"] {
 div[data-testid="stSelectbox"] label,
 div[data-testid="stDateInput"] label {
     color: #294766 !important;
-    font-size: .73rem !important;
-    font-weight: 750 !important;
+    font-size: .69rem !important;
+    font-weight: 760 !important;
+    margin-bottom: .12rem !important;
 }
 
 div[data-baseweb="select"] > div,
 div[data-testid="stDateInput"] input {
-    min-height: 2.60rem !important;
+    min-height: 2.34rem !important;
+    height: 2.34rem !important;
     background: #FFFFFF !important;
     border: 1px solid #DFE7F0 !important;
-    border-radius: 10px !important;
+    border-radius: 9px !important;
     box-shadow: 0 2px 8px rgba(15,42,69,.025);
+    font-size: .71rem !important;
+}
+
+/* Compact one-line Overview filters */
+div[data-testid="stSelectbox"] {
+    margin-bottom: 0 !important;
+}
+
+div[data-testid="stDateInput"] {
+    margin-bottom: 0 !important;
+}
+
+div[data-testid="stButton"] button {
+    min-height: 2.34rem !important;
+    height: 2.34rem !important;
+}
+
+.overview-filter-reset-spacer {
+    height: 1.46rem;
 }
 
 /* ---------- KPI cards ---------- */
@@ -1489,7 +1510,8 @@ st.markdown(
     }
 
     div[data-testid="stButton"] button {
-        min-height: 2.60rem !important;
+        min-height: 2.34rem !important;
+        height: 2.34rem !important;
         border-radius: 10px !important;
         border: 1px solid #DCE6F1 !important;
         color: #245EBA !important;
@@ -1634,60 +1656,61 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-fr1 = st.columns([1.0, 1.18, 1.0, .95, 1.18], gap="small")
+filter_cols = st.columns(
+    [0.86, 1.06, 0.84, 0.86, 1.10, 0.96, 0.76, 1.34, 0.60],
+    gap="small",
+)
 
-with fr1[0]:
+with filter_cols[0]:
     campus_filter = st.selectbox(
         "Campus",
         _options(df, "Campus"),
         key="ov_campus",
     )
 
-with fr1[1]:
+with filter_cols[1]:
     activity_filter = st.selectbox(
         "Activity Type",
         _options(df, "Activity Type"),
         key="ov_activity",
     )
 
-with fr1[2]:
+with filter_cols[2]:
     event_filter = st.selectbox(
         "Event",
         _options(df, "Event"),
         key="ov_event",
     )
 
-with fr1[3]:
+with filter_cols[3]:
     status_filter = st.selectbox(
         "Status",
         _options(df, "Status"),
         key="ov_status",
     )
 
-with fr1[4]:
+with filter_cols[4]:
     segment_filter = st.selectbox(
         "Target Segment",
         _options(df, "Target Segment"),
         key="ov_segment",
     )
 
-fr2 = st.columns([1.08, .90, 1.55, .58], gap="small")
-
-with fr2[0]:
+with filter_cols[5]:
     owner_filter = st.selectbox(
         "Owner",
         _options(df, "Activity Owner"),
         key="ov_owner",
     )
 
-with fr2[1]:
+with filter_cols[6]:
     priority_filter = st.selectbox(
         "Priority",
         _options(df, "Priority"),
         key="ov_priority",
     )
 
-with fr2[2]:
+with filter_cols[7]:
     date_range = None
     if "Activity Date" in df.columns and df["Activity Date"].notna().any():
         min_date = df["Activity Date"].min().date()
@@ -1702,8 +1725,11 @@ with fr2[2]:
     else:
         st.text_input("Date Range", value="", disabled=True)
 
-with fr2[3]:
-    st.write("")
+with filter_cols[8]:
+    st.markdown(
+        '<div class="overview-filter-reset-spacer">&nbsp;</div>',
+        unsafe_allow_html=True,
+    )
     if st.button("↻ Reset", width="stretch", key="ov_reset"):
         _reset_overview_filters()
         st.rerun()
