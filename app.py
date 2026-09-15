@@ -6791,12 +6791,335 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-snapshot-shell-marker) .
 .monthly-perf-bar { height:7px !important; }
 .monthly-perf-pct { font-size:8px !important; }
 
-@media (max-width:1250px) {
+@media (max-width:760px) {
     .monthly-panels { grid-template-columns:1fr !important; }
     .activity-bubble-board .q1-css-matrix {
         height:330px !important;
         min-height:330px !important;
         max-height:330px !important;
+    }
+}
+
+
+/* =========================================================
+   FINAL MONTHLY SUMMARY — APPROVED 3-CARD REFERENCE LAYOUT
+   ========================================================= */
+.monthly-summary-shell {
+    width:100% !important;
+    box-sizing:border-box !important;
+    overflow:hidden !important;
+    margin:.18rem 0 .58rem 0 !important;
+    padding:.58rem .64rem .62rem .64rem !important;
+    border:1px solid #DDE6F1 !important;
+    border-radius:16px !important;
+    background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%) !important;
+    box-shadow:0 12px 30px rgba(25,56,96,.060), inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+
+.monthly-summary-head {
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+    gap:1rem !important;
+    margin:0 0 .46rem 0 !important;
+    padding:0 .06rem !important;
+}
+
+.monthly-summary-title {
+    color:#173B67 !important;
+    font-size:.98rem !important;
+    font-weight:950 !important;
+    line-height:1.15 !important;
+    letter-spacing:-.015em !important;
+}
+
+.monthly-summary-sub {
+    color:#7489A3 !important;
+    font-size:.53rem !important;
+    line-height:1.28 !important;
+    margin-top:.09rem !important;
+}
+
+.monthly-range-chip {
+    flex:0 0 auto !important;
+    min-height:25px !important;
+    padding:.20rem .42rem !important;
+    border-radius:999px !important;
+    background:linear-gradient(145deg,#F2F7FF,#F7F2FF) !important;
+    border:1px solid #D9E4F4 !important;
+    color:#385B84 !important;
+    box-shadow:0 4px 11px rgba(40,82,135,.055) !important;
+    font-size:.45rem !important;
+    font-weight:950 !important;
+}
+
+.monthly-table-wrap {
+    width:100% !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    border:1px solid #DCE6F1 !important;
+    border-radius:11px !important;
+    background:#FFFFFF !important;
+    box-shadow:0 4px 13px rgba(25,56,96,.028) !important;
+    scrollbar-width:thin !important;
+    scrollbar-color:#C7D7E9 transparent !important;
+}
+
+.monthly-table {
+    width:100% !important;
+    min-width:1190px !important;
+    table-layout:auto !important;
+    border-collapse:separate !important;
+    border-spacing:0 !important;
+    color:#264563 !important;
+    font-size:9px !important;
+}
+
+.monthly-table th,
+.monthly-table td {
+    height:24px !important;
+    padding:4px 5px !important;
+    text-align:center !important;
+    vertical-align:middle !important;
+    border-right:1px solid #E5EDF6 !important;
+    border-bottom:1px solid #E5EDF6 !important;
+    font-variant-numeric:tabular-nums !important;
+}
+
+.monthly-table .ms-month-group,
+.monthly-table .ms-campus-group {
+    background:linear-gradient(180deg,#F1F6FD 0%,#EAF2FB 100%) !important;
+    color:#173B67 !important;
+    font-size:9px !important;
+    font-weight:950 !important;
+}
+
+.monthly-table .ms-month-group {
+    text-align:left !important;
+    padding-left:8px !important;
+}
+
+.monthly-table .ms-subhead {
+    color:#526C88 !important;
+    background:#F9FBFE !important;
+    font-size:8px !important;
+    font-weight:900 !important;
+}
+
+.monthly-table .ms-subhead.ms-completed {
+    color:#FFFFFF !important;
+    background:linear-gradient(180deg,#35A86D 0%,#258A59 100%) !important;
+}
+.monthly-table .ms-subhead.ms-confirmed {
+    color:#FFFFFF !important;
+    background:linear-gradient(180deg,#377AC8 0%,#235EA7 100%) !important;
+}
+.monthly-table .ms-subhead.ms-planned {
+    color:#FFFFFF !important;
+    background:linear-gradient(180deg,#93C9E9 0%,#72AFD7 100%) !important;
+}
+.monthly-table .ms-subhead.ms-cancelled {
+    color:#FFFFFF !important;
+    background:linear-gradient(180deg,#F06E64 0%,#D9504C 100%) !important;
+}
+
+.monthly-table tbody tr:not(.ms-total-row):hover td {
+    background:#F7FAFE !important;
+}
+
+.monthly-table .ms-month-cell {
+    position:sticky !important;
+    left:0 !important;
+    z-index:2 !important;
+    text-align:left !important;
+    padding-left:8px !important;
+    color:#173B67 !important;
+    background:#FBFCFE !important;
+    font-weight:900 !important;
+}
+
+.monthly-table .ms-total-row td {
+    color:#173B67 !important;
+    background:linear-gradient(180deg,#FFF9EF 0%,#FFF3DE 100%) !important;
+    font-weight:950 !important;
+}
+
+.monthly-table .ms-total-row .ms-month-cell {
+    background:linear-gradient(180deg,#FFF5E3 0%,#FFEED0 100%) !important;
+}
+
+.monthly-panels {
+    display:grid !important;
+    grid-template-columns:1.04fr .96fr 1.04fr !important;
+    align-items:stretch !important;
+    gap:9px !important;
+    width:100% !important;
+    margin-top:9px !important;
+}
+
+.monthly-panel {
+    position:relative !important;
+    overflow:hidden !important;
+    min-width:0 !important;
+    min-height:174px !important;
+    height:100% !important;
+    box-sizing:border-box !important;
+    padding:.52rem .56rem .50rem .56rem !important;
+    border:1px solid #E0E8F2 !important;
+    border-radius:13px !important;
+    background:linear-gradient(180deg,#FFFFFF 0%,#FBFDFF 100%) !important;
+    box-shadow:0 7px 18px rgba(26,56,96,.048), inset 0 1px 0 rgba(255,255,255,.98) !important;
+    transition:transform .20s ease, box-shadow .20s ease, border-color .20s ease !important;
+}
+
+.monthly-panel::before {
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:44%;
+    height:2px;
+    border-radius:999px;
+    background:linear-gradient(90deg,#2B6DE8,#7C3AED,transparent);
+    opacity:.85;
+}
+
+.monthly-key::before {
+    background:linear-gradient(90deg,#F0A53C,#F6CA78,transparent) !important;
+}
+.monthly-performance::before {
+    background:linear-gradient(90deg,#2B6DE8,#14A7B8,transparent) !important;
+}
+.monthly-actions::before {
+    background:linear-gradient(90deg,#EB5560,#7C3AED,transparent) !important;
+}
+
+.monthly-panel:hover {
+    transform:translateY(-3px) !important;
+    border-color:#D3DFEE !important;
+    box-shadow:0 13px 27px rgba(25,56,96,.085) !important;
+}
+
+.monthly-panel-title {
+    display:flex !important;
+    align-items:center !important;
+    gap:7px !important;
+    min-height:25px !important;
+    margin:0 0 7px 0 !important;
+    color:#173B67 !important;
+    font-size:.73rem !important;
+    font-weight:950 !important;
+    line-height:1.18 !important;
+}
+
+.monthly-panel-icon {
+    width:23px !important;
+    height:23px !important;
+    flex:0 0 23px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:50% !important;
+    font-size:11px !important;
+    box-shadow:0 4px 10px rgba(36,95,197,.06) !important;
+}
+
+.monthly-point {
+    display:grid !important;
+    grid-template-columns:20px minmax(0,1fr) !important;
+    align-items:start !important;
+    gap:7px !important;
+    margin:0 0 6px 0 !important;
+}
+
+.monthly-point:last-child { margin-bottom:0 !important; }
+
+.monthly-point-badge {
+    width:20px !important;
+    height:20px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:50% !important;
+    color:#FFFFFF !important;
+    background:linear-gradient(145deg,#3C7BE6,#2458C2) !important;
+    box-shadow:0 5px 11px rgba(43,109,232,.20) !important;
+    font-size:9px !important;
+    font-weight:950 !important;
+}
+
+.monthly-key .monthly-point-badge {
+    background:linear-gradient(145deg,#7C3AED,#4F46C7) !important;
+}
+
+.monthly-actions .monthly-point-badge {
+    background:linear-gradient(145deg,#6F54DB,#4B35B8) !important;
+}
+
+.monthly-point-text {
+    color:#536C87 !important;
+    font-size:.52rem !important;
+    line-height:1.35 !important;
+    padding-top:1px !important;
+}
+
+.monthly-perf-table {
+    width:100% !important;
+    border-collapse:separate !important;
+    border-spacing:0 !important;
+    table-layout:fixed !important;
+    color:#294866 !important;
+    font-size:9px !important;
+}
+
+.monthly-perf-table th {
+    padding:0 3px 5px 3px !important;
+    border-bottom:1px solid #E6EDF5 !important;
+    color:#71849B !important;
+    font-size:7.5px !important;
+    font-weight:950 !important;
+    white-space:nowrap !important;
+}
+
+.monthly-perf-table td {
+    padding:4px 3px !important;
+    border-bottom:1px solid #ECF1F6 !important;
+    color:#294866 !important;
+    font-size:8.5px !important;
+    font-weight:700 !important;
+    vertical-align:middle !important;
+}
+
+.monthly-perf-table tr:last-child td {
+    border-bottom:none !important;
+    font-weight:950 !important;
+}
+
+.monthly-perf-bar {
+    width:100% !important;
+    height:7px !important;
+    overflow:hidden !important;
+    border-radius:999px !important;
+    background:#E7EEF6 !important;
+}
+
+.monthly-perf-fill {
+    height:100% !important;
+    border-radius:999px !important;
+    background:linear-gradient(90deg,#22A765,#43C983) !important;
+    box-shadow:0 0 7px rgba(34,167,101,.14) !important;
+}
+
+.monthly-perf-pct {
+    color:#23945D !important;
+    font-size:8px !important;
+    font-weight:950 !important;
+    margin-left:4px !important;
+}
+
+@media (max-width:760px) {
+    .monthly-panels {
+        grid-template-columns:1fr !important;
     }
 }
 
@@ -7404,10 +7727,10 @@ else:
 
             row[(campus, "Activities")] = int(len(cdf))
             row[(campus, "Events")] = int(len(event_cdf))
-            row[(campus, "Completed")] = int(event_cdf["Status Clean"].eq("Completed").sum())
-            row[(campus, "Confirmed")] = int(event_cdf["Status Clean"].eq("Confirmed").sum())
-            row[(campus, "Planned")] = int(event_cdf["Status Clean"].eq("Planned").sum())
-            row[(campus, "Cancelled")] = int(event_cdf["Status Clean"].eq("Cancelled").sum())
+            row[(campus, "Completed")] = int(cdf["Status Clean"].eq("Completed").sum())
+            row[(campus, "Confirmed")] = int(cdf["Status Clean"].eq("Confirmed").sum())
+            row[(campus, "Planned")] = int(cdf["Status Clean"].eq("Planned").sum())
+            row[(campus, "Cancelled")] = int(cdf["Status Clean"].eq("Cancelled").sum())
 
         rows.append(row)
 
@@ -7418,10 +7741,10 @@ else:
 
         total_row[(campus, "Activities")] = int(len(cdf))
         total_row[(campus, "Events")] = int(len(event_cdf))
-        total_row[(campus, "Completed")] = int(event_cdf["Status Clean"].eq("Completed").sum())
-        total_row[(campus, "Confirmed")] = int(event_cdf["Status Clean"].eq("Confirmed").sum())
-        total_row[(campus, "Planned")] = int(event_cdf["Status Clean"].eq("Planned").sum())
-        total_row[(campus, "Cancelled")] = int(event_cdf["Status Clean"].eq("Cancelled").sum())
+        total_row[(campus, "Completed")] = int(cdf["Status Clean"].eq("Completed").sum())
+        total_row[(campus, "Confirmed")] = int(cdf["Status Clean"].eq("Confirmed").sum())
+        total_row[(campus, "Planned")] = int(cdf["Status Clean"].eq("Planned").sum())
+        total_row[(campus, "Cancelled")] = int(cdf["Status Clean"].eq("Cancelled").sum())
 
     rows.append(total_row)
 
@@ -7435,10 +7758,10 @@ else:
         mdf = monthly_base[monthly_base["Month Start"].eq(month_start)].copy()
         medf = mdf[mdf["Has Event"]].copy()
 
-        completed = int(medf["Status Clean"].eq("Completed").sum())
-        confirmed = int(medf["Status Clean"].eq("Confirmed").sum())
-        planned = int(medf["Status Clean"].eq("Planned").sum())
-        cancelled = int(medf["Status Clean"].eq("Cancelled").sum())
+        completed = int(mdf["Status Clean"].eq("Completed").sum())
+        confirmed = int(mdf["Status Clean"].eq("Confirmed").sum())
+        planned = int(mdf["Status Clean"].eq("Planned").sum())
+        cancelled = int(mdf["Status Clean"].eq("Cancelled").sum())
 
         month_totals.append({
             "Month": month_label,
@@ -7457,7 +7780,7 @@ else:
     for campus in campuses:
         cdf = monthly_base[monthly_base["Campus"].eq(campus)].copy()
         event_cdf = cdf[cdf["Has Event"]].copy()
-        completed = int(event_cdf["Status Clean"].eq("Completed").sum())
+        completed = int(cdf["Status Clean"].eq("Completed").sum())
         events = int(len(event_cdf))
 
         campus_perf_rows.append({
@@ -7475,11 +7798,10 @@ else:
 
     total_activities_monthly = int(len(monthly_base))
     total_events_monthly = int(monthly_base["Has Event"].sum())
-    event_only_all = monthly_base[monthly_base["Has Event"]].copy()
-    total_completed = int(event_only_all["Status Clean"].eq("Completed").sum())
-    total_confirmed = int(event_only_all["Status Clean"].eq("Confirmed").sum())
-    total_planned = int(event_only_all["Status Clean"].eq("Planned").sum())
-    total_cancelled = int(event_only_all["Status Clean"].eq("Cancelled").sum())
+    total_completed = int(monthly_base["Status Clean"].eq("Completed").sum())
+    total_confirmed = int(monthly_base["Status Clean"].eq("Confirmed").sum())
+    total_planned = int(monthly_base["Status Clean"].eq("Planned").sum())
+    total_cancelled = int(monthly_base["Status Clean"].eq("Cancelled").sum())
 
     best_month_activity = month_totals_df.sort_values(
         ["Activities", "Events"],
@@ -7625,7 +7947,7 @@ else:
 
     # Key insights
     table_html.extend([
-        '<div class="monthly-panel">',
+        '<div class="monthly-panel monthly-key">',
         '<div class="monthly-panel-title">',
         '<span class="monthly-panel-icon monthly-icon-yellow">💡</span>',
         'Key Insights',
@@ -7642,7 +7964,7 @@ else:
 
     # Campus performance
     table_html.extend([
-        '<div class="monthly-panel">',
+        '<div class="monthly-panel monthly-performance">',
         '<div class="monthly-panel-title">',
         '<span class="monthly-panel-icon monthly-icon-blue">📊</span>',
         f'Campus Performance Total ({html.escape(month_range)})',
