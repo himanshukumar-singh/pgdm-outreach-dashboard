@@ -5080,6 +5080,212 @@ div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker)
     }
 }
 
+
+/* =========================================================
+   CAMPUS EVENT SECTION — SIMPLE PROFESSIONAL VERSION
+   ========================================================= */
+
+.event-board {
+    margin: .52rem 0 .62rem 0 !important;
+    border-radius: 15px !important;
+    border: 1px solid #E1DAD2 !important;
+    background:
+        linear-gradient(180deg,#FFFFFF 0%,#FCFAF7 100%) !important;
+    box-shadow:
+        0 10px 26px rgba(48,41,37,.055),
+        inset 0 1px 0 rgba(255,255,255,.96) !important;
+    animation: none !important;
+}
+
+.event-board:hover {
+    transform: none !important;
+    box-shadow:
+        0 13px 30px rgba(48,41,37,.075),
+        inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+
+/* slim animated brand line only */
+.event-board::before {
+    height: 2px !important;
+    width: 22% !important;
+    background: linear-gradient(
+        90deg,
+        rgba(229,140,43,0),
+        #E58C2B,
+        #6B3F7D,
+        rgba(107,63,125,0)
+    ) !important;
+    animation: eventSimpleSweep 8s ease-in-out infinite !important;
+}
+
+@keyframes eventSimpleSweep {
+    0%,20%  { left:-24%; opacity:0; }
+    32%     { opacity:.9; }
+    58%     { left:108%; opacity:.9; }
+    70%,100%{ left:108%; opacity:0; }
+}
+
+.event-board-head {
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+    gap:1rem !important;
+    padding:.62rem .72rem .48rem .76rem !important;
+    background:transparent !important;
+    border-bottom:1px solid #ECE5DD !important;
+}
+
+.event-board-kicker {
+    color:#E08727 !important;
+    font-size:.46rem !important;
+    font-weight:950 !important;
+    letter-spacing:.11em !important;
+}
+
+.event-board-title {
+    color:#17395A !important;
+    font-size:.98rem !important;
+    margin-top:.06rem !important;
+}
+
+.event-board-sub {
+    color:#788797 !important;
+    font-size:.52rem !important;
+    margin-top:.08rem !important;
+}
+
+.event-simple-stats {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    padding-top:.04rem;
+}
+
+.event-simple-chip {
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:.20rem .34rem;
+    border-radius:999px;
+    background:#FAF7F2;
+    border:1px solid #E7DFD7;
+    color:#53677B;
+    font-size:.43rem;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.event-simple-chip strong {
+    color:#17395A;
+    font-size:.49rem;
+}
+
+.event-board-body {
+    padding:.52rem .56rem .56rem .56rem !important;
+}
+
+.event-board-grid {
+    grid-template-columns:.72fr 1.28fr !important;
+    gap:9px !important;
+}
+
+.event-card {
+    border-radius:11px !important;
+    box-shadow:none !important;
+    padding:.44rem .48rem .46rem .48rem !important;
+    border:1px solid #E7E0D8 !important;
+    background:#FFFFFF !important;
+}
+
+.event-card:hover {
+    transform:none !important;
+    box-shadow:0 6px 16px rgba(48,41,37,.055) !important;
+}
+
+.event-card::before {
+    height:2px !important;
+}
+
+.event-card-head {
+    margin-bottom:.34rem !important;
+}
+
+.event-card-title {
+    font-size:.56rem !important;
+}
+
+.event-card-meta {
+    font-size:.43rem !important;
+}
+
+/* simpler bars */
+.event-volume-row {
+    min-height:30px !important;
+    padding:.10rem .08rem !important;
+}
+
+.event-volume-track {
+    height:9px !important;
+}
+
+.event-volume-fill {
+    background:linear-gradient(90deg,#E58C2B,#F2B24E,#8B5C87) !important;
+    animation:none !important;
+    box-shadow:none !important;
+}
+
+.event-status-table {
+    border-spacing:0 4px !important;
+}
+
+.event-stack {
+    height:12px !important;
+}
+
+.event-stack-seg {
+    animation:none !important;
+}
+
+.event-completion-pill {
+    min-width:40px !important;
+    padding:.12rem .22rem !important;
+}
+
+/* remove old bottom metric cards */
+.event-insight-strip {
+    display:none !important;
+}
+
+/* one concise insight strip only */
+.event-action-box {
+    margin-top:8px !important;
+    padding:.46rem .52rem !important;
+    border-radius:9px !important;
+    border:1px solid #E8DED2 !important;
+    border-left:3px solid #E58C2B !important;
+    background:#FFF9F1 !important;
+    color:#617181 !important;
+    font-size:.48rem !important;
+    line-height:1.35 !important;
+}
+
+.event-action-box strong {
+    color:#17395A !important;
+}
+
+@media (max-width:1150px) {
+    .event-board-grid {
+        grid-template-columns:1fr !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .event-board::before {
+        animation:none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -6506,7 +6712,7 @@ if event_view.empty:
                 '<div class="event-board-head">'
                     '<div>'
                         '<div class="event-board-kicker">Campus · Event Intelligence</div>'
-                        '<div class="event-board-title">Campus Event & Execution Intelligence</div>'
+                        '<div class="event-board-title">Campus Events & Status</div>'
                         '<div class="event-board-sub">'
                             'Campus-wise event volume and execution status for the current filter selection.'
                         '</div>'
@@ -6674,22 +6880,13 @@ else:
         '<div class="event-board-kicker">Campus · Event Intelligence</div>',
         '<div class="event-board-title">Campus Event & Execution Intelligence</div>',
         '<div class="event-board-sub">'
-        'Campus-wise event volume and status execution in one executive view.'
+        'Campus-wise event volume and execution status.'
         '</div>',
         '</div>',
-        '<div class="event-board-head-stats">',
-        '<div class="event-board-stat">'
-        '<div class="label">Total Events</div>'
-        f'<div class="value">{total_event_count:,}</div>'
-        '</div>',
-        '<div class="event-board-stat">'
-        '<div class="label">Event Campuses</div>'
-        f'<div class="value">{active_event_campuses}</div>'
-        '</div>',
-        '<div class="event-board-stat">'
-        '<div class="label">Completion</div>'
-        f'<div class="value">{completion_rate:.1f}%</div>'
-        '</div>',
+        '<div class="event-simple-stats">',
+        f'<span class="event-simple-chip">Events <strong>{total_event_count:,}</strong></span>',
+        f'<span class="event-simple-chip">Campuses <strong>{active_event_campuses}</strong></span>',
+        f'<span class="event-simple-chip">Completed <strong>{completion_rate:.1f}%</strong></span>',
         '</div>',
         '</div>',
         '<div class="event-board-body">',
@@ -6909,40 +7106,15 @@ else:
         )
         risk_note = "Scale best practice"
 
+    # One concise management insight instead of multiple cards.
     event_board_parts.extend([
-        '<div class="event-insight-strip">',
-
-        '<div class="event-insight-card" style="--event-accent:#E58C2B;">'
-        '<div class="event-insight-label">Event Leader</div>'
-        f'<div class="event-insight-value">{html.escape(event_leader)}</div>'
-        f'<div class="event-insight-note">{event_leader_count} events · {event_leader_share:.1f}% share</div>'
-        '</div>',
-
-        '<div class="event-insight-card" style="--event-accent:#2F9B6B;">'
-        '<div class="event-insight-label">Completed</div>'
-        f'<div class="event-insight-value">{completed_total}</div>'
-        f'<div class="event-insight-note">{completion_rate:.1f}% of all filtered events</div>'
-        '</div>',
-
-        '<div class="event-insight-card" style="--event-accent:#2D6CDF;">'
-        '<div class="event-insight-label">Ready Pipeline</div>'
-        f'<div class="event-insight-value">{pipeline_total}</div>'
-        f'<div class="event-insight-note">{confirmed_total} confirmed · {planned_total} planned</div>'
-        '</div>',
-
-        '<div class="event-insight-card" style="--event-accent:#6B3F7D;">'
-        '<div class="event-insight-label">Management Focus</div>'
-        f'<div class="event-insight-value">{html.escape(risk_note)}</div>'
-        f'<div class="event-insight-note">{cancelled_total} cancelled · {blank_total} blank status</div>'
-        '</div>',
-
-        '</div>',
-
         '<div class="event-action-box">'
-        '<strong>Recommended Action:</strong> '
+        '<strong>Insight:</strong> '
+        f'{html.escape(event_leader)} leads with {event_leader_count} events '
+        f'({event_leader_share:.1f}% share); overall completion is {completion_rate:.1f}%. '
+        '<strong>Action:</strong> '
         f'{html.escape(action_text)}'
         '</div>',
-
         '</div>',  # body
         '</div>',  # board
     ])
