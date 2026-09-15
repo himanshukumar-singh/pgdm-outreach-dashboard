@@ -7230,6 +7230,520 @@ with st.container(border=True):
 
 
 # =========================================================
+# MONTHLY CAMPUS-WISE ACTIVITY & EVENT SUMMARY — RESTORED
+# Placed directly below Campus Reach Achievement
+# =========================================================
+
+st.markdown(
+    """
+    <style>
+    .month-report-shell {
+        position: relative;
+        overflow: hidden;
+        margin: .62rem 0 .72rem 0;
+        padding: .78rem .82rem .80rem .82rem;
+        border: 1px solid #DDE6F1;
+        border-radius: 18px;
+        background:
+            radial-gradient(circle at 98% 0%, rgba(108, 76, 224, .055), transparent 22%),
+            linear-gradient(180deg, #FFFFFF 0%, #FBFCFF 100%);
+        box-shadow: 0 12px 32px rgba(22, 49, 88, .065), inset 0 1px 0 rgba(255,255,255,.96);
+    }
+    .month-report-shell::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg,#2D6CDF,#7453C6,#F1A12B,#19A38D);
+    }
+    .month-report-head {
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:1rem;
+        margin-bottom:.54rem;
+    }
+    .month-report-title {
+        color:#12365F;
+        font-size:1.02rem;
+        font-weight:950;
+        line-height:1.15;
+        letter-spacing:-.015em;
+    }
+    .month-report-sub {
+        color:#7589A3;
+        font-size:.64rem;
+        margin-top:.11rem;
+    }
+    .month-range-pill {
+        display:inline-flex;
+        align-items:center;
+        gap:.28rem;
+        padding:.25rem .48rem;
+        border-radius:999px;
+        color:#4A4DA2;
+        font-size:.52rem;
+        font-weight:900;
+        white-space:nowrap;
+        border:1px solid #DEDDF4;
+        background:linear-gradient(135deg,#F7F6FF,#FFF8EB);
+        box-shadow:0 4px 11px rgba(48,68,112,.045);
+    }
+    .month-range-pill::before {
+        content:"";
+        width:6px;
+        height:6px;
+        border-radius:50%;
+        background:#6B5CE7;
+        box-shadow:0 0 0 3px rgba(107,92,231,.10);
+    }
+    .month-table-wrap {
+        width:100%;
+        overflow-x:auto;
+        border:1px solid #E1E8F2;
+        border-radius:13px;
+        background:#FFFFFF;
+        scrollbar-width:thin;
+        scrollbar-color:#C7D4E4 transparent;
+    }
+    .month-report-table {
+        width:100%;
+        min-width:1220px;
+        border-collapse:separate;
+        border-spacing:0;
+        table-layout:auto;
+        color:#244565;
+        font-size:.53rem;
+    }
+    .month-report-table th,
+    .month-report-table td {
+        text-align:center;
+        padding:.31rem .30rem;
+        border-right:1px solid #E6ECF4;
+        border-bottom:1px solid #E6ECF4;
+        white-space:nowrap;
+        font-variant-numeric:tabular-nums;
+    }
+    .month-report-table th:last-child,
+    .month-report-table td:last-child { border-right:none; }
+    .month-report-table thead tr:first-child th {
+        background:linear-gradient(180deg,#EFF5FC 0%,#E8F0F9 100%);
+        color:#173A67;
+        font-size:.55rem;
+        font-weight:950;
+    }
+    .month-report-table thead tr:nth-child(2) th {
+        color:#506A87;
+        background:#F9FBFD;
+        font-size:.50rem;
+        font-weight:900;
+    }
+    .month-report-table .m-completed { background:#2F9D68 !important; color:#FFFFFF !important; }
+    .month-report-table .m-confirmed { background:#2F6FBC !important; color:#FFFFFF !important; }
+    .month-report-table .m-planned   { background:#82BDE2 !important; color:#FFFFFF !important; }
+    .month-report-table .m-cancelled { background:#E25B58 !important; color:#FFFFFF !important; }
+    .month-report-table .month-col {
+        position:sticky;
+        left:0;
+        z-index:2;
+        text-align:left;
+        padding-left:.48rem;
+        background:#FAFCFF;
+        color:#173A67;
+        font-weight:900;
+    }
+    .month-report-table tbody tr:hover td { background:#F8FBFF; }
+    .month-report-table tbody tr:hover .month-col { background:#F1F7FF; }
+    .month-report-table .total-row td {
+        background:#FFF8E9;
+        color:#163960;
+        font-weight:950;
+        border-bottom:none;
+    }
+    .month-report-table .total-row .month-col { background:#FFF4D9; }
+
+    .month-insight-grid {
+        display:grid;
+        grid-template-columns:1.08fr 1fr 1.08fr;
+        gap:.58rem;
+        margin-top:.62rem;
+    }
+    .month-insight-card {
+        position:relative;
+        overflow:hidden;
+        min-height:172px;
+        padding:.66rem .70rem .62rem .70rem;
+        border:1px solid #E0E8F2;
+        border-radius:14px;
+        background:linear-gradient(150deg,#FFFFFF 0%,#FAFCFF 100%);
+        box-shadow:0 7px 18px rgba(22,49,88,.045);
+        transition:transform .20s ease, box-shadow .20s ease;
+    }
+    .month-insight-card:hover {
+        transform:translateY(-2px);
+        box-shadow:0 12px 25px rgba(22,49,88,.075);
+    }
+    .month-insight-card::before {
+        content:"";
+        position:absolute;
+        left:0;
+        right:0;
+        top:0;
+        height:2px;
+        background:linear-gradient(90deg,#2D6CDF,#7B53D8,#F0A12A);
+        opacity:.80;
+    }
+    .month-card-title {
+        display:flex;
+        align-items:center;
+        gap:.40rem;
+        color:#16385F;
+        font-size:.73rem;
+        font-weight:950;
+        margin-bottom:.48rem;
+    }
+    .month-card-icon {
+        width:25px;
+        height:25px;
+        border-radius:9px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        font-size:.72rem;
+        flex:0 0 25px;
+        box-shadow:0 5px 11px rgba(28,57,101,.06);
+    }
+    .month-card-icon.insight { background:#FFF4D9; color:#D78A11; }
+    .month-card-icon.performance { background:#EAF2FF; color:#2D6CDF; }
+    .month-card-icon.action { background:#FFF0F2; color:#DB4053; }
+    .month-point {
+        display:grid;
+        grid-template-columns:20px 1fr;
+        gap:.38rem;
+        align-items:start;
+        margin-bottom:.39rem;
+    }
+    .month-point:last-child { margin-bottom:0; }
+    .month-point-num {
+        width:20px;
+        height:20px;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#FFFFFF;
+        background:linear-gradient(145deg,#3476EE,#4C4DD1);
+        font-size:.49rem;
+        font-weight:950;
+        box-shadow:0 4px 10px rgba(52,90,208,.18);
+    }
+    .month-point-text {
+        color:#5B718B;
+        font-size:.54rem;
+        line-height:1.42;
+    }
+    .month-perf-table {
+        width:100%;
+        border-collapse:collapse;
+        font-size:.51rem;
+        color:#284866;
+    }
+    .month-perf-table th {
+        color:#75869A;
+        font-size:.46rem;
+        font-weight:950;
+        text-align:left;
+        padding:.15rem .12rem .27rem .12rem;
+        border-bottom:1px solid #E6ECF3;
+        white-space:nowrap;
+    }
+    .month-perf-table td {
+        padding:.28rem .12rem;
+        border-bottom:1px solid #EDF1F6;
+        font-weight:720;
+        vertical-align:middle;
+    }
+    .month-perf-table tr:last-child td { font-weight:950; border-bottom:none; }
+    .month-progress-wrap { display:flex; align-items:center; gap:.24rem; min-width:80px; }
+    .month-progress-track {
+        height:8px;
+        flex:1;
+        border-radius:999px;
+        overflow:hidden;
+        background:#E9EEF5;
+    }
+    .month-progress-fill {
+        height:100%;
+        border-radius:999px;
+        background:linear-gradient(90deg,#18A45F,#48C989);
+    }
+    .month-progress-pct {
+        color:#218B58;
+        font-size:.47rem;
+        font-weight:950;
+        min-width:25px;
+        text-align:right;
+    }
+    @media (max-width:1100px) {
+        .month-insight-grid { grid-template-columns:1fr; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+        .month-insight-card { transition:none !important; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+def _month_status_clean(value):
+    if pd.isna(value):
+        return ""
+    return str(value).strip().title()
+
+
+def _month_safe_pct(num, den):
+    try:
+        num = float(num)
+        den = float(den)
+        return (num / den * 100.0) if den else 0.0
+    except Exception:
+        return 0.0
+
+
+def _month_progress(pct):
+    pct = max(0.0, min(100.0, float(pct)))
+    return (
+        '<div class="month-progress-wrap">'
+        '<div class="month-progress-track">'
+        f'<div class="month-progress-fill" style="width:{pct:.1f}%"></div>'
+        '</div>'
+        f'<span class="month-progress-pct">{pct:.0f}%</span>'
+        '</div>'
+    )
+
+
+if "Activity Date" not in filtered.columns or filtered["Activity Date"].dropna().empty:
+    st.info("Monthly campus summary is unavailable because Activity Date is missing for the selected filters.")
+else:
+    monthly_base = filtered.dropna(subset=["Activity Date"]).copy()
+    monthly_base["Month Start"] = monthly_base["Activity Date"].dt.to_period("M").dt.to_timestamp()
+    multiple_years = monthly_base["Month Start"].dt.year.nunique() > 1
+    monthly_base["Month Label"] = monthly_base["Month Start"].dt.strftime("%b %Y" if multiple_years else "%b")
+    monthly_base["Campus"] = monthly_base["Campus"].fillna("Unknown").astype(str).str.strip()
+    monthly_base["Status Clean"] = (
+        monthly_base["Status"].apply(_month_status_clean)
+        if "Status" in monthly_base.columns
+        else ""
+    )
+    monthly_base["Has Event"] = (
+        monthly_base["Event"].fillna("").astype(str).str.strip().ne("")
+        if "Event" in monthly_base.columns
+        else False
+    )
+
+    preferred_campuses = ["Noida", "Lucknow", "Jaipur", "Indore"]
+    campus_values = monthly_base["Campus"].dropna().astype(str).unique().tolist()
+    campuses = [c for c in preferred_campuses if c in campus_values]
+    campuses += sorted(c for c in campus_values if c not in campuses)
+
+    months_order = (
+        monthly_base[["Month Start", "Month Label"]]
+        .drop_duplicates()
+        .sort_values("Month Start")
+        .reset_index(drop=True)
+    )
+
+    rows = []
+    for _, month_row in months_order.iterrows():
+        month_slice = monthly_base[monthly_base["Month Start"].eq(month_row["Month Start"])]
+        row = {"Month": month_row["Month Label"]}
+        for campus in campuses:
+            cdf = month_slice[month_slice["Campus"].eq(campus)]
+            row[(campus, "Activities")] = int(len(cdf))
+            row[(campus, "Events")] = int(cdf["Has Event"].sum())
+            row[(campus, "Completed")] = int(cdf["Status Clean"].eq("Completed").sum())
+            row[(campus, "Confirmed")] = int(cdf["Status Clean"].eq("Confirmed").sum())
+            row[(campus, "Planned")] = int(cdf["Status Clean"].eq("Planned").sum())
+            row[(campus, "Cancelled")] = int(cdf["Status Clean"].eq("Cancelled").sum())
+        rows.append(row)
+
+    total_row = {"Month": "Total"}
+    campus_perf = []
+    for campus in campuses:
+        cdf = monthly_base[monthly_base["Campus"].eq(campus)]
+        activities = int(len(cdf))
+        events = int(cdf["Has Event"].sum())
+        completed = int(cdf["Status Clean"].eq("Completed").sum())
+        confirmed = int(cdf["Status Clean"].eq("Confirmed").sum())
+        planned = int(cdf["Status Clean"].eq("Planned").sum())
+        cancelled = int(cdf["Status Clean"].eq("Cancelled").sum())
+
+        total_row[(campus, "Activities")] = activities
+        total_row[(campus, "Events")] = events
+        total_row[(campus, "Completed")] = completed
+        total_row[(campus, "Confirmed")] = confirmed
+        total_row[(campus, "Planned")] = planned
+        total_row[(campus, "Cancelled")] = cancelled
+
+        campus_perf.append({
+            "Campus": campus,
+            "Activities": activities,
+            "Events": events,
+            "Completed": completed,
+            "Completion %": _month_safe_pct(completed, events),
+        })
+    rows.append(total_row)
+
+    month_stats = []
+    for _, month_row in months_order.iterrows():
+        mdf = monthly_base[monthly_base["Month Start"].eq(month_row["Month Start"])]
+        month_stats.append({
+            "Month": month_row["Month Label"],
+            "Activities": int(len(mdf)),
+            "Events": int(mdf["Has Event"].sum()),
+            "Completed": int(mdf["Status Clean"].eq("Completed").sum()),
+            "Confirmed": int(mdf["Status Clean"].eq("Confirmed").sum()),
+            "Planned": int(mdf["Status Clean"].eq("Planned").sum()),
+        })
+    month_stats_df = pd.DataFrame(month_stats)
+    campus_perf_df = pd.DataFrame(campus_perf)
+
+    peak_activity = month_stats_df.sort_values(["Activities", "Events"], ascending=False).iloc[0]
+    month_stats_df["Ready"] = month_stats_df["Completed"] + month_stats_df["Confirmed"]
+    peak_execution = month_stats_df.sort_values(["Ready", "Events"], ascending=False).iloc[0]
+    leader = campus_perf_df.sort_values(["Activities", "Events"], ascending=False).iloc[0]
+
+    total_month_activities = int(len(monthly_base))
+    total_month_events = int(monthly_base["Has Event"].sum())
+    total_month_completed = int(monthly_base["Status Clean"].eq("Completed").sum())
+    total_month_planned = int(monthly_base["Status Clean"].eq("Planned").sum())
+
+    leader_activity_share = _month_safe_pct(leader["Activities"], total_month_activities)
+    leader_event_share = _month_safe_pct(leader["Events"], total_month_events)
+
+    positive_event_perf = campus_perf_df[campus_perf_df["Events"] > 0].copy()
+    if not positive_event_perf.empty:
+        median_completion = positive_event_perf["Completion %"].median()
+        weak = positive_event_perf[positive_event_perf["Completion %"] < median_completion]
+        weak_text = ", ".join(weak["Campus"].tolist()[:2]) if not weak.empty else "lower-completion campuses"
+    else:
+        weak_text = "campuses with pending event execution"
+
+    first_month = str(months_order.iloc[0]["Month Label"])
+    last_month = str(months_order.iloc[-1]["Month Label"])
+    range_text = first_month if first_month == last_month else f"{first_month} – {last_month}"
+
+    parts = [
+        '<div class="month-report-shell">',
+        '<div class="month-report-head">',
+        '<div>',
+        '<div class="month-report-title">Monthly Campus-wise Activity &amp; Event Summary</div>',
+        '<div class="month-report-sub">Detailed count of activities, events and execution status by campus and month.</div>',
+        '</div>',
+        f'<div class="month-range-pill">{html.escape(range_text)}</div>',
+        '</div>',
+        '<div class="month-table-wrap">',
+        '<table class="month-report-table">',
+        '<thead><tr>',
+        '<th rowspan="2" style="min-width:70px;text-align:left;padding-left:.48rem;">Month</th>',
+    ]
+
+    for campus in campuses:
+        parts.append(f'<th colspan="6">{html.escape(str(campus))}</th>')
+    parts.append('</tr><tr>')
+    for _ in campuses:
+        parts.extend([
+            '<th>Activities</th>',
+            '<th>Events</th>',
+            '<th class="m-completed">Completed</th>',
+            '<th class="m-confirmed">Confirmed</th>',
+            '<th class="m-planned">Planned</th>',
+            '<th class="m-cancelled">Cancelled</th>',
+        ])
+    parts.append('</tr></thead><tbody>')
+
+    metrics = ["Activities", "Events", "Completed", "Confirmed", "Planned", "Cancelled"]
+    for i, row in enumerate(rows):
+        is_total = i == len(rows) - 1
+        parts.append('<tr class="total-row">' if is_total else '<tr>')
+        parts.append(f'<td class="month-col">{html.escape(str(row["Month"]))}</td>')
+        for campus in campuses:
+            for metric in metrics:
+                parts.append(f'<td>{int(row.get((campus, metric), 0))}</td>')
+        parts.append('</tr>')
+    parts.extend(['</tbody></table>', '</div>'])
+
+    key_points = [
+        f'{peak_activity["Month"]} has the highest activity volume ({int(peak_activity["Activities"]):,}) across all campuses.',
+        f'Event execution (Completed + Confirmed) is strongest in {peak_execution["Month"]} ({int(peak_execution["Ready"]):,} activities).',
+        f'{leader["Campus"]} contributes the highest activity share ({leader_activity_share:.1f}%) and {leader_event_share:.1f}% of event records.',
+        f'Keep monthly event conversion under review where activity volume rises faster than event execution.',
+    ]
+
+    action_points = [
+        f'Prioritize closure of {total_month_planned:,} planned-status activities across the current selection.',
+        f'Focus completion improvement on {weak_text}.',
+        'Increase event outcomes in high-activity months where event volume remains comparatively low.',
+        f'Review the latest visible month ({last_month}) for ownership, event readiness and timely execution.',
+    ]
+
+    parts.append('<div class="month-insight-grid">')
+
+    parts.append('<div class="month-insight-card">')
+    parts.append('<div class="month-card-title"><span class="month-card-icon insight">💡</span>Key Insights</div>')
+    for idx, text_value in enumerate(key_points, 1):
+        parts.append(
+            '<div class="month-point">'
+            f'<span class="month-point-num">{idx}</span>'
+            f'<span class="month-point-text">{html.escape(text_value)}</span>'
+            '</div>'
+        )
+    parts.append('</div>')
+
+    parts.append('<div class="month-insight-card">')
+    parts.append(f'<div class="month-card-title"><span class="month-card-icon performance">▥</span>Campus Performance Total ({html.escape(range_text)})</div>')
+    parts.append('<table class="month-perf-table"><thead><tr><th>Campus</th><th>Activities</th><th>Events</th><th>Completed</th><th>Completion %</th></tr></thead><tbody>')
+    for _, perf in campus_perf_df.iterrows():
+        parts.append(
+            '<tr>'
+            f'<td>{html.escape(str(perf["Campus"]))}</td>'
+            f'<td>{int(perf["Activities"]):,}</td>'
+            f'<td>{int(perf["Events"]):,}</td>'
+            f'<td>{int(perf["Completed"]):,}</td>'
+            f'<td>{_month_progress(perf["Completion %"])}</td>'
+            '</tr>'
+        )
+    overall_completion = _month_safe_pct(total_month_completed, total_month_events)
+    parts.append(
+        '<tr>'
+        '<td>Total</td>'
+        f'<td>{total_month_activities:,}</td>'
+        f'<td>{total_month_events:,}</td>'
+        f'<td>{total_month_completed:,}</td>'
+        f'<td>{_month_progress(overall_completion)}</td>'
+        '</tr>'
+    )
+    parts.append('</tbody></table></div>')
+
+    parts.append('<div class="month-insight-card">')
+    parts.append('<div class="month-card-title"><span class="month-card-icon action">◎</span>Recommended Actions</div>')
+    for idx, text_value in enumerate(action_points, 1):
+        parts.append(
+            '<div class="month-point">'
+            f'<span class="month-point-num">{idx}</span>'
+            f'<span class="month-point-text">{html.escape(text_value)}</span>'
+            '</div>'
+        )
+    parts.append('</div>')
+
+    parts.extend(['</div>', '</div>'])
+    st.markdown(''.join(parts), unsafe_allow_html=True)
+
+
+# =========================================================
 # EXECUTION & ACTION HEALTH
 # =========================================================
 overview_section(
