@@ -7010,7 +7010,7 @@ def render_activity_event_status_matrix(matrix_df):
     # Blank Event values are kept visible rather than silently discarded.
     source["Event Display"] = source["Event"].where(
         source["Event"].ne(""),
-        "No Event / Not Tagged",
+        "No Event",
     )
 
     grouped = (
@@ -7227,7 +7227,7 @@ def render_activity_event_status_matrix(matrix_df):
         }
         .aev-table {
             width:100%;
-            min-width:1450px;
+            min-width:1140px;
             table-layout:fixed;
             border-collapse:separate;
             border-spacing:0;
@@ -7250,25 +7250,29 @@ def render_activity_event_status_matrix(matrix_df):
         .aev-left-head {
             color:#FFFFFF;
             background:linear-gradient(145deg,#183B66 0%,#285889 100%);
-            font-size:.58rem;
+            font-size:.56rem;
             font-weight:950;
-            padding:.46rem .42rem;
+            padding:.45rem .34rem;
+            line-height:1.12;
+            white-space:normal;
         }
         .aev-campus-head {
             color:#12365E;
-            font-size:.68rem;
+            font-size:.66rem;
             font-weight:950;
-            padding:.38rem .30rem;
+            padding:.38rem .20rem;
             letter-spacing:.01em;
+            white-space:nowrap;
         }
         .aev-campus-head.noida   { background:linear-gradient(180deg,#D9EAFF 0%,#EAF4FF 100%); }
         .aev-campus-head.lucknow { background:linear-gradient(180deg,#DDF4E3 0%,#ECF9EF 100%); }
         .aev-campus-head.jaipur  { background:linear-gradient(180deg,#FFE6D2 0%,#FFF2E7 100%); }
         .aev-campus-head.indore  { background:linear-gradient(180deg,#E8DDFB 0%,#F2ECFF 100%); }
         .aev-status-head {
-            padding:.35rem .19rem;
-            font-size:.48rem;
+            padding:.34rem .08rem;
+            font-size:.43rem;
             font-weight:950;
+            line-height:1.05;
             white-space:nowrap;
         }
         .aev-status-head.planned     { color:#235E98; background:#DCEEFF; }
@@ -7277,13 +7281,17 @@ def render_activity_event_status_matrix(matrix_df):
         .aev-status-head.cancelled   { color:#AC3841; background:#FFE0E2; }
         .aev-status-head.rescheduled { color:#98690B; background:#FFF0C9; }
         .aev-activity-cell {
-            width:142px;
-            padding:.43rem .42rem;
+            width:132px;
+            padding:.40rem .44rem;
             text-align:left !important;
             color:#173A62;
-            font-size:.58rem;
+            font-size:.55rem;
             font-weight:950;
-            line-height:1.25;
+            line-height:1.22;
+            white-space:normal;
+            word-break:keep-all;
+            overflow-wrap:normal;
+            hyphens:none;
             background:linear-gradient(180deg,#F8FBFF 0%,#F2F7FC 100%);
             border-left:3px solid #4B7BEC;
         }
@@ -7291,30 +7299,51 @@ def render_activity_event_status_matrix(matrix_df):
             display:inline-flex;
             align-items:center;
             justify-content:center;
-            min-width:24px;
-            margin-left:5px;
-            padding:.09rem .25rem;
+            min-width:22px;
+            margin-left:4px;
+            padding:.07rem .22rem;
             border-radius:999px;
             color:#425C79;
             background:#E8F0FA;
             border:1px solid #D7E3F0;
-            font-size:.47rem;
+            font-size:.44rem;
             font-weight:950;
+            vertical-align:middle;
         }
         .aev-event-cell {
-            width:164px;
-            padding:.36rem .42rem;
+            width:105px;
+            padding:.34rem .38rem;
             text-align:left !important;
             color:#304F70;
-            font-size:.56rem;
-            font-weight:780;
+            font-size:.53rem;
+            font-weight:820;
+            line-height:1.18;
+            white-space:normal;
+            word-break:normal;
+            overflow-wrap:normal;
             background:#FFFFFF;
         }
+        .aev-event-main {
+            display:inline-block;
+            color:#2E4F73;
+            font-weight:850;
+            white-space:normal;
+        }
         .aev-event-count {
-            color:#8395A9;
-            font-size:.48rem;
-            font-weight:800;
-            margin-left:3px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:19px;
+            height:16px;
+            margin-left:4px;
+            padding:0 .18rem;
+            border-radius:999px;
+            color:#5E7690;
+            background:#EEF3F8;
+            border:1px solid #DEE7F0;
+            font-size:.41rem;
+            font-weight:900;
+            vertical-align:middle;
         }
         .aev-table tbody tr:nth-child(even) .aev-event-cell,
         .aev-table tbody tr:nth-child(even) td:not(.aev-activity-cell) {
@@ -7324,10 +7353,11 @@ def render_activity_event_status_matrix(matrix_df):
             background:#F4F8FE;
         }
         .aev-data-cell {
-            padding:.29rem .14rem;
-            min-width:48px;
+            padding:.27rem .06rem;
+            width:45px;
+            min-width:45px;
             height:30px;
-            font-size:.53rem;
+            font-size:.50rem;
         }
         .aev-zero {
             color:#C1CBD7;
@@ -7337,11 +7367,11 @@ def render_activity_event_status_matrix(matrix_df):
             display:inline-flex;
             align-items:center;
             justify-content:center;
-            min-width:25px;
-            height:20px;
-            padding:0 .20rem;
+            min-width:23px;
+            height:19px;
+            padding:0 .16rem;
             border-radius:6px;
-            font-size:.51rem;
+            font-size:.48rem;
             font-weight:950;
             font-variant-numeric:tabular-nums;
             box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
@@ -7446,6 +7476,11 @@ def render_activity_event_status_matrix(matrix_df):
         '</div>',
         '<div class="aev-scroll">',
         '<table class="aev-table">',
+        '<colgroup>',
+        '<col style="width:132px">',
+        '<col style="width:105px">',
+        *['<col style="width:45px">' for _ in range(len(campus_order) * len(status_order))],
+        '</colgroup>',
         '<thead><tr>',
         '<th class="aev-left-head" rowspan="2">Activity Type</th>',
         '<th class="aev-left-head" rowspan="2">Event</th>',
@@ -7486,7 +7521,8 @@ def render_activity_event_status_matrix(matrix_df):
         event_label = escape(row["event"])
         parts.append(
             '<td class="aev-event-cell">'
-            f'{event_label}<span class="aev-event-count">({row["event_total"]:,})</span>'
+            f'<span class="aev-event-main">{event_label}</span>'
+            f'<span class="aev-event-count">{row["event_total"]:,}</span>'
             '</td>'
         )
 
