@@ -5358,500 +5358,6 @@ div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker)
     .q1-event-mini-bubble { animation: none !important; }
 }
 
-
-
-/* =========================================================
-   FINAL APPROVED OVERVIEW TOP UI
-   FILTERS + EXECUTIVE SNAPSHOT
-   KEEP THIS BLOCK AT THE VERY END OF MAIN <style>
-   ========================================================= */
-
-/* =========================================================
-   A. FILTER CONTROL DECK
-   ========================================================= */
-
-.filter-panel-title {
-    display: none !important;
-}
-
-.filter-motion-marker {
-    display: none !important;
-}
-
-/* Complete Filter container */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) {
-    position: relative !important;
-    overflow: visible !important;
-    padding: 2.10rem .72rem .62rem .72rem !important;
-    border-radius: 13px !important;
-    border: 1px solid #DFE5F1 !important;
-    background:
-        radial-gradient(circle at 97% 20%, rgba(112, 64, 200, .045), transparent 24%),
-        linear-gradient(120deg, #FFFFFF 0%, #FBFCFF 52%, #F8F7FF 100%) !important;
-    background-size: auto !important;
-    box-shadow:
-        0 8px 24px rgba(25, 48, 91, .055),
-        0 1px 0 rgba(255,255,255,.95) inset !important;
-    animation: none !important;
-    align-items: flex-end !important;
-    margin-top: .15rem !important;
-    margin-bottom: .40rem !important;
-}
-
-/* Orange → violet thin brand line */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)::before {
-    content: "" !important;
-    position: absolute !important;
-    z-index: 15 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: 0 !important;
-    bottom: auto !important;
-    width: 100% !important;
-    height: 2px !important;
-    border-radius: 13px 13px 0 0 !important;
-    background: linear-gradient(
-        90deg,
-        #F39A24 0%,
-        #F6B84F 22%,
-        #7961D7 58%,
-        #5B55F6 100%
-    ) !important;
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;
-    pointer-events: none !important;
-}
-
-/* FILTERS heading inside the panel */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)::after {
-    content: "Filters" !important;
-    position: absolute !important;
-    z-index: 14 !important;
-    top: .57rem !important;
-    left: .95rem !important;
-    right: auto !important;
-    bottom: auto !important;
-    width: auto !important;
-    height: 22px !important;
-    display: flex !important;
-    align-items: center !important;
-    padding-left: 24px !important;
-    color: #102B52 !important;
-    font-family: Inter, "Segoe UI", Arial, sans-serif !important;
-    font-size: .83rem !important;
-    font-weight: 850 !important;
-    letter-spacing: -.01em !important;
-    border-radius: 0 !important;
-    background-color: transparent !important;
-    background-repeat: no-repeat !important;
-    background-position: left center !important;
-    background-size: 16px 16px !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232E6BEB' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h16l-6.2 7.2V18l-3.6 2v-7.8L4 5z'/%3E%3C/svg%3E") !important;
-    box-shadow: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;
-    pointer-events: none !important;
-}
-
-/* tighter Streamlit columns */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"] {
-    position: relative !important;
-    min-width: 0 !important;
-}
-
-/* labels */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stSelectbox"] label,
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stDateInput"] label {
-    color: #213E67 !important;
-    font-size: .60rem !important;
-    font-weight: 800 !important;
-    letter-spacing: .005em !important;
-    margin-left: .02rem !important;
-    margin-bottom: .10rem !important;
-    line-height: 1 !important;
-}
-
-/* control box */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-baseweb="select"] > div,
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stDateInput"] input {
-    min-height: 2.18rem !important;
-    height: 2.18rem !important;
-    border-radius: 8px !important;
-    border: 1px solid #DDE6F5 !important;
-    background: linear-gradient(180deg, #F8FAFF 0%, #F4F7FC 100%) !important;
-    color: #163A69 !important;
-    box-shadow:
-        0 2px 6px rgba(34, 72, 123, .035),
-        0 1px 0 rgba(255,255,255,.9) inset !important;
-    transition:
-        transform .16s ease,
-        border-color .16s ease,
-        box-shadow .16s ease,
-        background .16s ease !important;
-}
-
-/* leave space for left icon */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-baseweb="select"] > div {
-    padding-left: 1.92rem !important;
-}
-
-/* Date field */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stDateInput"] input {
-    padding-left: 1.96rem !important;
-    font-size: .65rem !important;
-    font-weight: 650 !important;
-    font-variant-numeric: tabular-nums !important;
-}
-
-/* value */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-baseweb="select"] span {
-    color: #173A68 !important;
-    font-size: .66rem !important;
-    font-weight: 700 !important;
-}
-
-/* dropdown arrow */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-baseweb="select"] svg {
-    color: #2865E5 !important;
-    width: 15px !important;
-    height: 15px !important;
-}
-
-/* hover */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-baseweb="select"] > div:hover,
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stDateInput"] input:hover {
-    transform: translateY(-1px) !important;
-    border-color: #AFC5F3 !important;
-    background: #FFFFFF !important;
-    box-shadow:
-        0 6px 14px rgba(38, 82, 150, .085),
-        0 0 0 1px rgba(66, 105, 210, .025) inset !important;
-}
-
-/* focus */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-baseweb="select"] > div:focus-within,
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stDateInput"] input:focus {
-    border-color: #6E8FF0 !important;
-    box-shadow:
-        0 0 0 2px rgba(79, 108, 232, .10),
-        0 7px 16px rgba(42, 72, 142, .085) !important;
-}
-
-/* No up/down floating animation for complete widgets */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stSelectbox"],
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stDateInput"] {
-    animation: none !important;
-}
-
-/* =========================================================
-   B. ICONS INSIDE FILTER BOXES
-   ========================================================= */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]::before {
-    content: "" !important;
-    position: absolute !important;
-    z-index: 10 !important;
-    left: .63rem !important;
-    bottom: .71rem !important;
-    width: 13px !important;
-    height: 13px !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-    background-size: contain !important;
-    pointer-events: none !important;
-}
-
-/* Campus */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(1)::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B55F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h16M6 20V9l6-4 6 4v11M9 20v-5h6v5'/%3E%3C/svg%3E") !important;
-}
-/* Activity Type */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(2)::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B55F6' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3'/%3E%3C/svg%3E") !important;
-}
-/* Event */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(3)::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B55F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='5' width='16' height='15' rx='2'/%3E%3Cpath d='M8 3v4M16 3v4M4 10h16M9 14h2M13 14h2'/%3E%3C/svg%3E") !important;
-}
-/* Status */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(4)::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B55F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12h4l2-6 4 12 2-6h6'/%3E%3C/svg%3E") !important;
-}
-/* Target Segment */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(5)::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B55F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='8' r='3'/%3E%3Ccircle cx='17' cy='9' r='2.5'/%3E%3Cpath d='M3 20c0-4 2.5-7 6-7s6 3 6 7M14 14c3 0 6 2 6 6'/%3E%3C/svg%3E") !important;
-}
-/* Owner */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(6)::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B55F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7'/%3E%3C/svg%3E") !important;
-}
-/* Priority */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(7)::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B55F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 9-7 9-7-9 7-9z'/%3E%3Cpath d='M7 12h10'/%3E%3C/svg%3E") !important;
-}
-/* Date Range */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(8)::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B55F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M8 3v4M16 3v4M3 10h18'/%3E%3C/svg%3E") !important;
-}
-/* Reset column should NOT get an icon pseudo element */
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) [data-testid="stColumn"]:nth-child(9)::before {
-    display: none !important;
-}
-
-/* =========================================================
-   C. RESET BUTTON
-   ========================================================= */
-.overview-filter-reset-spacer {
-    height: 1.06rem !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stButton"] button {
-    min-height: 2.18rem !important;
-    height: 2.18rem !important;
-    border-radius: 9px !important;
-    padding: 0 .56rem !important;
-    color: #FFFFFF !important;
-    font-size: .65rem !important;
-    font-weight: 750 !important;
-    border: 1px solid rgba(35,69,123,.38) !important;
-    background: linear-gradient(105deg, #0E477D 0%, #153E78 55%, #443C99 115%) !important;
-    background-size: auto !important;
-    box-shadow:
-        0 6px 15px rgba(20, 62, 117, .20),
-        inset 0 1px 0 rgba(255,255,255,.18) !important;
-    animation: none !important;
-    transition: transform .16s ease, box-shadow .16s ease !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) div[data-testid="stButton"] button:hover {
-    transform: translateY(-2px) !important;
-    box-shadow:
-        0 10px 20px rgba(19, 55, 111, .27),
-        0 0 0 1px rgba(120,104,242,.12) !important;
-}
-
-/* =========================================================
-   D. EXECUTIVE SNAPSHOT
-   ========================================================= */
-.snapshot-banner {
-    position: relative !important;
-    overflow: hidden !important;
-    margin: .20rem 0 0 0 !important;
-    min-height: 3.40rem !important;
-    padding: .52rem .78rem .47rem 3.10rem !important;
-    border: 1px solid #E1E7F1 !important;
-    border-bottom: 0 !important;
-    border-radius: 13px 13px 0 0 !important;
-    background:
-        radial-gradient(circle at 55% 50%, rgba(243,166,89,.040), transparent 30%),
-        linear-gradient(115deg, #FFFFFF 0%, #FFFDFC 55%, #FCFAFF 100%) !important;
-    box-shadow: 0 7px 20px rgba(31,58,98,.045) !important;
-}
-
-.snapshot-banner::before {
-    content: "" !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    width: 4px !important;
-    background: linear-gradient(180deg, #F29A24, #F3BA51 47%, #70427C) !important;
-}
-
-/* Greater Minds watermark */
-.snapshot-banner::after {
-    content: "Greater Minds\A Brighter Futures" !important;
-    white-space: pre !important;
-    position: absolute !important;
-    z-index: 1 !important;
-    left: 49% !important;
-    top: 51% !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: translate(-50%, -50%) rotate(-5deg) !important;
-    width: auto !important;
-    height: auto !important;
-    color: rgba(205, 145, 94, .25) !important;
-    background: none !important;
-    font-family: Georgia, serif !important;
-    font-style: italic !important;
-    font-size: .78rem !important;
-    font-weight: 650 !important;
-    line-height: .90 !important;
-    text-align: center !important;
-    animation: snapshotWatermark 7s ease-in-out infinite !important;
-    pointer-events: none !important;
-}
-
-@keyframes snapshotWatermark {
-    0%,100% {
-        opacity: .72;
-        transform: translate(-50%, -50%) rotate(-5deg) scale(1);
-    }
-    50% {
-        opacity: .95;
-        transform: translate(-50%, -52%) rotate(-5deg) scale(1.025);
-    }
-}
-
-.snapshot-symbol {
-    position: absolute;
-    left: .78rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 29px;
-    height: 29px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: conic-gradient(from 25deg, #7651CC, #A763CC, #EE9A2B, #F7C45D, #7651CC);
-    color: #FFFFFF;
-    font-size: 12px;
-    font-weight: 900;
-    box-shadow: 0 5px 14px rgba(99,64,151,.18);
-}
-
-.snapshot-copy,
-.snapshot-badges {
-    position: relative !important;
-    z-index: 4 !important;
-}
-
-.snapshot-eyebrow {
-    color: #F08D21 !important;
-    font-size: .47rem !important;
-    font-weight: 900 !important;
-    letter-spacing: .11em !important;
-}
-
-.snapshot-title {
-    color: #112F59 !important;
-    font-size: .88rem !important;
-    font-weight: 900 !important;
-    margin-top: .01rem !important;
-    line-height: 1.05 !important;
-}
-
-.snapshot-sub {
-    color: #71849B !important;
-    font-size: .51rem !important;
-    margin-top: .08rem !important;
-}
-
-.snapshot-badge {
-    padding: .18rem .38rem !important;
-    font-size: .42rem !important;
-    font-weight: 850 !important;
-    border-radius: 999px !important;
-}
-
-/* =========================================================
-   E. KPI RAIL — JOIN WITH SNAPSHOT HEADER
-   ========================================================= */
-.snapshot-motion-marker {
-    display: none !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
-    margin-top: -1px !important;
-    padding: .38rem .46rem .42rem .46rem !important;
-    border: 1px solid #E1E7F1 !important;
-    border-top: 1px solid #EEF1F5 !important;
-    border-radius: 0 0 13px 13px !important;
-    background: linear-gradient(180deg, #FFFFFF 0%, #FBFCFE 100%) !important;
-    box-shadow: 0 10px 24px rgba(25,53,93,.055) !important;
-    overflow: visible !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker)::before {
-    display: none !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
-    height: 64px !important;
-    min-height: 64px !important;
-    border-radius: 10px !important;
-    padding: .37rem .46rem .34rem .48rem !important;
-    grid-template-columns: 32px minmax(0,1fr) !important;
-    grid-template-rows: 25px 14px 12px !important;
-    column-gap: .44rem !important;
-    background: linear-gradient(125deg, #FFFFFF 0%, #FFFFFF 58%, var(--wash) 145%) !important;
-    border: 1px solid var(--border) !important;
-    box-shadow:
-        0 5px 13px rgba(30,58,95,.045),
-        inset 0 1px 0 rgba(255,255,255,.95) !important;
-    animation: kpiFinalFloat 6s ease-in-out infinite !important;
-}
-
-@keyframes kpiFinalFloat {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-1px); }
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi:hover {
-    transform: translateY(-3px) !important;
-    box-shadow:
-        0 11px 22px rgba(29,58,99,.095),
-        0 0 0 1px rgba(255,255,255,.82) inset !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon {
-    grid-column: 1 !important;
-    grid-row: 1 / 4 !important;
-    width: 29px !important;
-    height: 29px !important;
-    border-radius: 10px !important;
-    font-size: 12px !important;
-    margin: 0 !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .value {
-    grid-column: 2 !important;
-    grid-row: 1 !important;
-    color: #10305B !important;
-    font-size: 1.09rem !important;
-    font-weight: 950 !important;
-    line-height: 1 !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .label {
-    grid-column: 2 !important;
-    grid-row: 2 !important;
-    color: #24446A !important;
-    font-size: .48rem !important;
-    font-weight: 900 !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .sub {
-    grid-column: 2 !important;
-    grid-row: 3 !important;
-    color: #8999AC !important;
-    font-size: .39rem !important;
-    line-height: 1 !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::before {
-    height: 2px !important;
-    width: 68% !important;
-}
-
-@media (max-width: 1200px) {
-    div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) {
-        overflow-x: auto !important;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .snapshot-banner::after,
-    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
-        animation: none !important;
-    }
-}
-
 </style>
 """,
     unsafe_allow_html=True,
@@ -5861,14 +5367,24 @@ div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::befo
 # =========================================================
 # HELPERS
 # =========================================================
+KPI_ICONS = {
+    "Total Activities": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2h4l7 4V7l-7 4H3z"/><path d="M18 8c1.5 1 2.3 2.3 2.3 4S19.5 15 18 16"/></svg>',
+    "Total Events": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M8 14h3M13 14h3"/></svg>',
+    "Institutions": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-4 7 4v12M8 12h2M14 12h2M8 16h2M14 16h2"/></svg>',
+    "Cities Covered": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.2 7-12a7 7 0 10-14 0c0 6.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.2"/></svg>',
+    "Planned Reach": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 2.5-7 6-7s6 3 6 7M14 14c3 0 6 2 6 6"/></svg>',
+    "Actual Reach": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 12l7-7M16 5h3v3"/></svg>',
+}
+
 def professional_kpi(label, value, subtitle, icon, css_class):
+    icon_html = KPI_ICONS.get(label, html.escape(str(icon)))
     st.markdown(
         (
             f'<div class="pro-kpi {css_class}">'
-            f'<div class="icon">{icon}</div>'
-            f'<div class="label">{label}</div>'
+            f'<div class="icon">{icon_html}</div>'
+            f'<div class="label">{html.escape(str(label))}</div>'
             f'<div class="value">{value}</div>'
-            f'<div class="sub">{subtitle}</div>'
+            f'<div class="sub">{html.escape(str(subtitle))}</div>'
             f'<div class="mini-line"></div>'
             f'</div>'
         ),
@@ -6374,6 +5890,155 @@ def _options(frame, column):
     return ["All"] + sorted(values.unique().tolist(), key=lambda x: x.lower())
 
 
+
+def _ensure_filter_state(key, options):
+    """Return a valid persisted selection for a custom filter."""
+    options = list(options) if options else ["All"]
+    current = st.session_state.get(key, "All")
+    if current not in options:
+        current = "All" if "All" in options else options[0]
+        st.session_state[key] = current
+    elif key not in st.session_state:
+        st.session_state[key] = current
+    return current
+
+
+def _filter_label(label, css_class, svg_html):
+    st.markdown(
+        (
+            f'<div class="cf-label {css_class}">'
+            f'<span class="cf-icon">{svg_html}</span>'
+            f'<span>{html.escape(label)}</span>'
+            f'</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def _custom_select_filter(label, options, state_key, css_class, svg_html):
+    """Professional popover selector while keeping normal Streamlit state."""
+    options = list(options) if options else ["All"]
+    current = _ensure_filter_state(state_key, options)
+
+    _filter_label(label, css_class, svg_html)
+
+    if hasattr(st, "popover"):
+        with st.popover(str(current), use_container_width=True):
+            st.markdown(
+                f'<div class="cf-popover-title">{html.escape(label)}</div>'
+                '<div class="cf-popover-sub">Choose one value to update the dashboard.</div>',
+                unsafe_allow_html=True,
+            )
+
+            for idx, option in enumerate(options):
+                option_text = str(option)
+                selected = option_text == str(current)
+                button_label = f"✓  {option_text}" if selected else option_text
+                if st.button(
+                    button_label,
+                    key=f"{state_key}__option__{idx}",
+                    width="stretch",
+                    type="primary" if selected else "secondary",
+                ):
+                    st.session_state[state_key] = option
+                    st.rerun()
+    else:
+        # Safe fallback for older Streamlit versions.
+        current = st.selectbox(
+            label,
+            options,
+            index=options.index(current),
+            key=state_key,
+            label_visibility="collapsed",
+        )
+
+    return st.session_state.get(state_key, current)
+
+
+def _custom_date_filter(frame, column="Activity Date"):
+    calendar_svg = (
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+        'stroke-linecap="round" stroke-linejoin="round">'
+        '<rect x="3" y="5" width="18" height="16" rx="2"/>'
+        '<path d="M8 3v4M16 3v4M3 10h18"/></svg>'
+    )
+    _filter_label("Date Range", "cf-date", calendar_svg)
+
+    if column not in frame.columns or not frame[column].notna().any():
+        if hasattr(st, "popover"):
+            with st.popover("No dates", use_container_width=True):
+                st.caption("Activity Date is not available for this selection.")
+        else:
+            st.text_input("Date Range", value="", disabled=True, label_visibility="collapsed")
+        return None
+
+    min_date = frame[column].min().date()
+    max_date = frame[column].max().date()
+
+    current = st.session_state.get("ov_date")
+    if not (
+        isinstance(current, (list, tuple))
+        and len(current) == 2
+        and current[0] is not None
+        and current[1] is not None
+    ):
+        current = (min_date, max_date)
+        st.session_state["ov_date"] = current
+
+    start_value, end_value = current[0], current[1]
+    display = f"{pd.Timestamp(start_value).strftime('%Y/%m/%d')} — {pd.Timestamp(end_value).strftime('%Y/%m/%d')}"
+
+    if hasattr(st, "popover"):
+        with st.popover(display, use_container_width=True):
+            st.markdown(
+                '<div class="cf-popover-title">Date Range</div>'
+                '<div class="cf-popover-sub">Select the outreach activity period.</div>',
+                unsafe_allow_html=True,
+            )
+
+            if "ov_date_picker" not in st.session_state:
+                st.session_state["ov_date_picker"] = current
+
+            picked = st.date_input(
+                "Select date range",
+                value=st.session_state.get("ov_date_picker", current),
+                min_value=min_date,
+                max_value=max_date,
+                key="ov_date_picker",
+                label_visibility="collapsed",
+            )
+
+            if isinstance(picked, (list, tuple)) and len(picked) == 2:
+                picked_tuple = (picked[0], picked[1])
+                if tuple(current) != picked_tuple:
+                    st.session_state["ov_date"] = picked_tuple
+                    st.rerun()
+    else:
+        picked = st.date_input(
+            "Date Range",
+            value=current,
+            min_value=min_date,
+            max_value=max_date,
+            key="ov_date_picker",
+            label_visibility="collapsed",
+        )
+        if isinstance(picked, (list, tuple)) and len(picked) == 2:
+            st.session_state["ov_date"] = (picked[0], picked[1])
+
+    return st.session_state.get("ov_date", current)
+
+
+# Inline vector icons for the custom filter labels.
+FILTER_ICONS = {
+    "campus": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 20V9l6-4 6 4v11M9 20v-5h6v5"/></svg>',
+    "activity": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 14h2M13 14h2"/></svg>',
+    "event": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13l-7 7-9-9V4h7l9 9z"/><circle cx="8.5" cy="8.5" r="1.2"/></svg>',
+    "status": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/></svg>',
+    "segment": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 2.5-7 6-7s6 3 6 7M14 14c3 0 6 2 6 6"/></svg>',
+    "owner": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7"/></svg>',
+    "priority": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3z"/></svg>',
+}
+
 def _reset_overview_filters():
     for key in [
         "ov_campus",
@@ -6384,6 +6049,7 @@ def _reset_overview_filters():
         "ov_owner",
         "ov_priority",
         "ov_date",
+        "ov_date_picker",
     ]:
         st.session_state.pop(key, None)
 
@@ -6843,110 +6509,120 @@ st.markdown(header_html, unsafe_allow_html=True)
 
 
 # =========================================================
-# FILTERS
-# Campus → Activity Type → Event → Status →
+# FILTERS — CUSTOM PROFESSIONAL POPOVER CONTROLS
+# Order locked: Campus → Activity Type → Event → Status →
 # Target Segment → Owner → Priority → Date Range → Reset
 # =========================================================
 
-filter_cols = st.columns(
-    [
-        0.86,   # Campus
-        1.04,   # Activity Type
-        0.82,   # Event
-        0.82,   # Status
-        1.03,   # Target Segment
-        0.90,   # Owner
-        0.72,   # Priority
-        1.35,   # Date Range
-        0.78,   # Reset
-    ],
-    gap="small",
-)
-
-with filter_cols[0]:
+with st.container(border=True):
     st.markdown(
-        '<span class="filter-motion-marker"></span>',
+        (
+            '<span class="custom-filter-deck-marker"></span>'
+            '<div class="custom-filter-deck-head">'
+                '<div class="custom-filter-title-wrap">'
+                    '<span class="custom-filter-funnel">'
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'
+                            '<path d="M4 5h16l-6.2 7.2V18l-3.6 2v-7.8L4 5z"/>'
+                        '</svg>'
+                    '</span>'
+                    '<span class="custom-filter-title">Filters</span>'
+                    '<span class="custom-filter-note">Refine your view to get precise outreach insights</span>'
+                '</div>'
+                '<div class="custom-filter-signature">From Campuses to Careers</div>'
+            '</div>'
+        ),
         unsafe_allow_html=True,
     )
-    campus_filter = st.selectbox(
-        "Campus",
-        _options(df, "Campus"),
-        key="ov_campus",
+
+    filter_cols = st.columns(
+        [0.90, 1.05, 0.84, 0.84, 1.08, 0.88, 0.78, 1.42, 0.82],
+        gap="small",
     )
 
-with filter_cols[1]:
-    activity_filter = st.selectbox(
-        "Activity Type",
-        _options(df, "Activity Type"),
-        key="ov_activity",
-    )
-
-with filter_cols[2]:
-    event_filter = st.selectbox(
-        "Event",
-        _options(df, "Event"),
-        key="ov_event",
-    )
-
-with filter_cols[3]:
-    status_filter = st.selectbox(
-        "Status",
-        _options(df, "Status"),
-        key="ov_status",
-    )
-
-with filter_cols[4]:
-    segment_filter = st.selectbox(
-        "Target Segment",
-        _options(df, "Target Segment"),
-        key="ov_segment",
-    )
-
-with filter_cols[5]:
-    owner_filter = st.selectbox(
-        "Owner",
-        _options(df, "Activity Owner"),
-        key="ov_owner",
-    )
-
-with filter_cols[6]:
-    priority_filter = st.selectbox(
-        "Priority",
-        _options(df, "Priority"),
-        key="ov_priority",
-    )
-
-with filter_cols[7]:
-    date_range = None
-    if "Activity Date" in df.columns and df["Activity Date"].notna().any():
-        min_date = df["Activity Date"].min().date()
-        max_date = df["Activity Date"].max().date()
-        date_range = st.date_input(
-            "Date Range",
-            value=(min_date, max_date),
-            min_value=min_date,
-            max_value=max_date,
-            key="ov_date",
-        )
-    else:
-        st.text_input(
-            "Date Range",
-            value="",
-            disabled=True,
+    with filter_cols[0]:
+        campus_filter = _custom_select_filter(
+            "Campus",
+            _options(df, "Campus"),
+            "ov_campus",
+            "cf-campus",
+            FILTER_ICONS["campus"],
         )
 
-with filter_cols[8]:
+    with filter_cols[1]:
+        activity_filter = _custom_select_filter(
+            "Activity Type",
+            _options(df, "Activity Type"),
+            "ov_activity",
+            "cf-activity",
+            FILTER_ICONS["activity"],
+        )
+
+    with filter_cols[2]:
+        event_filter = _custom_select_filter(
+            "Event",
+            _options(df, "Event"),
+            "ov_event",
+            "cf-event",
+            FILTER_ICONS["event"],
+        )
+
+    with filter_cols[3]:
+        status_filter = _custom_select_filter(
+            "Status",
+            _options(df, "Status"),
+            "ov_status",
+            "cf-status",
+            FILTER_ICONS["status"],
+        )
+
+    with filter_cols[4]:
+        segment_filter = _custom_select_filter(
+            "Target Segment",
+            _options(df, "Target Segment"),
+            "ov_segment",
+            "cf-segment",
+            FILTER_ICONS["segment"],
+        )
+
+    with filter_cols[5]:
+        owner_filter = _custom_select_filter(
+            "Owner",
+            _options(df, "Activity Owner"),
+            "ov_owner",
+            "cf-owner",
+            FILTER_ICONS["owner"],
+        )
+
+    with filter_cols[6]:
+        priority_filter = _custom_select_filter(
+            "Priority",
+            _options(df, "Priority"),
+            "ov_priority",
+            "cf-priority",
+            FILTER_ICONS["priority"],
+        )
+
+    with filter_cols[7]:
+        date_range = _custom_date_filter(df, "Activity Date")
+
+    with filter_cols[8]:
+        st.markdown(
+            '<div class="custom-filter-reset-spacer"></div>',
+            unsafe_allow_html=True,
+        )
+        if st.button("↻  Reset", width="stretch", key="ov_reset"):
+            _reset_overview_filters()
+            st.rerun()
+
     st.markdown(
-        '<div class="overview-filter-reset-spacer"></div>',
+        (
+            '<div class="custom-filter-foot">'
+                '<span class="custom-filter-foot-dot">i</span>'
+                '<span>Filter across campus, activity, event, execution status, audience, owner, priority and date range. All dashboard metrics update instantly.</span>'
+            '</div>'
+        ),
         unsafe_allow_html=True,
     )
-    if st.button(
-        "↻ Reset",
-        width="stretch",
-        key="ov_reset",
-    ):
-        _reset_overview_filters()
-        st.rerun()
 
 
 # =========================================================
@@ -7034,7 +6710,11 @@ reach_achievement = _pct(actual_reach, planned_reach)
 st.markdown(
     (
         '<div class="snapshot-banner">'
-            '<div class="snapshot-symbol">◒</div>'
+            '<div class="snapshot-symbol">'
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">'
+                    '<path d="M5 20V13M10 20V9M15 20V5M20 20V11"/>'
+                '</svg>'
+            '</div>'
             '<div class="snapshot-copy">'
                 '<div class="snapshot-eyebrow">Executive Snapshot</div>'
                 '<div class="snapshot-title">Outreach Performance at a Glance</div>'
@@ -8035,7 +7715,435 @@ st.markdown(
             grid-template-columns: 1fr;
         }
     }
-    </style>
+    
+
+/* =========================================================
+   FINAL CUSTOM FILTER DECK + EXECUTIVE SNAPSHOT
+   Reliable custom-popover controls; keep at END of style.
+   ========================================================= */
+
+/* Stable left-aligned page heading (remove shuttle movement) */
+.overview-header {
+    transform: translateY(-28px) !important;
+    margin-bottom: -24px !important;
+}
+.overview-title-wrap {
+    height: 1.72rem !important;
+    overflow: visible !important;
+}
+.overview-title {
+    position: static !important;
+    left: auto !important;
+    transform: none !important;
+    animation: none !important;
+    color: #102E57 !important;
+    font-size: 1.36rem !important;
+    font-weight: 900 !important;
+    letter-spacing: -.025em !important;
+}
+.overview-eyebrow {
+    color: #6B3F8D !important;
+    font-size: .63rem !important;
+    font-weight: 900 !important;
+    letter-spacing: .15em !important;
+}
+.overview-subtitle {
+    color: #637C9A !important;
+    font-size: .78rem !important;
+    margin-top: .12rem !important;
+}
+.overview-accent { display:none !important; }
+
+/* Old native-filter styling is no longer used */
+.filter-panel-title,
+.filter-motion-marker { display:none !important; }
+
+/* ---------- FILTER DECK SHELL ---------- */
+.custom-filter-deck-marker { display:none !important; }
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) {
+    position: relative !important;
+    overflow: hidden !important;
+    border: 1px solid #DDE5F2 !important;
+    border-radius: 16px !important;
+    background:
+        radial-gradient(circle at 92% 12%, rgba(106,83,244,.07), transparent 24%),
+        radial-gradient(circle at 8% 88%, rgba(33,109,238,.04), transparent 25%),
+        linear-gradient(135deg,#FFFFFF 0%,#FBFCFF 55%,#F8F7FF 100%) !important;
+    box-shadow:
+        0 12px 30px rgba(28,55,95,.075),
+        inset 0 1px 0 rgba(255,255,255,.96) !important;
+    padding: .58rem .72rem .54rem .72rem !important;
+    margin: .12rem 0 .48rem 0 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)::before {
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:3px;
+    background:linear-gradient(90deg,#2D6CDF 0%,#6B5CF6 36%,#8B4FD3 62%,#F0A12C 100%);
+    z-index:5;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)::after {
+    content:"";
+    position:absolute;
+    width:230px;
+    height:115px;
+    right:-70px;
+    bottom:-55px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(73,129,255,.09), rgba(125,79,210,.035) 42%, transparent 72%);
+    pointer-events:none;
+    animation:filterAmbient 8s ease-in-out infinite;
+}
+
+@keyframes filterAmbient {
+    0%,100% { transform:translate(0,0) scale(1); }
+    50% { transform:translate(-18px,-5px) scale(1.05); }
+}
+
+.custom-filter-deck-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    position:relative;
+    z-index:2;
+    margin-bottom:.43rem;
+}
+.custom-filter-title-wrap {
+    display:flex;
+    align-items:center;
+    gap:.52rem;
+}
+.custom-filter-funnel {
+    width:31px;
+    height:31px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#FFFFFF;
+    background:linear-gradient(145deg,#2563EB,#6047E8);
+    box-shadow:0 7px 16px rgba(53,83,204,.22), inset 0 1px 0 rgba(255,255,255,.22);
+}
+.custom-filter-funnel svg { width:17px; height:17px; }
+.custom-filter-title {
+    color:#102F59;
+    font-size:.96rem;
+    font-weight:900;
+    letter-spacing:-.015em;
+}
+.custom-filter-note {
+    color:#7D8FA8;
+    font-size:.57rem;
+    margin-left:.10rem;
+    padding-left:.55rem;
+    border-left:1px solid #DFE7F2;
+}
+.custom-filter-signature {
+    color:#8796C0;
+    font-family:Georgia,serif;
+    font-size:.56rem;
+    font-style:italic;
+    letter-spacing:.02em;
+}
+
+/* Compact columns inside this deck */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+div[data-testid="stHorizontalBlock"] {
+    align-items:flex-end !important;
+    gap:.52rem !important;
+}
+
+.cf-control-marker { display:none !important; }
+.cf-label {
+    display:flex;
+    align-items:center;
+    gap:.34rem;
+    min-height:23px;
+    margin:0 0 .18rem .02rem;
+    color:#203D67;
+    font-size:.61rem;
+    font-weight:850;
+    line-height:1;
+    white-space:nowrap;
+}
+.cf-icon {
+    width:21px;
+    height:21px;
+    border-radius:7px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 21px;
+    border:1px solid currentColor;
+    box-shadow:0 3px 9px rgba(24,54,96,.07);
+}
+.cf-icon svg { width:13px; height:13px; }
+.cf-campus .cf-icon { color:#7B4FD4; background:#F6F0FF; }
+.cf-activity .cf-icon { color:#F08A21; background:#FFF5E8; }
+.cf-event .cf-icon { color:#3278E8; background:#EEF5FF; }
+.cf-status .cf-icon { color:#2E9D62; background:#EDF9F2; }
+.cf-segment .cf-icon { color:#8E4FE0; background:#F6EEFF; }
+.cf-owner .cf-icon { color:#EB5B84; background:#FFF0F4; }
+.cf-priority .cf-icon { color:#E7A11D; background:#FFF7E2; }
+.cf-date .cf-icon { color:#286BEA; background:#EDF4FF; }
+
+/* Custom popover trigger is the visible filter box */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+div[data-testid="stPopover"] > button {
+    width:100% !important;
+    min-height:2.28rem !important;
+    height:2.28rem !important;
+    justify-content:space-between !important;
+    padding:0 .68rem !important;
+    border-radius:10px !important;
+    border:1px solid #DCE6F5 !important;
+    background:linear-gradient(180deg,#FAFCFF 0%,#F4F7FC 100%) !important;
+    color:#163B6B !important;
+    font-size:.66rem !important;
+    font-weight:700 !important;
+    box-shadow:0 3px 8px rgba(28,63,111,.045), inset 0 1px 0 rgba(255,255,255,.95) !important;
+    transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease !important;
+    overflow:hidden !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+div[data-testid="stPopover"] > button:hover {
+    transform:translateY(-2px) !important;
+    border-color:#9CB7F1 !important;
+    background:#FFFFFF !important;
+    box-shadow:0 8px 17px rgba(42,78,142,.11),0 0 0 1px rgba(87,100,232,.045) inset !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+div[data-testid="stPopover"] > button:focus-visible {
+    border-color:#6D8EF0 !important;
+    box-shadow:0 0 0 3px rgba(89,105,232,.11),0 8px 17px rgba(42,78,142,.09) !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+div[data-testid="stPopover"] > button p {
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    white-space:nowrap !important;
+    color:#173B69 !important;
+    font-weight:700 !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+div[data-testid="stPopover"] > button svg {
+    color:#2F66DB !important;
+    width:15px !important;
+    height:15px !important;
+    flex:0 0 15px !important;
+}
+
+/* Reset */
+.custom-filter-reset-spacer { height:1.44rem; }
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+div[data-testid="stButton"] button {
+    min-height:2.28rem !important;
+    height:2.28rem !important;
+    border-radius:10px !important;
+    border:1px solid rgba(32,69,131,.32) !important;
+    color:#FFFFFF !important;
+    background:linear-gradient(110deg,#0D4B86 0%,#1759A5 48%,#453BC7 115%) !important;
+    box-shadow:0 8px 17px rgba(25,72,142,.23),inset 0 1px 0 rgba(255,255,255,.18) !important;
+    font-size:.65rem !important;
+    font-weight:800 !important;
+    transition:transform .16s ease,box-shadow .16s ease,filter .16s ease !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
+div[data-testid="stButton"] button:hover {
+    transform:translateY(-2px) !important;
+    filter:saturate(1.08) brightness(1.03) !important;
+    box-shadow:0 12px 23px rgba(25,72,142,.29),0 0 0 1px rgba(122,105,255,.12) inset !important;
+}
+
+.custom-filter-foot {
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    gap:.38rem;
+    margin-top:.45rem;
+    padding:.35rem .55rem;
+    border-radius:10px;
+    color:#7287A2;
+    font-size:.51rem;
+    background:linear-gradient(90deg,#F5F8FD 0%,#FAFBFF 70%,rgba(246,243,255,.75) 100%);
+    border:1px solid #E5EBF4;
+}
+.custom-filter-foot-dot {
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:#E7EEF9;
+    color:#5E7DA6;
+    font-size:.43rem;
+    font-weight:900;
+}
+
+/* ---------- POPOVER OPTION PANELS ---------- */
+div[data-testid="stPopoverBody"] {
+    border:1px solid #DDE5F1 !important;
+    border-radius:14px !important;
+    box-shadow:0 18px 44px rgba(20,48,88,.17) !important;
+    background:#FFFFFF !important;
+}
+.cf-popover-title {
+    color:#15375F;
+    font-size:.72rem;
+    font-weight:900;
+    margin-bottom:.26rem;
+}
+.cf-popover-sub {
+    color:#8494A8;
+    font-size:.50rem;
+    margin-bottom:.35rem;
+}
+
+/* ---------- EXECUTIVE SNAPSHOT ---------- */
+.snapshot-banner {
+    position:relative !important;
+    overflow:hidden !important;
+    margin:.18rem 0 0 0 !important;
+    padding:.58rem .72rem .53rem 3.35rem !important;
+    border:1px solid #E1E7F1 !important;
+    border-bottom:0 !important;
+    border-radius:15px 15px 0 0 !important;
+    min-height:3.58rem !important;
+    background:
+        radial-gradient(circle at 54% 46%, rgba(232,168,100,.055), transparent 28%),
+        radial-gradient(circle at 97% 15%, rgba(109,79,211,.055), transparent 24%),
+        linear-gradient(120deg,#FFFFFF 0%,#FFFDFC 56%,#FBFAFF 100%) !important;
+    box-shadow:0 8px 22px rgba(30,56,95,.05) !important;
+}
+.snapshot-banner::before {
+    content:"" !important;
+    position:absolute !important;
+    left:0 !important; top:0 !important; bottom:0 !important;
+    width:4px !important;
+    background:linear-gradient(180deg,#F29A25,#F2BA50 48%,#76498A) !important;
+}
+.snapshot-banner::after {
+    content:"Greater Minds\A Brighter Futures" !important;
+    white-space:pre !important;
+    position:absolute !important;
+    left:51% !important;
+    top:52% !important;
+    width:auto !important; height:auto !important;
+    transform:translate(-50%,-50%) rotate(-4deg) !important;
+    background:none !important;
+    color:rgba(203,145,96,.24) !important;
+    font-family:Georgia,serif !important;
+    font-style:italic !important;
+    font-size:.77rem !important;
+    font-weight:650 !important;
+    line-height:.88 !important;
+    text-align:center !important;
+    animation:snapshotWatermarkFinal 7s ease-in-out infinite !important;
+    pointer-events:none !important;
+}
+@keyframes snapshotWatermarkFinal {
+    0%,100% { opacity:.72; transform:translate(-50%,-50%) rotate(-4deg) scale(1); }
+    50% { opacity:.94; transform:translate(-50%,-53%) rotate(-4deg) scale(1.02); }
+}
+.snapshot-symbol {
+    position:absolute;
+    z-index:4;
+    left:.76rem;
+    top:50%;
+    transform:translateY(-50%);
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#FFFFFF;
+    background:linear-gradient(145deg,#7347DD 0%,#9350D5 42%,#F09A2A 100%);
+    box-shadow:0 7px 16px rgba(102,62,170,.20),inset 0 1px 0 rgba(255,255,255,.22);
+}
+.snapshot-symbol svg { width:19px; height:19px; }
+.snapshot-copy,.snapshot-badges { position:relative !important; z-index:4 !important; }
+.snapshot-eyebrow { color:#F08C22 !important; font-size:.47rem !important; font-weight:950 !important; letter-spacing:.12em !important; }
+.snapshot-title { color:#102F59 !important; font-size:.96rem !important; font-weight:950 !important; margin-top:.03rem !important; }
+.snapshot-sub { color:#74879E !important; font-size:.52rem !important; margin-top:.07rem !important; }
+.snapshot-badges { gap:7px !important; }
+.snapshot-badge { padding:.22rem .42rem !important; border-radius:999px !important; font-size:.42rem !important; font-weight:900 !important; }
+
+.snapshot-motion-marker { display:none !important; }
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
+    margin-top:-1px !important;
+    padding:.40rem .46rem .43rem .46rem !important;
+    border:1px solid #E1E7F1 !important;
+    border-top:1px solid #EEF1F5 !important;
+    border-radius:0 0 15px 15px !important;
+    background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFE 100%) !important;
+    box-shadow:0 10px 25px rgba(25,53,93,.06) !important;
+    overflow:visible !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker)::before { display:none !important; }
+
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
+    height:68px !important;
+    min-height:68px !important;
+    border-radius:11px !important;
+    padding:.40rem .48rem .36rem .48rem !important;
+    grid-template-columns:36px minmax(0,1fr) !important;
+    grid-template-rows:26px 15px 12px !important;
+    column-gap:.46rem !important;
+    background:linear-gradient(125deg,#FFFFFF 0%,#FFFFFF 55%,var(--wash) 148%) !important;
+    border:1px solid var(--border) !important;
+    box-shadow:0 5px 14px rgba(30,58,95,.05),inset 0 1px 0 rgba(255,255,255,.95) !important;
+    animation:kpiCustomFloat 6s ease-in-out infinite !important;
+}
+@keyframes kpiCustomFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1px)} }
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi:hover {
+    transform:translateY(-3px) !important;
+    box-shadow:0 12px 23px rgba(29,58,99,.10),0 0 0 1px rgba(255,255,255,.82) inset !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon {
+    grid-column:1 !important; grid-row:1 / 4 !important;
+    width:34px !important; height:34px !important;
+    border-radius:50% !important;
+    font-size:0 !important;
+    margin:0 !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon svg { width:18px !important; height:18px !important; }
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .value {
+    grid-column:2 !important; grid-row:1 !important;
+    font-size:1.14rem !important; color:#10315C !important; font-weight:950 !important; line-height:1 !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .label {
+    grid-column:2 !important; grid-row:2 !important;
+    color:#24446A !important; font-size:.50rem !important; font-weight:900 !important; text-transform:none !important; letter-spacing:0 !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .sub {
+    grid-column:2 !important; grid-row:3 !important;
+    color:#8999AC !important; font-size:.40rem !important; line-height:1 !important;
+}
+
+@media (max-width: 1200px) {
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stHorizontalBlock"] { overflow-x:auto !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)::after,
+    .snapshot-banner::after,
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi { animation:none !important; }
+}
+
+</style>
     """,
     unsafe_allow_html=True,
 )
