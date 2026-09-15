@@ -4928,6 +4928,158 @@ div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker)
     }
 }
 
+
+/* =========================================================
+   RESTORED ACTIVITY TYPE × CAMPUS BUBBLE MATRIX
+   ========================================================= */
+
+.activity-bubble-board {
+    position: relative;
+    overflow: hidden;
+    margin: .52rem 0 .58rem 0;
+    padding: .66rem .72rem .60rem .72rem;
+    border-radius: 17px;
+    border: 1px solid #DDD5CD;
+    background:
+        radial-gradient(circle at 94% 8%, rgba(107,63,125,.055), transparent 24%),
+        radial-gradient(circle at 5% 94%, rgba(229,140,43,.045), transparent 22%),
+        linear-gradient(130deg,#FFFDFC 0%,#FAF7F2 52%,#FCF9F6 100%);
+    box-shadow:
+        0 16px 38px rgba(49,42,38,.075),
+        inset 0 1px 0 rgba(255,255,255,.96);
+    animation: activityBubbleBoardBreath 7s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease;
+}
+
+.activity-bubble-board:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 22px 48px rgba(49,42,38,.105),
+        inset 0 1px 0 rgba(255,255,255,.98);
+}
+
+.activity-bubble-board::before {
+    content: "";
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: -28%;
+    width: 25%;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        rgba(229,140,43,0),
+        #E58C2B,
+        #F1B45C,
+        #6B3F7D,
+        rgba(107,63,125,0)
+    );
+    animation: activityBubbleBoardSweep 7.2s ease-in-out infinite;
+}
+
+@keyframes activityBubbleBoardBreath {
+    0%,100% {
+        box-shadow:
+            0 16px 38px rgba(49,42,38,.070),
+            inset 0 1px 0 rgba(255,255,255,.96);
+    }
+    50% {
+        box-shadow:
+            0 20px 44px rgba(67,48,41,.100),
+            inset 0 1px 0 rgba(255,255,255,.98);
+    }
+}
+
+@keyframes activityBubbleBoardSweep {
+    0%,18%  { left:-28%; opacity:0; }
+    30%     { opacity:1; }
+    58%     { left:110%; opacity:.95; }
+    70%,100%{ left:110%; opacity:0; }
+}
+
+.activity-bubble-head {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .38rem;
+}
+
+.activity-bubble-kicker {
+    color: #E08727;
+    font-size: .49rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+.activity-bubble-title {
+    color: #17395A;
+    font-size: 1.00rem;
+    font-weight: 950;
+    letter-spacing: -.015em;
+    margin-top: .07rem;
+}
+
+.activity-bubble-sub {
+    color: #758497;
+    font-size: .54rem;
+    line-height: 1.32;
+    margin-top: .08rem;
+}
+
+.activity-bubble-badge {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: .22rem .40rem;
+    border-radius: 999px;
+    color: #17395A;
+    background: #FFF7EA;
+    border: 1px solid #E8D7C0;
+    box-shadow: 0 4px 12px rgba(55,45,40,.04);
+    font-size: .44rem;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+.activity-bubble-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #28A86B;
+    box-shadow: 0 0 0 3px rgba(40,168,107,.12);
+}
+
+.activity-bubble-board .q1-css-matrix {
+    height: 385px !important;
+    min-height: 385px !important;
+    max-height: 385px !important;
+    margin-top: 0 !important;
+}
+
+.activity-bubble-board .q1-css-corner,
+.activity-bubble-board .q1-css-campus,
+.activity-bubble-board .q1-css-activity,
+.activity-bubble-board .q1-css-cell {
+    min-height: 39px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .activity-bubble-board,
+    .activity-bubble-board::before {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -6168,6 +6320,160 @@ with k6:
         f"{reach_achievement:.1f}% of planned reach" if planned_reach else "Actual reach entered",
         "✓",
         "kpi-green",
+    )
+
+
+# =========================================================
+# ACTIVITY TYPE × CAMPUS BUBBLE MATRIX
+# =========================================================
+
+activity_mix = pd.DataFrame()
+
+if {"Campus", "Activity Type"}.issubset(filtered.columns):
+    activity_mix = (
+        filtered.dropna(subset=["Campus", "Activity Type"])
+        .groupby(["Activity Type", "Campus"], observed=True)
+        .size()
+        .reset_index(name="Activities")
+    )
+
+if not activity_mix.empty:
+    activity_colors = _activity_color_map()
+
+    for activity_type in activity_mix["Activity Type"].astype(str).unique():
+        activity_colors.setdefault(
+            activity_type,
+            _activity_fallback_color(activity_type),
+        )
+
+    campus_totals_activity = (
+        activity_mix.groupby("Campus", observed=True)["Activities"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+
+    activity_totals = (
+        activity_mix.groupby("Activity Type", observed=True)["Activities"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+
+    campus_order = campus_totals_activity.index.tolist()
+    activity_order = activity_totals.index.tolist()
+
+    max_count = max(
+        int(activity_mix["Activities"].max()),
+        1,
+    )
+
+    bubble_lookup = {
+        (str(row["Activity Type"]), str(row["Campus"])): int(row["Activities"])
+        for _, row in activity_mix.iterrows()
+    }
+
+    def _hex_luminance(hex_color):
+        value = str(hex_color).lstrip("#")
+        if len(value) != 6:
+            return 1.0
+        r = int(value[0:2], 16) / 255.0
+        g = int(value[2:4], 16) / 255.0
+        b = int(value[4:6], 16) / 255.0
+        return (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
+
+    grid_columns = (
+        "118px "
+        + " ".join(["minmax(105px, 1fr)"] * len(campus_order))
+    )
+
+    matrix_parts = [
+        '<div class="activity-bubble-board">',
+        '<div class="activity-bubble-head">',
+        '<div>',
+        '<div class="activity-bubble-kicker">Activity Portfolio</div>',
+        '<div class="activity-bubble-title">Activity Type × Campus Matrix</div>',
+        '<div class="activity-bubble-sub">'
+        'Rows show Activity Type and columns show Campus. Bubble size represents activity count.'
+        '</div>',
+        '</div>',
+        f'<div class="activity-bubble-badge">{int(activity_mix["Activities"].sum()):,} activities</div>',
+        '</div>',
+        '<div class="q1-css-matrix">',
+        f'<div class="q1-css-grid" style="grid-template-columns:{grid_columns};">',
+        '<div class="q1-css-corner"></div>',
+    ]
+
+    for campus in campus_order:
+        matrix_parts.append(
+            f'<div class="q1-css-campus">{html.escape(str(campus))}</div>'
+        )
+
+    bubble_index = 0
+
+    for activity_type in activity_order:
+        matrix_parts.append(
+            f'<div class="q1-css-activity">{html.escape(str(activity_type))}</div>'
+        )
+
+        activity_color = activity_colors.get(
+            activity_type,
+            _activity_fallback_color(activity_type),
+        )
+
+        luminance = _hex_luminance(activity_color)
+        text_color = "#FFFFFF" if luminance < .47 else "#17395A"
+
+        for campus in campus_order:
+            count = bubble_lookup.get(
+                (str(activity_type), str(campus)),
+                0,
+            )
+
+            matrix_parts.append('<div class="q1-css-cell">')
+
+            if count > 0:
+                size_px = 22 + (
+                    math.sqrt(count / max_count) * 38
+                )
+
+                delay = -((bubble_index % 9) * .31)
+                duration = 3.8 + ((bubble_index % 5) * .22)
+
+                tooltip = (
+                    f"{activity_type} · {campus}: {count} activities"
+                )
+
+                matrix_parts.append(
+                    (
+                        '<div class="q1-motion-bubble" '
+                        f'title="{html.escape(tooltip)}" '
+                        f'style="width:{size_px:.1f}px;'
+                        f'height:{size_px:.1f}px;'
+                        f'background:{activity_color};'
+                        f'color:{text_color};'
+                        f'--bubble-delay:{delay:.2f}s;'
+                        f'--bubble-duration:{duration:.2f}s;">'
+                        f'<span class="q1-bubble-count">{count}</span>'
+                        '</div>'
+                    )
+                )
+
+                bubble_index += 1
+
+            matrix_parts.append('</div>')
+
+    matrix_parts.extend([
+        '</div>',
+        '<div class="q1-css-matrix-foot">',
+        '<span>Bubble size = activity count · hover for detail</span>',
+        '<span><strong>Live:</strong> updates with current filters</span>',
+        '</div>',
+        '</div>',
+        '</div>',
+    ])
+
+    st.markdown(
+        "".join(matrix_parts),
+        unsafe_allow_html=True,
     )
 
 
