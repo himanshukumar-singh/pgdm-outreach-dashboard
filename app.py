@@ -3112,6 +3112,129 @@ div[data-testid="stPlotlyChart"]::after {
     }
 }
 
+
+/* =========================================================
+   Q1 BUBBLE CHART — DEPTH + MOTION
+   ========================================================= */
+
+/* Stronger premium shadow around the complete chart card */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker) {
+    box-shadow:
+        0 18px 42px rgba(40,35,32,.105),
+        0 4px 12px rgba(112,65,125,.055),
+        inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+
+/* Soft raised plotting surface */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+div[data-testid="stPlotlyChart"] {
+    border-radius: 14px !important;
+    background:
+        linear-gradient(180deg,#FFFDFC 0%,#FBF8F4 100%) !important;
+    box-shadow:
+        0 14px 28px rgba(52,43,38,.085),
+        0 3px 8px rgba(229,140,43,.045),
+        0 0 0 1px rgba(224,214,203,.88) !important;
+    transition:
+        transform .24s ease,
+        box-shadow .24s ease !important;
+}
+
+/* On hover, the plotting surface lifts very slightly */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+div[data-testid="stPlotlyChart"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow:
+        0 20px 38px rgba(52,43,38,.125),
+        0 5px 12px rgba(107,63,125,.060),
+        0 0 0 1px rgba(211,194,177,.96) !important;
+}
+
+/* Bubble points get a subtle floating/pulse animation + shadow */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+.scatterlayer .point {
+    transform-box: fill-box;
+    transform-origin: center;
+    filter:
+        drop-shadow(0 5px 6px rgba(23,57,90,.20))
+        drop-shadow(0 1px 2px rgba(229,140,43,.10));
+    animation: q1BubblePulse 3.8s ease-in-out infinite;
+    transition:
+        filter .20s ease,
+        opacity .20s ease;
+}
+
+/* Stagger bubble motion so all circles do not move together */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+.scatterlayer .trace:nth-child(2n) .point {
+    animation-delay: .45s;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+.scatterlayer .trace:nth-child(3n) .point {
+    animation-delay: .85s;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+.scatterlayer .trace:nth-child(4n) .point {
+    animation-delay: 1.20s;
+}
+
+@keyframes q1BubblePulse {
+    0%,100% {
+        transform: translateY(0) scale(1);
+        filter:
+            drop-shadow(0 5px 6px rgba(23,57,90,.18))
+            drop-shadow(0 1px 2px rgba(229,140,43,.08));
+    }
+    50% {
+        transform: translateY(-2px) scale(1.055);
+        filter:
+            drop-shadow(0 8px 10px rgba(23,57,90,.26))
+            drop-shadow(0 2px 4px rgba(229,140,43,.14));
+    }
+}
+
+/* Bubble hover = stronger depth without becoming flashy */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+.scatterlayer .point:hover {
+    filter:
+        drop-shadow(0 10px 14px rgba(23,57,90,.32))
+        drop-shadow(0 3px 6px rgba(229,140,43,.20));
+}
+
+/* Very subtle ambient chart glow */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    width: 170px;
+    height: 170px;
+    right: -65px;
+    bottom: -85px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(229,140,43,.085) 0%,
+        rgba(107,63,125,.045) 46%,
+        rgba(255,255,255,0) 72%
+    );
+    animation: q1AmbientGlow 7.5s ease-in-out infinite;
+}
+
+@keyframes q1AmbientGlow {
+    0%,100% { transform: scale(1) translate(0,0); opacity:.72; }
+    50%     { transform: scale(1.12) translate(-12px,-8px); opacity:1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)
+    .scatterlayer .point,
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.q1-brand-chart-marker)::after {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
