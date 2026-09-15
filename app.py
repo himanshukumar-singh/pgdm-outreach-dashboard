@@ -7241,107 +7241,697 @@ else:
 
 
 # =========================================================
-# Q3 — MONTHLY ACTIVITY + EVENT MOMENTUM
+# Q3 — MONTHLY CAMPUS-WISE ACTIVITY & EVENT SUMMARY
 # =========================================================
-overview_section(
-    "Q3 · Monthly Momentum",
-    "Monthly Activity Count + Event Count",
-    "Track seasonality and whether event execution is moving at the same pace as the overall outreach plan.",
+
+st.markdown(
+    """
+    <style>
+    /* ======================================================
+       MONTHLY SUMMARY — exact reference-style section
+    ====================================================== */
+    .monthly-summary-shell {
+        background: linear-gradient(180deg, #FFFFFF 0%, #FBFCFE 100%);
+        border: 1px solid #DFE8F3;
+        border-radius: 18px;
+        padding: 14px 14px 12px 14px;
+        box-shadow: 0 12px 34px rgba(24, 56, 102, .07);
+        margin-top: 6px;
+        margin-bottom: 14px;
+        overflow: hidden;
+    }
+
+    .monthly-summary-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .monthly-summary-title {
+        font-size: 1.08rem;
+        font-weight: 900;
+        color: #173A67;
+        line-height: 1.15;
+        margin-bottom: 2px;
+    }
+
+    .monthly-summary-sub {
+        font-size: .78rem;
+        color: #7288A5;
+        line-height: 1.35;
+    }
+
+    .monthly-table-wrap {
+        overflow-x: auto;
+        border: 1px solid #E3EAF4;
+        border-radius: 14px;
+        background: #FFFFFF;
+    }
+
+    .monthly-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 1320px;
+        font-size: 12px;
+        color: #1F3E63;
+    }
+
+    .monthly-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+
+    .monthly-table th,
+    .monthly-table td {
+        border-right: 1px solid #E8EEF6;
+        border-bottom: 1px solid #E8EEF6;
+        text-align: center;
+        padding: 7px 6px;
+        white-space: nowrap;
+    }
+
+    .monthly-table th:first-child,
+    .monthly-table td:first-child {
+        border-left: 1px solid #E8EEF6;
+    }
+
+    .monthly-table tr:first-child th {
+        border-top: 1px solid #E8EEF6;
+    }
+
+    .monthly-table .ms-month-group {
+        background: linear-gradient(180deg, #F3F7FD 0%, #ECF3FB 100%);
+        color: #193C6B;
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    .monthly-table .ms-campus-group {
+        background: linear-gradient(180deg, #F7FAFE 0%, #EEF4FB 100%);
+        color: #143863;
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    .monthly-table .ms-subhead {
+        font-size: 11px;
+        font-weight: 800;
+        color: #516B89;
+        background: #FAFCFF;
+    }
+
+    .monthly-table .ms-activities {
+        background: #F3F8FF;
+    }
+
+    .monthly-table .ms-events {
+        background: #F7F9FC;
+    }
+
+    .monthly-table .ms-completed {
+        background: linear-gradient(180deg, #2FA769 0%, #248A56 100%);
+        color: #FFFFFF !important;
+    }
+
+    .monthly-table .ms-confirmed {
+        background: linear-gradient(180deg, #2F6FBC 0%, #21579B 100%);
+        color: #FFFFFF !important;
+    }
+
+    .monthly-table .ms-planned {
+        background: linear-gradient(180deg, #9FD0EE 0%, #80BCDF 100%);
+        color: #FFFFFF !important;
+    }
+
+    .monthly-table .ms-cancelled {
+        background: linear-gradient(180deg, #F2695D 0%, #D9534F 100%);
+        color: #FFFFFF !important;
+    }
+
+    .monthly-table .ms-month-cell {
+        text-align: left;
+        font-weight: 800;
+        color: #173A67;
+        background: #FAFCFF;
+        position: sticky;
+        left: 0;
+        z-index: 1;
+    }
+
+    .monthly-table .ms-total-row td {
+        font-weight: 900;
+        background: #FFF8EF;
+        color: #173A67;
+    }
+
+    .monthly-table .ms-total-row td:first-child {
+        background: #FFF4E2;
+    }
+
+    .monthly-panels {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr 1.15fr;
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .monthly-panel {
+        background: linear-gradient(180deg, #FFFFFF 0%, #FBFDFF 100%);
+        border: 1px solid #E3EAF4;
+        border-radius: 16px;
+        padding: 14px 14px 12px 14px;
+        box-shadow: 0 8px 24px rgba(23, 58, 103, .06);
+        min-height: 205px;
+    }
+
+    .monthly-panel-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1rem;
+        font-weight: 900;
+        color: #173A67;
+        margin-bottom: 10px;
+    }
+
+    .monthly-panel-icon {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        font-size: 14px;
+        flex: 0 0 28px;
+    }
+
+    .monthly-icon-yellow { background: rgba(242, 176, 77, .18); color: #E29A18; }
+    .monthly-icon-blue   { background: rgba(43,109,232,.12); color: #2B6DE8; }
+    .monthly-icon-red    { background: rgba(239, 94, 94, .14); color: #E14B4B; }
+
+    .monthly-point {
+        display: grid;
+        grid-template-columns: 26px 1fr;
+        gap: 9px;
+        align-items: start;
+        margin-bottom: 9px;
+    }
+
+    .monthly-point:last-child { margin-bottom: 0; }
+
+    .monthly-point-badge {
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, #2B6DE8 0%, #1D57CC 100%);
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: 900;
+        box-shadow: 0 6px 14px rgba(43,109,232,.22);
+    }
+
+    .monthly-point-text {
+        font-size: .80rem;
+        line-height: 1.45;
+        color: #4F6682;
+    }
+
+    .monthly-perf-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    .monthly-perf-table th {
+        text-align: left;
+        font-size: 11px;
+        color: #6B7F97;
+        font-weight: 900;
+        padding: 0 0 7px 0;
+        border-bottom: 1px solid #E7EEF7;
+    }
+
+    .monthly-perf-table td {
+        padding: 7px 0;
+        border-bottom: 1px solid #EDF2F8;
+        color: #204063;
+        font-weight: 600;
+    }
+
+    .monthly-perf-table tr:last-child td {
+        border-bottom: none;
+        font-weight: 900;
+    }
+
+    .monthly-perf-bar {
+        width: 100%;
+        height: 10px;
+        background: #E9EFF6;
+        border-radius: 999px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .monthly-perf-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #2FA769 0%, #3CC77F 100%);
+        border-radius: 999px;
+    }
+
+    .monthly-perf-pct {
+        font-size: 11px;
+        font-weight: 800;
+        color: #2A8E58;
+        margin-left: 6px;
+        white-space: nowrap;
+    }
+
+    .monthly-actions .monthly-point-badge {
+        background: linear-gradient(180deg, #2B6DE8 0%, #164AB4 100%);
+    }
+
+    @media (max-width: 1200px) {
+        .monthly-panels {
+            grid-template-columns: 1fr;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
-with st.container(border=True):
-    chart_header(
-        "Monthly Outreach Momentum",
-        "Columns = all activities; line = records where Event is populated.",
+
+def _monthly_status_clean(x):
+    if pd.isna(x):
+        return ""
+    return str(x).strip().title()
+
+
+def _monthly_safe_pct(num, den):
+    try:
+        num = float(num)
+        den = float(den)
+        if den == 0:
+            return 0.0
+        return (num / den) * 100.0
+    except Exception:
+        return 0.0
+
+
+def _monthly_num(v):
+    try:
+        return int(v)
+    except Exception:
+        return 0
+
+
+def _monthly_perf_bar(pct):
+    pct = max(0.0, min(100.0, float(pct)))
+    return f"""
+        <div style="display:flex; align-items:center; gap:6px;">
+            <div class="monthly-perf-bar">
+                <div class="monthly-perf-fill" style="width:{pct:.1f}%;"></div>
+            </div>
+            <span class="monthly-perf-pct">{pct:.0f}%</span>
+        </div>
+    """
+
+
+overview_section(
+    "Q3 · Monthly Momentum",
+    "Monthly Campus-wise Activity & Event Summary",
+    "Detailed count of activities, events and event status by campus and month.",
+)
+
+if "Activity Date" not in filtered.columns or filtered["Activity Date"].dropna().empty:
+    st.info("Monthly summary cannot be calculated because Activity Date is unavailable for this selection.")
+else:
+    monthly_base = filtered.copy()
+    monthly_base = monthly_base.dropna(subset=["Activity Date"]).copy()
+
+    monthly_base["Month Start"] = monthly_base["Activity Date"].dt.to_period("M").dt.to_timestamp()
+    multi_year = monthly_base["Month Start"].dt.year.nunique() > 1
+    monthly_base["Month Label"] = monthly_base["Month Start"].dt.strftime("%b %Y" if multi_year else "%b")
+    monthly_base["Campus"] = monthly_base["Campus"].fillna("Unknown").astype(str).str.strip()
+    monthly_base["Status Clean"] = monthly_base["Status"].apply(_monthly_status_clean) if "Status" in monthly_base.columns else ""
+    monthly_base["Has Event"] = (
+        monthly_base["Event"].fillna("").astype(str).str.strip().ne("")
+        if "Event" in monthly_base.columns
+        else False
     )
 
-    monthly = pd.DataFrame()
-    if "Activity Date" in filtered.columns and filtered["Activity Date"].notna().any():
-        monthly_base = filtered.dropna(subset=["Activity Date"]).copy()
-        monthly_base["Month Start"] = monthly_base["Activity Date"].dt.to_period("M").dt.to_timestamp()
+    preferred_campuses = ["Noida", "Lucknow", "Jaipur", "Indore"]
+    visible_campuses = [c for c in preferred_campuses if c in monthly_base["Campus"].unique().tolist()]
+    extra_campuses = sorted([c for c in monthly_base["Campus"].unique().tolist() if c not in visible_campuses])
+    campuses = visible_campuses + extra_campuses
 
-        activity_month = (
-            monthly_base.groupby("Month Start", observed=True)
-            .size()
-            .rename("Activities")
+    months_order = (
+        monthly_base[["Month Start", "Month Label"]]
+        .drop_duplicates()
+        .sort_values("Month Start")
+        .reset_index(drop=True)
+    )
+
+    status_order = ["Completed", "Confirmed", "Planned", "Cancelled"]
+
+    # -------------------------------
+    # Build month x campus summary
+    # -------------------------------
+    rows = []
+    export_rows = []
+
+    for _, mrow in months_order.iterrows():
+        month_start = mrow["Month Start"]
+        month_label = mrow["Month Label"]
+
+        row = {"Month": month_label}
+        export_row = {"Month": month_label}
+
+        month_slice = monthly_base[monthly_base["Month Start"] == month_start].copy()
+
+        for campus in campuses:
+            cdf = month_slice[month_slice["Campus"] == campus].copy()
+
+            activities = len(cdf)
+            events = int(cdf["Has Event"].sum()) if "Has Event" in cdf.columns else 0
+            completed = int((cdf["Status Clean"] == "Completed").sum()) if "Status Clean" in cdf.columns else 0
+            confirmed = int((cdf["Status Clean"] == "Confirmed").sum()) if "Status Clean" in cdf.columns else 0
+            planned = int((cdf["Status Clean"] == "Planned").sum()) if "Status Clean" in cdf.columns else 0
+            cancelled = int((cdf["Status Clean"] == "Cancelled").sum()) if "Status Clean" in cdf.columns else 0
+
+            row[(campus, "Activities")] = activities
+            row[(campus, "Events")] = events
+            row[(campus, "Completed")] = completed
+            row[(campus, "Confirmed")] = confirmed
+            row[(campus, "Planned")] = planned
+            row[(campus, "Cancelled")] = cancelled
+
+            export_row[f"{campus} Activities"] = activities
+            export_row[f"{campus} Events"] = events
+            export_row[f"{campus} Completed"] = completed
+            export_row[f"{campus} Confirmed"] = confirmed
+            export_row[f"{campus} Planned"] = planned
+            export_row[f"{campus} Cancelled"] = cancelled
+
+        rows.append(row)
+        export_rows.append(export_row)
+
+    # -------------------------------
+    # Add Total row
+    # -------------------------------
+    total_row = {"Month": "Total"}
+    export_total_row = {"Month": "Total"}
+
+    for campus in campuses:
+        cdf = monthly_base[monthly_base["Campus"] == campus].copy()
+
+        activities = len(cdf)
+        events = int(cdf["Has Event"].sum()) if "Has Event" in cdf.columns else 0
+        completed = int((cdf["Status Clean"] == "Completed").sum()) if "Status Clean" in cdf.columns else 0
+        confirmed = int((cdf["Status Clean"] == "Confirmed").sum()) if "Status Clean" in cdf.columns else 0
+        planned = int((cdf["Status Clean"] == "Planned").sum()) if "Status Clean" in cdf.columns else 0
+        cancelled = int((cdf["Status Clean"] == "Cancelled").sum()) if "Status Clean" in cdf.columns else 0
+
+        total_row[(campus, "Activities")] = activities
+        total_row[(campus, "Events")] = events
+        total_row[(campus, "Completed")] = completed
+        total_row[(campus, "Confirmed")] = confirmed
+        total_row[(campus, "Planned")] = planned
+        total_row[(campus, "Cancelled")] = cancelled
+
+        export_total_row[f"{campus} Activities"] = activities
+        export_total_row[f"{campus} Events"] = events
+        export_total_row[f"{campus} Completed"] = completed
+        export_total_row[f"{campus} Confirmed"] = confirmed
+        export_total_row[f"{campus} Planned"] = planned
+        export_total_row[f"{campus} Cancelled"] = cancelled
+
+    rows.append(total_row)
+    export_rows.append(export_total_row)
+
+    export_df = pd.DataFrame(export_rows)
+
+    # -------------------------------
+    # Monthly insights calculations
+    # -------------------------------
+    month_totals = []
+    for _, mrow in months_order.iterrows():
+        month_start = mrow["Month Start"]
+        month_label = mrow["Month Label"]
+        mdf = monthly_base[monthly_base["Month Start"] == month_start].copy()
+
+        activities = len(mdf)
+        events = int(mdf["Has Event"].sum())
+        completed = int((mdf["Status Clean"] == "Completed").sum())
+        confirmed = int((mdf["Status Clean"] == "Confirmed").sum())
+        planned = int((mdf["Status Clean"] == "Planned").sum())
+        cancelled = int((mdf["Status Clean"] == "Cancelled").sum())
+
+        month_totals.append({
+            "Month": month_label,
+            "Activities": activities,
+            "Events": events,
+            "Completed": completed,
+            "Confirmed": confirmed,
+            "Planned": planned,
+            "Cancelled": cancelled,
+            "Execution Ready": completed + confirmed,
+        })
+
+    month_totals_df = pd.DataFrame(month_totals)
+
+    campus_perf_rows = []
+    for campus in campuses:
+        cdf = monthly_base[monthly_base["Campus"] == campus].copy()
+
+        activities = len(cdf)
+        events = int(cdf["Has Event"].sum())
+        completed = int((cdf["Status Clean"] == "Completed").sum())
+        completion_pct = _monthly_safe_pct(completed, events)
+
+        campus_perf_rows.append({
+            "Campus": campus,
+            "Activities": activities,
+            "Events": events,
+            "Completed": completed,
+            "Completion %": completion_pct,
+        })
+
+    campus_perf_df = pd.DataFrame(campus_perf_rows).sort_values(
+        ["Activities", "Events"], ascending=False
+    ).reset_index(drop=True)
+
+    total_activities = int(len(monthly_base))
+    total_events = int(monthly_base["Has Event"].sum())
+    total_completed = int((monthly_base["Status Clean"] == "Completed").sum())
+    total_confirmed = int((monthly_base["Status Clean"] == "Confirmed").sum())
+    total_planned = int((monthly_base["Status Clean"] == "Planned").sum())
+    total_cancelled = int((monthly_base["Status Clean"] == "Cancelled").sum())
+
+    best_month_activity = month_totals_df.sort_values(["Activities", "Events"], ascending=False).iloc[0]
+    best_month_execution = month_totals_df.sort_values(["Execution Ready", "Completed"], ascending=False).iloc[0]
+    best_month_completion = month_totals_df.copy()
+    best_month_completion["Completion %"] = best_month_completion.apply(
+        lambda x: _monthly_safe_pct(x["Completed"], x["Events"]), axis=1
+    )
+    best_month_completion = best_month_completion.sort_values(["Completion %", "Completed"], ascending=False).iloc[0]
+
+    leader_campus_row = campus_perf_df.iloc[0]
+    leader_campus = str(leader_campus_row["Campus"])
+    leader_activity_share = _monthly_safe_pct(leader_campus_row["Activities"], total_activities)
+    leader_event_share = _monthly_safe_pct(leader_campus_row["Events"], total_events) if total_events else 0
+
+    weaker_campuses = campus_perf_df[campus_perf_df["Completion %"] < campus_perf_df["Completion %"].median()]
+    weaker_campus_text = ", ".join(weaker_campuses["Campus"].tolist()[:2]) if not weaker_campuses.empty else "lower-completion campuses"
+
+    # -------------------------------
+    # Table HTML
+    # -------------------------------
+    table_html = []
+    table_html.append('<div class="monthly-summary-shell">')
+    table_html.append('<div class="monthly-summary-head">')
+    table_html.append(
+        '<div>'
+        '<div class="monthly-summary-title">Monthly Campus-wise Activity &amp; Event Summary</div>'
+        '<div class="monthly-summary-sub">Detailed count of activities, events and event status by campus and month.</div>'
+        '</div>'
+    )
+    table_html.append('</div>')
+
+    table_html.append('<div class="monthly-table-wrap">')
+    table_html.append('<table class="monthly-table">')
+
+    # Header row 1
+    table_html.append('<thead>')
+    table_html.append('<tr>')
+    table_html.append('<th class="ms-month-group" rowspan="2" style="min-width:82px; text-align:left; padding-left:10px;">Month</th>')
+    for campus in campuses:
+        table_html.append(
+            f'<th class="ms-campus-group" colspan="6">{html.escape(str(campus))}</th>'
+        )
+    table_html.append('</tr>')
+
+    # Header row 2
+    table_html.append('<tr>')
+    for _campus in campuses:
+        table_html.append('<th class="ms-subhead ms-activities">Activities</th>')
+        table_html.append('<th class="ms-subhead ms-events">Events</th>')
+        table_html.append('<th class="ms-subhead ms-completed">Completed</th>')
+        table_html.append('<th class="ms-subhead ms-confirmed">Confirmed</th>')
+        table_html.append('<th class="ms-subhead ms-planned">Planned</th>')
+        table_html.append('<th class="ms-subhead ms-cancelled">Cancelled</th>')
+    table_html.append('</tr>')
+    table_html.append('</thead>')
+
+    # Body
+    table_html.append('<tbody>')
+    for idx, row in enumerate(rows):
+        is_total = idx == len(rows) - 1
+        tr_class = ' class="ms-total-row"' if is_total else ""
+        table_html.append(f'<tr{tr_class}>')
+        table_html.append(f'<td class="ms-month-cell">{html.escape(str(row["Month"]))}</td>')
+        for campus in campuses:
+            for metric in ["Activities", "Events", "Completed", "Confirmed", "Planned", "Cancelled"]:
+                val = _monthly_num(row.get((campus, metric), 0))
+                table_html.append(f'<td>{val}</td>')
+        table_html.append('</tr>')
+    table_html.append('</tbody>')
+    table_html.append('</table>')
+    table_html.append('</div>')  # table wrap
+
+    # -------------------------------
+    # Insights panels
+    # -------------------------------
+    # Key Insights panel
+    key_points = [
+        f"{best_month_activity['Month']} has the highest activity volume ({_monthly_num(best_month_activity['Activities'])}) across all campuses.",
+        f"Event execution (Completed + Confirmed) is strongest in {best_month_execution['Month']} ({_monthly_num(best_month_execution['Execution Ready'])} events).",
+        f"{leader_campus} contributes the highest share of activities ({leader_activity_share:.1f}%) and events ({leader_event_share:.1f}%).",
+        f"Focus on converting planned events, especially in {best_month_activity['Month']} and {best_month_execution['Month']}.",
+    ]
+
+    # Campus Performance panel table
+    perf_html = []
+    perf_html.append('<table class="monthly-perf-table">')
+    perf_html.append(
+        '<thead><tr>'
+        '<th style="width:26%;">Campus</th>'
+        '<th style="width:14%;">Activities</th>'
+        '<th style="width:12%;">Events</th>'
+        '<th style="width:14%;">Completed</th>'
+        '<th style="width:34%;">Completion %</th>'
+        '</tr></thead><tbody>'
+    )
+
+    perf_tot_activities = int(campus_perf_df["Activities"].sum())
+    perf_tot_events = int(campus_perf_df["Events"].sum())
+    perf_tot_completed = int(campus_perf_df["Completed"].sum())
+    perf_tot_completion = _monthly_safe_pct(perf_tot_completed, perf_tot_events)
+
+    for _, prow in campus_perf_df.iterrows():
+        perf_html.append(
+            '<tr>'
+            f'<td>{html.escape(str(prow["Campus"]))}</td>'
+            f'<td>{_monthly_num(prow["Activities"])}</td>'
+            f'<td>{_monthly_num(prow["Events"])}</td>'
+            f'<td>{_monthly_num(prow["Completed"])}</td>'
+            f'<td>{_monthly_perf_bar(prow["Completion %"])}</td>'
+            '</tr>'
         )
 
-        event_month = (
-            monthly_base[monthly_base["Event"].notna()]
-            .groupby("Month Start", observed=True)
-            .size()
-            .rename("Events")
-            if "Event" in monthly_base.columns
-            else pd.Series(dtype=int, name="Events")
+    perf_html.append(
+        '<tr>'
+        '<td>Total</td>'
+        f'<td>{perf_tot_activities}</td>'
+        f'<td>{perf_tot_events}</td>'
+        f'<td>{perf_tot_completed}</td>'
+        f'<td>{_monthly_perf_bar(perf_tot_completion)}</td>'
+        '</tr>'
+    )
+    perf_html.append('</tbody></table>')
+
+    # Recommended actions panel
+    actions = [
+        f"Prioritize execution of {total_planned} planned events ({_monthly_safe_pct(total_planned, max(total_events,1)):.1f}% of total events).",
+        f"Focus on improving completion rate in {weaker_campus_text}.",
+        f"Increase event outcomes in months with high activity volume but lower event conversion.",
+        f"Review event pipeline for the latest visible month to ensure timely execution.",
+    ]
+
+    table_html.append('<div class="monthly-panels">')
+
+    # Panel 1
+    table_html.append(
+        '<div class="monthly-panel">'
+        '<div class="monthly-panel-title">'
+        '<span class="monthly-panel-icon monthly-icon-yellow">💡</span>'
+        'Key Insights'
+        '</div>'
+    )
+    for i, text in enumerate(key_points, start=1):
+        table_html.append(
+            '<div class="monthly-point">'
+            f'<div class="monthly-point-badge">{i}</div>'
+            f'<div class="monthly-point-text">{html.escape(text)}</div>'
+            '</div>'
+        )
+    table_html.append('</div>')
+
+    # Panel 2
+    title_month_range = f"Total ({months_order.iloc[0]['Month Label']}–{months_order.iloc[-1]['Month Label']})" if len(months_order) > 1 else f"Total ({months_order.iloc[0]['Month Label']})"
+    table_html.append(
+        '<div class="monthly-panel">'
+        '<div class="monthly-panel-title">'
+        '<span class="monthly-panel-icon monthly-icon-blue">📊</span>'
+        f'Campus Performance {html.escape(title_month_range)}'
+        '</div>'
+        + "".join(perf_html) +
+        '</div>'
+    )
+
+    # Panel 3
+    table_html.append(
+        '<div class="monthly-panel monthly-actions">'
+        '<div class="monthly-panel-title">'
+        '<span class="monthly-panel-icon monthly-icon-red">🎯</span>'
+        'Recommended Actions'
+        '</div>'
+    )
+    for i, text in enumerate(actions, start=1):
+        table_html.append(
+            '<div class="monthly-point">'
+            f'<div class="monthly-point-badge">{i}</div>'
+            f'<div class="monthly-point-text">{html.escape(text)}</div>'
+            '</div>'
+        )
+    table_html.append('</div>')
+
+    table_html.append('</div>')  # monthly-panels
+    table_html.append('</div>')  # shell
+
+    # -------------------------------
+    # Render header + download + section
+    # -------------------------------
+    head_left, head_right = st.columns([10.5, 1.5])
+    with head_left:
+        pass
+    with head_right:
+        st.download_button(
+            "Download",
+            export_df.to_csv(index=False).encode("utf-8"),
+            file_name="monthly_campus_activity_event_summary.csv",
+            mime="text/csv",
+            use_container_width=True,
         )
 
-        monthly = (
-            pd.concat([activity_month, event_month], axis=1)
-            .fillna(0)
-            .reset_index()
-            .sort_values("Month Start")
-        )
-        monthly["Activities"] = monthly["Activities"].astype(int)
-        monthly["Events"] = monthly["Events"].astype(int)
-        monthly["Month"] = monthly["Month Start"].dt.strftime("%b %Y")
-
-    if monthly.empty:
-        st.info("Monthly trend cannot be calculated because Activity Date is unavailable for this selection.")
-    else:
-        fig = go.Figure()
-        fig.add_trace(
-            go.Bar(
-                x=monthly["Month"],
-                y=monthly["Activities"],
-                name="Activities",
-                marker_color="#2F6FBC",
-                opacity=.88,
-                text=monthly["Activities"],
-                textposition="outside",
-                textfont=dict(size=9),
-                hovertemplate="<b>%{x}</b><br>Activities: %{y:.0f}<extra></extra>",
-            )
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=monthly["Month"],
-                y=monthly["Events"],
-                name="Events",
-                mode="lines+markers+text",
-                line=dict(color="#7C3AED", width=3),
-                marker=dict(size=8, color="#7C3AED", line=dict(color="#FFFFFF", width=1.5)),
-                text=monthly["Events"],
-                textposition="top center",
-                textfont=dict(size=9, color="#6D43C5"),
-                hovertemplate="<b>%{x}</b><br>Events: %{y:.0f}<extra></extra>",
-            )
-        )
-        fig.update_xaxes(title="", showgrid=False)
-        fig.update_yaxes(title="Count", rangemode="tozero", dtick=1)
-        fig = professional_chart(fig, 335, legend=True)
-        fig.update_layout(bargap=.42)
-        st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
-
-        peak_activity_row = monthly.loc[monthly["Activities"].idxmax()]
-        peak_event_row = monthly.loc[monthly["Events"].idxmax()]
-        latest_row = monthly.iloc[-1]
-        previous_row = monthly.iloc[-2] if len(monthly) > 1 else None
-
-        if previous_row is not None and previous_row["Activities"]:
-            momentum_change = (latest_row["Activities"] - previous_row["Activities"]) / previous_row["Activities"] * 100
-            direction = "increased" if momentum_change >= 0 else "decreased"
-            momentum_sentence = f"Latest monthly activity volume has {direction} by {abs(momentum_change):.1f}% versus the previous visible month."
-        else:
-            momentum_sentence = "Only one comparable month is visible under the current filters."
-
-        ems_insight(
-            "EMS · Monthly Momentum Insight",
-            f"{peak_activity_row['Month']} is the peak activity month with {int(peak_activity_row['Activities'])} activities; {peak_event_row['Month']} has the highest event count ({int(peak_event_row['Events'])}).",
-            momentum_sentence,
-            "Use the peak-month activity mix as the capacity baseline; if event growth lags activity growth, review whether the added activity volume is generating sufficiently high-impact engagement.",
-            "violet",
-        )
-
+    st.markdown("".join(table_html), unsafe_allow_html=True)
 
 # =========================================================
 # REACH PERFORMANCE
