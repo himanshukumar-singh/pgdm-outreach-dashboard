@@ -6329,491 +6329,6 @@ def render_activity_execution_matrix(frame):
 
 
 # =========================================================
-# FINAL REFERENCE-STYLE OVERVIEW UI OVERRIDES
-# =========================================================
-st.markdown(
-    """
-<style>
-/* =========================================================
-   FINAL OVERVIEW — layout from approved reference image
-   ========================================================= */
-:root {
-    --ov-navy:#0F2F57;
-    --ov-blue:#245FC5;
-    --ov-violet:#6E43C8;
-    --ov-orange:#E79022;
-    --ov-teal:#18A98D;
-    --ov-green:#25A96B;
-    --ov-border:#DDE5EF;
-    --ov-muted:#71839A;
-    --ov-canvas:#F7F8FB;
-}
-
-.block-container {
-    max-width:none !important;
-    padding-top:.22rem !important;
-    padding-left:1.25rem !important;
-    padding-right:1.25rem !important;
-    padding-bottom:1.10rem !important;
-}
-
-[data-testid="stAppViewContainer"] {
-    background:
-        radial-gradient(circle at 92% 1%, rgba(108,67,200,.045), transparent 25%),
-        radial-gradient(circle at 55% 25%, rgba(36,95,197,.035), transparent 28%),
-        linear-gradient(180deg,#FAFBFD 0%,#F5F7FA 100%) !important;
-}
-
-/* ---------- Header ---------- */
-.overview-header {
-    transform:none !important;
-    margin:0 0 .34rem 0 !important;
-    padding:.10rem .18rem 0 .18rem;
-}
-.overview-eyebrow {
-    color:#6B3F7D !important;
-    font-size:.61rem !important;
-    font-weight:950 !important;
-    letter-spacing:.15em !important;
-    margin-bottom:.08rem !important;
-}
-.overview-title-row,
-.overview-title-wrap {
-    height:auto !important;
-    overflow:visible !important;
-}
-.overview-title {
-    position:static !important;
-    transform:none !important;
-    width:auto !important;
-    color:var(--ov-navy) !important;
-    font-size:1.48rem !important;
-    font-weight:950 !important;
-    line-height:1.02 !important;
-    letter-spacing:-.025em !important;
-    animation:ovTitleTone 8s ease-in-out infinite !important;
-}
-@keyframes ovTitleTone {
-    0%,100% { text-shadow:0 0 0 rgba(36,95,197,0); }
-    50% { text-shadow:0 3px 14px rgba(36,95,197,.11); }
-}
-.overview-subtitle {
-    color:#68809A !important;
-    font-size:.74rem !important;
-    margin-top:.18rem !important;
-}
-.overview-accent {
-    height:2px !important;
-    margin-top:.30rem !important;
-    background:linear-gradient(90deg,#E58C2B 0%,#6B3F7D 52%,rgba(107,63,125,0) 100%) !important;
-}
-
-/* =========================================================
-   FILTER PANEL — premium one-line control deck
-   ========================================================= */
-.ov-filter-shell-marker,
-.ov-snapshot-shell-marker { display:none; }
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) {
-    position:relative !important;
-    overflow:hidden !important;
-    margin:.18rem 0 .46rem 0 !important;
-    padding:.48rem .62rem .58rem .62rem !important;
-    border-radius:15px !important;
-    border:1px solid #E4DDD5 !important;
-    background:
-        radial-gradient(circle at 96% 12%, rgba(107,63,125,.045), transparent 24%),
-        linear-gradient(120deg,#FFFDFC 0%,#FBF8F3 52%,#FCF9F6 100%) !important;
-    box-shadow:0 10px 28px rgba(56,45,40,.055), inset 0 1px 0 rgba(255,255,255,.98) !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)::before {
-    content:"";
-    position:absolute;
-    z-index:4;
-    top:0;
-    left:-24%;
-    width:22%;
-    height:2px;
-    background:linear-gradient(90deg,transparent,#E58C2B,#6B3F7D,transparent);
-    animation:ovFilterSweep 7.5s ease-in-out infinite;
-}
-@keyframes ovFilterSweep {
-    0%,18% { left:-24%; opacity:0; }
-    28% { opacity:1; }
-    58% { left:108%; opacity:.95; }
-    70%,100% { left:108%; opacity:0; }
-}
-
-.ov-filter-head {
-    display:flex;
-    align-items:center;
-    gap:.50rem;
-    margin:.02rem .05rem .28rem .05rem;
-}
-.ov-filter-icon {
-    width:25px;
-    height:25px;
-    border-radius:8px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    color:#245FC5;
-    background:linear-gradient(145deg,#EEF4FF,#F6F0FF);
-    border:1px solid #DCE5F5;
-    font-size:.78rem;
-    box-shadow:0 4px 10px rgba(36,95,197,.07);
-}
-.ov-filter-title {
-    color:var(--ov-navy);
-    font-size:.89rem;
-    font-weight:950;
-}
-.ov-filter-help {
-    color:#7C8DA2;
-    font-size:.56rem;
-    padding-left:.48rem;
-    border-left:1px solid #D8E0E9;
-}
-
-/* Streamlit row containing the filters */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stHorizontalBlock"] {
-    align-items:end !important;
-    gap:.48rem !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stSelectbox"] label,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stDateInput"] label,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stTextInput"] label {
-    color:#36526F !important;
-    font-size:.57rem !important;
-    font-weight:900 !important;
-    margin:0 0 .12rem .06rem !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-baseweb="select"] > div,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stDateInput"] input,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stTextInput"] input {
-    min-height:2.28rem !important;
-    height:2.28rem !important;
-    border-radius:10px !important;
-    border:1px solid #DDE5EF !important;
-    background:linear-gradient(180deg,#FFFFFF 0%,#F8FAFD 100%) !important;
-    box-shadow:0 4px 12px rgba(28,54,86,.035), inset 0 1px 0 rgba(255,255,255,.98) !important;
-    color:#183A60 !important;
-    font-size:.65rem !important;
-    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-baseweb="select"] > div:hover,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stDateInput"] input:hover {
-    transform:translateY(-2px) !important;
-    border-color:#B8CBE7 !important;
-    box-shadow:0 9px 18px rgba(36,95,197,.08), 0 0 0 1px rgba(107,63,125,.035) inset !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-baseweb="select"] svg,
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stDateInput"] svg {
-    color:#6B3F7D !important;
-    width:17px !important;
-    height:17px !important;
-    transition:transform .18s ease !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-baseweb="select"]:hover svg {
-    transform:translateY(1px) scale(1.08);
-}
-
-.overview-filter-reset-spacer { height:1.08rem !important; }
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)
-div[data-testid="stButton"] button {
-    min-height:2.28rem !important;
-    height:2.28rem !important;
-    border-radius:10px !important;
-    border:1px solid #284C72 !important;
-    color:#FFFFFF !important;
-    font-size:.62rem !important;
-    font-weight:900 !important;
-    background:linear-gradient(120deg,#11365C 0%,#24507A 58%,#5E3D79 135%) !important;
-    background-size:170% 100% !important;
-    box-shadow:0 8px 18px rgba(17,54,92,.18) !important;
-    animation:ovResetFlow 6s ease-in-out infinite !important;
-}
-@keyframes ovResetFlow {
-    0%,100% { background-position:0% 50%; }
-    50% { background-position:100% 50%; }
-}
-
-/* =========================================================
-   EXECUTIVE SNAPSHOT — one unified shell
-   ========================================================= */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-snapshot-shell-marker) {
-    position:relative !important;
-    overflow:hidden !important;
-    margin:.05rem 0 .50rem 0 !important;
-    padding:.48rem .56rem .54rem .56rem !important;
-    border-radius:15px !important;
-    border:1px solid #E1DAD2 !important;
-    background:linear-gradient(180deg,#FFFEFC 0%,#FBF8F4 100%) !important;
-    box-shadow:0 11px 28px rgba(50,42,38,.055), inset 0 1px 0 rgba(255,255,255,.98) !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-snapshot-shell-marker)::before {
-    content:"";
-    position:absolute;
-    left:0;
-    top:0;
-    bottom:0;
-    width:4px;
-    background:linear-gradient(180deg,#F0A13A,#E58C2B 46%,#6B3F7D 100%);
-}
-
-.snapshot-banner {
-    margin:0 0 .34rem 0 !important;
-    padding:.05rem .22rem .30rem .30rem !important;
-    border:0 !important;
-    border-radius:0 !important;
-    background:transparent !important;
-    box-shadow:none !important;
-}
-.snapshot-banner::before,
-.snapshot-banner::after { display:none !important; }
-.snapshot-eyebrow {
-    color:#E08727 !important;
-    font-size:.46rem !important;
-    font-weight:950 !important;
-    letter-spacing:.11em !important;
-}
-.snapshot-title {
-    color:var(--ov-navy) !important;
-    font-size:.95rem !important;
-    font-weight:950 !important;
-}
-.snapshot-sub {
-    color:#7C8A98 !important;
-    font-size:.50rem !important;
-}
-.snapshot-badges { gap:5px !important; }
-.snapshot-badge {
-    padding:.18rem .34rem !important;
-    font-size:.40rem !important;
-    font-weight:950 !important;
-    border-radius:999px !important;
-}
-
-/* KPI row */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-snapshot-shell-marker)
-div[data-testid="stHorizontalBlock"] {
-    gap:.46rem !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-snapshot-shell-marker) .pro-kpi {
-    min-height:74px !important;
-    height:74px !important;
-    border-radius:11px !important;
-    padding:.42rem .50rem .38rem .50rem !important;
-    box-shadow:0 6px 16px rgba(31,51,76,.045), inset 0 1px 0 rgba(255,255,255,.96) !important;
-}
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-snapshot-shell-marker) .pro-kpi:hover {
-    transform:translateY(-3px) scale(1.01) !important;
-    box-shadow:0 12px 25px rgba(31,51,76,.09) !important;
-}
-
-/* =========================================================
-   ACTIVITY MATRIX — compact approved reference layout
-   ========================================================= */
-.activity-bubble-board {
-    margin:.10rem 0 .52rem 0 !important;
-    padding:.50rem .60rem .48rem .60rem !important;
-    border-radius:15px !important;
-    border:1px solid #E1DAD2 !important;
-    background:linear-gradient(180deg,#FFFFFF 0%,#FCFAF7 100%) !important;
-    box-shadow:0 12px 28px rgba(50,42,38,.055), inset 0 1px 0 rgba(255,255,255,.97) !important;
-}
-.activity-bubble-head { margin-bottom:.24rem !important; }
-.activity-bubble-kicker { font-size:.45rem !important; color:#E08727 !important; }
-.activity-bubble-title { font-size:.96rem !important; color:var(--ov-navy) !important; }
-.activity-bubble-sub { font-size:.48rem !important; color:#7B8998 !important; }
-.activity-bubble-badge {
-    font-size:.40rem !important;
-    padding:.18rem .34rem !important;
-    border-color:#ECDCC6 !important;
-    background:#FFF9EF !important;
-}
-.activity-bubble-board .q1-css-matrix {
-    height:305px !important;
-    min-height:305px !important;
-    max-height:305px !important;
-    border-radius:10px !important;
-    padding:.18rem .20rem .18rem .20rem !important;
-    box-shadow:0 5px 14px rgba(52,43,38,.035), 0 0 0 1px #E6DED5 inset !important;
-}
-.activity-bubble-board .q1-css-corner,
-.activity-bubble-board .q1-css-campus,
-.activity-bubble-board .q1-css-activity,
-.activity-bubble-board .q1-css-cell {
-    min-height:34px !important;
-}
-.activity-bubble-board .q1-css-campus { font-size:.50rem !important; font-weight:900 !important; }
-.activity-bubble-board .q1-css-activity { font-size:.48rem !important; font-weight:800 !important; }
-.q1-motion-bubble {
-    box-shadow:0 7px 13px rgba(23,57,90,.18), 0 2px 5px rgba(47,35,31,.10) !important;
-}
-.q1-event-mini-bubble {
-    box-shadow:0 5px 10px rgba(23,57,90,.16), 0 2px 4px rgba(47,35,31,.09) !important;
-}
-.q1-css-matrix-foot,
-.q1-event-bubble-legend { display:none !important; }
-
-/* =========================================================
-   MONTHLY CAMPUS SUMMARY — approved reference layout
-   ========================================================= */
-.monthly-summary-shell {
-    position:relative;
-    overflow:hidden;
-    margin:.08rem 0 .54rem 0 !important;
-    padding:.48rem .56rem .52rem .56rem !important;
-    border-radius:15px !important;
-    border:1px solid #DDE5EF !important;
-    background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFE 100%) !important;
-    box-shadow:0 11px 28px rgba(24,56,102,.055) !important;
-}
-.monthly-summary-shell::before {
-    content:"";
-    position:absolute;
-    top:0;
-    left:-24%;
-    width:22%;
-    height:2px;
-    background:linear-gradient(90deg,transparent,#2B6DE8,#7C3AED,transparent);
-    animation:monthlySweep 7.4s ease-in-out infinite;
-}
-@keyframes monthlySweep {
-    0%,18% { left:-24%; opacity:0; }
-    30% { opacity:.9; }
-    58% { left:108%; opacity:.9; }
-    70%,100% { left:108%; opacity:0; }
-}
-.monthly-summary-head { margin-bottom:.34rem !important; align-items:center !important; }
-.monthly-summary-title { font-size:.90rem !important; color:var(--ov-navy) !important; }
-.monthly-summary-sub { font-size:.49rem !important; color:#7B8DA3 !important; }
-.monthly-range-chip {
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    padding:.20rem .38rem;
-    border-radius:999px;
-    background:linear-gradient(145deg,#F5F8FF,#F5F0FF);
-    border:1px solid #DCE5F4;
-    color:#385A80;
-    font-size:.43rem;
-    font-weight:900;
-    white-space:nowrap;
-    box-shadow:0 3px 8px rgba(36,95,197,.04);
-}
-.monthly-range-chip::before { content:"▣"; color:#6B3F7D; font-size:.56rem; }
-.monthly-table-wrap {
-    border-radius:10px !important;
-    border:1px solid #DFE7F0 !important;
-    box-shadow:0 4px 12px rgba(24,56,102,.025) inset !important;
-}
-.monthly-table {
-    min-width:1180px !important;
-    font-size:9px !important;
-}
-.monthly-table th,
-.monthly-table td {
-    padding:4px 4px !important;
-    font-size:9px !important;
-}
-.monthly-table .ms-month-group,
-.monthly-table .ms-campus-group { font-size:9px !important; }
-.monthly-table .ms-subhead { font-size:8px !important; }
-
-.monthly-panels {
-    grid-template-columns:1fr 1.04fr 1.04fr !important;
-    gap:8px !important;
-    margin-top:8px !important;
-}
-.monthly-panel {
-    min-height:142px !important;
-    padding:.48rem .52rem .46rem .52rem !important;
-    border-radius:12px !important;
-    box-shadow:0 6px 16px rgba(23,58,103,.045) !important;
-    transition:transform .18s ease, box-shadow .18s ease !important;
-}
-.monthly-panel:hover {
-    transform:translateY(-2px);
-    box-shadow:0 10px 22px rgba(23,58,103,.075) !important;
-}
-.monthly-panel-title {
-    gap:6px !important;
-    font-size:.72rem !important;
-    margin-bottom:6px !important;
-}
-.monthly-panel-icon {
-    width:22px !important;
-    height:22px !important;
-    flex:0 0 22px !important;
-    font-size:11px !important;
-}
-.monthly-point {
-    grid-template-columns:21px 1fr !important;
-    gap:6px !important;
-    margin-bottom:5px !important;
-}
-.monthly-point-badge {
-    width:19px !important;
-    height:19px !important;
-    font-size:9px !important;
-    box-shadow:0 4px 9px rgba(43,109,232,.18) !important;
-}
-.monthly-point-text {
-    font-size:.52rem !important;
-    line-height:1.30 !important;
-}
-.monthly-perf-table { font-size:9px !important; }
-.monthly-perf-table th { font-size:8px !important; padding:0 0 4px 0 !important; }
-.monthly-perf-table td { font-size:9px !important; padding:4px 0 !important; }
-.monthly-perf-bar { height:7px !important; }
-.monthly-perf-pct { font-size:8px !important; }
-
-@media (max-width:1250px) {
-    .monthly-panels { grid-template-columns:1fr !important; }
-    .activity-bubble-board .q1-css-matrix {
-        height:330px !important;
-        min-height:330px !important;
-        max-height:330px !important;
-    }
-}
-
-@media (prefers-reduced-motion:reduce) {
-    .overview-title,
-    div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker)::before,
-    div[data-testid="stVerticalBlockBorderWrapper"]:has(.ov-filter-shell-marker) div[data-testid="stButton"] button,
-    .monthly-summary-shell::before {
-        animation:none !important;
-    }
-}
-</style>
-    """,
-    unsafe_allow_html=True,
-)
-
-# =========================================================
 # HEADER — preserve existing title motion and styling
 # =========================================================
 header_html = (
@@ -6838,96 +6353,88 @@ st.markdown(header_html, unsafe_allow_html=True)
 # Order locked: Campus → Activity Type → Event → Status →
 # Target Segment → Owner → Priority → Date Range → Reset
 # =========================================================
-with st.container(border=True):
-    st.markdown('<span class="ov-filter-shell-marker"></span>', unsafe_allow_html=True)
+st.markdown('<div class="filter-panel-title">Filters</div>', unsafe_allow_html=True)
+filter_cols = st.columns(
+    [0.82, 1.00, 0.78, 0.82, 1.02, 0.90, 0.70, 1.20, 0.66],
+    gap="small",
+)
+
+with filter_cols[0]:
     st.markdown(
-        (
-            '<div class="ov-filter-head">'
-                '<span class="ov-filter-icon">⌘</span>'
-                '<span class="ov-filter-title">Filters</span>'
-                '<span class="ov-filter-help">Refine the outreach view across campus, activity, event and execution dimensions.</span>'
-            '</div>'
-        ),
+        '<span class="filter-motion-marker"></span>',
         unsafe_allow_html=True,
     )
-
-    filter_cols = st.columns(
-        [0.82, 1.00, 0.78, 0.82, 1.02, 0.90, 0.70, 1.24, 0.66],
-        gap="small",
+    campus_filter = st.selectbox(
+        "Campus",
+        _options(df, "Campus"),
+        key="ov_campus",
     )
 
-    with filter_cols[0]:
-        campus_filter = st.selectbox(
-            "Campus",
-            _options(df, "Campus"),
-            key="ov_campus",
-        )
+with filter_cols[1]:
+    activity_filter = st.selectbox(
+        "Activity Type",
+        _options(df, "Activity Type"),
+        key="ov_activity",
+    )
 
-    with filter_cols[1]:
-        activity_filter = st.selectbox(
-            "Activity Type",
-            _options(df, "Activity Type"),
-            key="ov_activity",
-        )
+with filter_cols[2]:
+    event_filter = st.selectbox(
+        "Event",
+        _options(df, "Event"),
+        key="ov_event",
+    )
 
-    with filter_cols[2]:
-        event_filter = st.selectbox(
-            "Event",
-            _options(df, "Event"),
-            key="ov_event",
-        )
+with filter_cols[3]:
+    status_filter = st.selectbox(
+        "Status",
+        _options(df, "Status"),
+        key="ov_status",
+    )
 
-    with filter_cols[3]:
-        status_filter = st.selectbox(
-            "Status",
-            _options(df, "Status"),
-            key="ov_status",
-        )
+with filter_cols[4]:
+    segment_filter = st.selectbox(
+        "Target Segment",
+        _options(df, "Target Segment"),
+        key="ov_segment",
+    )
 
-    with filter_cols[4]:
-        segment_filter = st.selectbox(
-            "Target Segment",
-            _options(df, "Target Segment"),
-            key="ov_segment",
-        )
+with filter_cols[5]:
+    owner_filter = st.selectbox(
+        "Owner",
+        _options(df, "Activity Owner"),
+        key="ov_owner",
+    )
 
-    with filter_cols[5]:
-        owner_filter = st.selectbox(
-            "Owner",
-            _options(df, "Activity Owner"),
-            key="ov_owner",
-        )
+with filter_cols[6]:
+    priority_filter = st.selectbox(
+        "Priority",
+        _options(df, "Priority"),
+        key="ov_priority",
+    )
 
-    with filter_cols[6]:
-        priority_filter = st.selectbox(
-            "Priority",
-            _options(df, "Priority"),
-            key="ov_priority",
+with filter_cols[7]:
+    date_range = None
+    if "Activity Date" in df.columns and df["Activity Date"].notna().any():
+        min_date = df["Activity Date"].min().date()
+        max_date = df["Activity Date"].max().date()
+        date_range = st.date_input(
+            "Date Range",
+            value=(min_date, max_date),
+            min_value=min_date,
+            max_value=max_date,
+            key="ov_date",
         )
+    else:
+        st.text_input("Date Range", value="", disabled=True)
 
-    with filter_cols[7]:
-        date_range = None
-        if "Activity Date" in df.columns and df["Activity Date"].notna().any():
-            min_date = df["Activity Date"].min().date()
-            max_date = df["Activity Date"].max().date()
-            date_range = st.date_input(
-                "Date Range",
-                value=(min_date, max_date),
-                min_value=min_date,
-                max_value=max_date,
-                key="ov_date",
-            )
-        else:
-            st.text_input("Date Range", value="", disabled=True)
-
-    with filter_cols[8]:
-        st.markdown(
-            '<div class="overview-filter-reset-spacer">&nbsp;</div>',
-            unsafe_allow_html=True,
-        )
-        if st.button("↻ Reset", width="stretch", key="ov_reset"):
-            _reset_overview_filters()
-            st.rerun()
+with filter_cols[8]:
+    st.markdown(
+        '<div class="overview-filter-reset-spacer">&nbsp;</div>',
+        unsafe_allow_html=True,
+    )
+    if st.button("↻ Reset", width="stretch", key="ov_reset"):
+        _reset_overview_filters()
+        st.rerun()
 
 
 # =========================================================
@@ -6973,11 +6480,7 @@ if filtered.empty:
 today = pd.Timestamp.today().normalize()
 
 event_mask = (
-    filtered["Event"]
-    .astype("string")
-    .str.strip()
-    .replace({"": pd.NA, "nan": pd.NA, "None": pd.NA, "<NA>": pd.NA, "(blank)": pd.NA})
-    .notna()
+    filtered["Event"].notna()
     if "Event" in filtered.columns
     else pd.Series(False, index=filtered.index)
 )
@@ -7016,84 +6519,86 @@ reach_achievement = _pct(actual_reach, planned_reach)
 # =========================================================
 # EXECUTIVE SNAPSHOT
 # =========================================================
-with st.container(border=True):
-    st.markdown('<span class="ov-snapshot-shell-marker"></span>', unsafe_allow_html=True)
-
-    st.markdown(
-        (
-            '<div class="snapshot-banner">'
-                '<div class="snapshot-copy">'
-                    '<div class="snapshot-eyebrow">Executive Snapshot</div>'
-                    '<div class="snapshot-title">Outreach Performance at a Glance</div>'
-                    '<div class="snapshot-sub">'
-                        'Live outreach volume, event coverage and student-reach performance.'
-                    '</div>'
-                '</div>'
-                '<div class="snapshot-badges">'
-                    '<span class="snapshot-badge navy">LIVE VIEW</span>'
-                    '<span class="snapshot-badge orange">MANAGEMENT SUMMARY</span>'
-                    '<span class="snapshot-badge violet">AUTO-SYNC</span>'
+st.markdown(
+    (
+        '<div class="snapshot-banner">'
+            '<div class="snapshot-copy">'
+                '<div class="snapshot-eyebrow">Executive Snapshot</div>'
+                '<div class="snapshot-title">Outreach Performance at a Glance</div>'
+                '<div class="snapshot-sub">'
+                    'Live outreach volume, event coverage and student-reach performance.'
                 '</div>'
             '</div>'
-        ),
+            '<div class="snapshot-badges">'
+                '<span class="snapshot-badge navy">LIVE VIEW</span>'
+                '<span class="snapshot-badge orange">MANAGEMENT SUMMARY</span>'
+                '<span class="snapshot-badge violet">AUTO-SYNC</span>'
+            '</div>'
+        '</div>'
+    ),
+    unsafe_allow_html=True,
+)
+
+k1, k2, k3, k4, k5, k6 = st.columns(6, gap="small")
+
+with k1:
+    st.markdown(
+        '<span class="snapshot-motion-marker"></span>',
         unsafe_allow_html=True,
     )
 
-    k1, k2, k3, k4, k5, k6 = st.columns(6, gap="small")
+    professional_kpi(
+        "Total Activities",
+        f"{total_activities:,}",
+        "Filtered outreach activity volume",
+        "●",
+        "kpi-blue",
+    )
 
-    with k1:
-        professional_kpi(
-            "Total Activities",
-            f"{total_activities:,}",
-            "Filtered outreach activity volume",
-            "●",
-            "kpi-blue",
-        )
+with k2:
+    professional_kpi(
+        "Total Events",
+        f"{total_events:,}",
+        "Records with Event populated",
+        "✦",
+        "kpi-cyan",
+    )
 
-    with k2:
-        professional_kpi(
-            "Total Events",
-            f"{total_events:,}",
-            "Records with Event populated",
-            "✦",
-            "kpi-cyan",
-        )
+with k3:
+    professional_kpi(
+        "Institutions",
+        f"{institutions:,}",
+        "Unique institutions / event names",
+        "◆",
+        "kpi-violet",
+    )
 
-    with k3:
-        professional_kpi(
-            "Institutions",
-            f"{institutions:,}",
-            "Unique institutions / event names",
-            "◆",
-            "kpi-violet",
-        )
+with k4:
+    professional_kpi(
+        "Cities Covered",
+        f"{cities:,}",
+        "Current outreach footprint",
+        "⌖",
+        "kpi-teal",
+    )
 
-    with k4:
-        professional_kpi(
-            "Cities Covered",
-            f"{cities:,}",
-            "Current outreach footprint",
-            "⌖",
-            "kpi-teal",
-        )
+with k5:
+    professional_kpi(
+        "Planned Reach",
+        f"{planned_reach:,}",
+        "Planned student / faculty reach",
+        "◎",
+        "kpi-amber",
+    )
 
-    with k5:
-        professional_kpi(
-            "Planned Reach",
-            f"{planned_reach:,}",
-            "Planned student / faculty reach",
-            "◎",
-            "kpi-amber",
-        )
-
-    with k6:
-        professional_kpi(
-            "Actual Reach",
-            f"{actual_reach:,}",
-            f"{reach_achievement:.1f}% of planned reach" if planned_reach else "Actual reach entered",
-            "✓",
-            "kpi-green",
-        )
+with k6:
+    professional_kpi(
+        "Actual Reach",
+        f"{actual_reach:,}",
+        f"{reach_achievement:.1f}% of planned reach" if planned_reach else "Actual reach entered",
+        "✓",
+        "kpi-green",
+    )
 
 
 # =========================================================
@@ -7137,10 +6642,7 @@ if not activity_mix.empty:
     activity_totals = (
         activity_mix.groupby("Activity Type", observed=True)["Activities"].sum().sort_values(ascending=False)
     )
-    preferred_campus_order = ["Noida", "Lucknow", "Jaipur", "Indore"]
-    campus_present = campus_totals_activity.index.astype(str).tolist()
-    campus_order = [c for c in preferred_campus_order if c in campus_present]
-    campus_order += [c for c in campus_present if c not in campus_order]
+    campus_order = campus_totals_activity.index.tolist()
     activity_order = activity_totals.index.tolist()
     max_count = max(int(activity_mix["Activities"].max()), 1)
     bubble_lookup = {
@@ -7231,7 +6733,7 @@ if not activity_mix.empty:
                         event_count = int(event_row["Event Count"])
                         event_color = event_color_map.get(event_name, "#6B3F7D")
                         event_text_color = "#FFFFFF" if _hex_luminance(event_color) < .58 else "#17395A"
-                        event_size = 15 + (math.sqrt(event_count / max_event_count) * 11)
+                        event_size = 18 + (math.sqrt(event_count / max_event_count) * 15)
                         event_delay = -((event_bubble_index % 11) * .23)
                         event_duration = 3.7 + ((event_bubble_index % 5) * .19)
                         event_tooltip = (
@@ -7254,7 +6756,7 @@ if not activity_mix.empty:
                             f'<span class="q1-more-events" title="{html.escape(hidden_names)}">+{hidden_events}</span>'
                         )
 
-                size_px = 19 + (math.sqrt(total_count / max_count) * 29)
+                size_px = 22 + (math.sqrt(total_count / max_count) * 38)
                 delay = -((bubble_index % 9) * .31)
                 duration = 3.8 + ((bubble_index % 5) * .22)
                 total_tooltip = f"{activity_type} · {campus}: {total_count} total activities"
@@ -7297,378 +6799,548 @@ if not activity_mix.empty:
 
 
 # =========================================================
-# MONTHLY CAMPUS-WISE ACTIVITY & EVENT SUMMARY
-# Approved compact reference layout
+# CAMPUS EVENT & EXECUTION INTELLIGENCE
 # =========================================================
 
-def _monthly_status_clean(x):
-    if pd.isna(x):
-        return ""
-    return str(x).strip().title()
+event_view = filtered.copy()
 
-
-def _monthly_safe_pct(num, den):
-    try:
-        num = float(num)
-        den = float(den)
-        if den == 0:
-            return 0.0
-        return (num / den) * 100.0
-    except Exception:
-        return 0.0
-
-
-def _monthly_num(v):
-    try:
-        return int(v)
-    except Exception:
-        return 0
-
-
-def _monthly_perf_bar(pct):
-    pct = max(0.0, min(100.0, float(pct)))
-    return f"""
-        <div style="display:flex; align-items:center; gap:5px;">
-            <div class="monthly-perf-bar">
-                <div class="monthly-perf-fill" style="width:{pct:.1f}%;"></div>
-            </div>
-            <span class="monthly-perf-pct">{pct:.0f}%</span>
-        </div>
-    """
-
-
-if "Activity Date" not in filtered.columns or filtered["Activity Date"].dropna().empty:
-    st.info("Monthly summary cannot be calculated because Activity Date is unavailable for this selection.")
-else:
-    monthly_base = filtered.dropna(subset=["Activity Date"]).copy()
-
-    monthly_base["Month Start"] = (
-        monthly_base["Activity Date"].dt.to_period("M").dt.to_timestamp()
-    )
-    multi_year = monthly_base["Month Start"].dt.year.nunique() > 1
-    monthly_base["Month Label"] = monthly_base["Month Start"].dt.strftime(
-        "%b %Y" if multi_year else "%b"
-    )
-    monthly_base["Campus"] = (
-        monthly_base["Campus"]
-        .fillna("Unknown")
-        .astype(str)
+if "Event" in event_view.columns:
+    event_clean = (
+        event_view["Event"]
+        .astype("string")
         .str.strip()
-    )
-    monthly_base["Status Clean"] = (
-        monthly_base["Status"].apply(_monthly_status_clean)
-        if "Status" in monthly_base.columns
-        else ""
-    )
-
-    if "Event" in monthly_base.columns:
-        monthly_base["Event Clean"] = (
-            monthly_base["Event"]
-            .astype("string")
-            .str.strip()
-            .replace({
-                "": pd.NA,
-                "nan": pd.NA,
-                "None": pd.NA,
-                "<NA>": pd.NA,
-                "(blank)": pd.NA,
-            })
-        )
-        monthly_base["Has Event"] = monthly_base["Event Clean"].notna()
-    else:
-        monthly_base["Has Event"] = False
-
-    preferred_campuses = ["Noida", "Lucknow", "Jaipur", "Indore"]
-    campus_values = monthly_base["Campus"].dropna().astype(str).unique().tolist()
-    campuses = [c for c in preferred_campuses if c in campus_values]
-    campuses += [c for c in campus_values if c not in campuses]
-
-    months_order = (
-        monthly_base[["Month Start", "Month Label"]]
-        .drop_duplicates()
-        .sort_values("Month Start")
-        .reset_index(drop=True)
-    )
-
-    rows = []
-
-    for _, mrow in months_order.iterrows():
-        month_start = mrow["Month Start"]
-        month_label = mrow["Month Label"]
-        month_slice = monthly_base[monthly_base["Month Start"].eq(month_start)].copy()
-        row = {"Month": month_label}
-
-        for campus in campuses:
-            cdf = month_slice[month_slice["Campus"].eq(campus)].copy()
-            event_cdf = cdf[cdf["Has Event"]].copy()
-
-            row[(campus, "Activities")] = int(len(cdf))
-            row[(campus, "Events")] = int(len(event_cdf))
-            row[(campus, "Completed")] = int(event_cdf["Status Clean"].eq("Completed").sum())
-            row[(campus, "Confirmed")] = int(event_cdf["Status Clean"].eq("Confirmed").sum())
-            row[(campus, "Planned")] = int(event_cdf["Status Clean"].eq("Planned").sum())
-            row[(campus, "Cancelled")] = int(event_cdf["Status Clean"].eq("Cancelled").sum())
-
-        rows.append(row)
-
-    total_row = {"Month": "Total"}
-    for campus in campuses:
-        cdf = monthly_base[monthly_base["Campus"].eq(campus)].copy()
-        event_cdf = cdf[cdf["Has Event"]].copy()
-
-        total_row[(campus, "Activities")] = int(len(cdf))
-        total_row[(campus, "Events")] = int(len(event_cdf))
-        total_row[(campus, "Completed")] = int(event_cdf["Status Clean"].eq("Completed").sum())
-        total_row[(campus, "Confirmed")] = int(event_cdf["Status Clean"].eq("Confirmed").sum())
-        total_row[(campus, "Planned")] = int(event_cdf["Status Clean"].eq("Planned").sum())
-        total_row[(campus, "Cancelled")] = int(event_cdf["Status Clean"].eq("Cancelled").sum())
-
-    rows.append(total_row)
-
-    # -----------------------------
-    # Month and campus intelligence
-    # -----------------------------
-    month_totals = []
-    for _, mrow in months_order.iterrows():
-        month_start = mrow["Month Start"]
-        month_label = mrow["Month Label"]
-        mdf = monthly_base[monthly_base["Month Start"].eq(month_start)].copy()
-        medf = mdf[mdf["Has Event"]].copy()
-
-        completed = int(medf["Status Clean"].eq("Completed").sum())
-        confirmed = int(medf["Status Clean"].eq("Confirmed").sum())
-        planned = int(medf["Status Clean"].eq("Planned").sum())
-        cancelled = int(medf["Status Clean"].eq("Cancelled").sum())
-
-        month_totals.append({
-            "Month": month_label,
-            "Activities": int(len(mdf)),
-            "Events": int(len(medf)),
-            "Completed": completed,
-            "Confirmed": confirmed,
-            "Planned": planned,
-            "Cancelled": cancelled,
-            "Execution Ready": completed + confirmed,
+        .replace({
+            "": pd.NA,
+            "nan": pd.NA,
+            "None": pd.NA,
+            "<NA>": pd.NA,
         })
-
-    month_totals_df = pd.DataFrame(month_totals)
-
-    campus_perf_rows = []
-    for campus in campuses:
-        cdf = monthly_base[monthly_base["Campus"].eq(campus)].copy()
-        event_cdf = cdf[cdf["Has Event"]].copy()
-        completed = int(event_cdf["Status Clean"].eq("Completed").sum())
-        events = int(len(event_cdf))
-
-        campus_perf_rows.append({
-            "Campus": campus,
-            "Activities": int(len(cdf)),
-            "Events": events,
-            "Completed": completed,
-            "Completion %": _monthly_safe_pct(completed, events),
-        })
-
-    campus_perf_df = pd.DataFrame(campus_perf_rows).sort_values(
-        ["Activities", "Events"],
-        ascending=False,
-    ).reset_index(drop=True)
-
-    total_activities_monthly = int(len(monthly_base))
-    total_events_monthly = int(monthly_base["Has Event"].sum())
-    event_only_all = monthly_base[monthly_base["Has Event"]].copy()
-    total_completed = int(event_only_all["Status Clean"].eq("Completed").sum())
-    total_confirmed = int(event_only_all["Status Clean"].eq("Confirmed").sum())
-    total_planned = int(event_only_all["Status Clean"].eq("Planned").sum())
-    total_cancelled = int(event_only_all["Status Clean"].eq("Cancelled").sum())
-
-    best_month_activity = month_totals_df.sort_values(
-        ["Activities", "Events"],
-        ascending=False,
-    ).iloc[0]
-    best_month_execution = month_totals_df.sort_values(
-        ["Execution Ready", "Completed"],
-        ascending=False,
-    ).iloc[0]
-
-    leader_campus_row = campus_perf_df.iloc[0]
-    leader_campus = str(leader_campus_row["Campus"])
-    leader_activity_share = _monthly_safe_pct(
-        leader_campus_row["Activities"],
-        total_activities_monthly,
     )
-    leader_event_share = _monthly_safe_pct(
-        leader_campus_row["Events"],
-        total_events_monthly,
-    ) if total_events_monthly else 0.0
+    event_view = event_view[event_clean.notna()].copy()
+else:
+    event_view = event_view.iloc[0:0].copy()
 
-    valid_completion = campus_perf_df[campus_perf_df["Events"] > 0].copy()
-    if valid_completion.empty:
-        weaker_campus_text = "campuses with event activity"
-    else:
-        completion_median = valid_completion["Completion %"].median()
-        weaker = valid_completion[valid_completion["Completion %"] < completion_median]
-        weaker_campus_text = (
-            ", ".join(weaker["Campus"].astype(str).tolist()[:2])
-            if not weaker.empty
-            else str(valid_completion.sort_values("Completion %").iloc[0]["Campus"])
+if event_view.empty:
+    st.markdown(
+        (
+            '<div class="event-board">'
+                '<div class="event-board-head">'
+                    '<div>'
+                        '<div class="event-board-kicker">Campus · Event Intelligence</div>'
+                        '<div class="event-board-title">Campus Events & Status</div>'
+                        '<div class="event-board-sub">'
+                            'Campus-wise event volume and execution status for the current filter selection.'
+                        '</div>'
+                    '</div>'
+                '</div>'
+                '<div class="event-board-body">'
+                    '<div class="event-empty-state">'
+                        'No Event records are available for the selected filters.'
+                    '</div>'
+                '</div>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )
+else:
+    # -----------------------------------------------------
+    # Core event metrics
+    # -----------------------------------------------------
+    event_view["Campus"] = (
+        event_view["Campus"]
+        .astype("string")
+        .str.strip()
+        .replace({
+            "": pd.NA,
+            "nan": pd.NA,
+            "None": pd.NA,
+            "<NA>": pd.NA,
+        })
+    )
+
+    event_view = event_view.dropna(subset=["Campus"]).copy()
+
+    if "Status" not in event_view.columns:
+        event_view["Status"] = pd.NA
+
+    event_view["Status"] = (
+        event_view["Status"]
+        .astype("string")
+        .str.strip()
+        .replace({
+            "": pd.NA,
+            "nan": pd.NA,
+            "None": pd.NA,
+            "<NA>": pd.NA,
+        })
+        .fillna("(blank)")
+    )
+
+    event_totals = (
+        event_view.groupby("Campus", observed=True)
+        .size()
+        .sort_values(ascending=False)
+    )
+
+    event_status = (
+        event_view.groupby(
+            ["Campus", "Status"],
+            observed=True,
+            dropna=False,
         )
+        .size()
+        .reset_index(name="Count")
+    )
 
-    first_month = str(months_order.iloc[0]["Month Label"])
-    last_month = str(months_order.iloc[-1]["Month Label"])
-    month_range = first_month if first_month == last_month else f"{first_month} – {last_month}"
+    total_event_count = int(len(event_view))
+    active_event_campuses = int(event_view["Campus"].nunique())
 
-    # -----------------------------
-    # Build monthly HTML
-    # -----------------------------
-    table_html = [
-        '<div class="monthly-summary-shell">',
-        '<div class="monthly-summary-head">',
-        '<div>',
-        '<div class="monthly-summary-title">Monthly Campus-wise Activity &amp; Event Summary</div>',
-        '<div class="monthly-summary-sub">Detailed count of activities, events and event status by campus and month.</div>',
-        '</div>',
-        f'<div class="monthly-range-chip">{html.escape(month_range)}</div>',
-        '</div>',
-        '<div class="monthly-table-wrap">',
-        '<table class="monthly-table">',
-        '<thead>',
-        '<tr>',
-        '<th class="ms-month-group" rowspan="2" style="min-width:68px;text-align:left;padding-left:8px;">Month</th>',
+    preferred_status_order = [
+        "Completed",
+        "Confirmed",
+        "Planned",
+        "Cancelled",
+        "Rescheduled",
+        "(blank)",
     ]
 
-    for campus in campuses:
-        table_html.append(
-            f'<th class="ms-campus-group" colspan="6">{html.escape(str(campus))}</th>'
+    present_statuses = (
+        event_status["Status"]
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    status_order = [
+        status
+        for status in preferred_status_order
+        if status in present_statuses
+    ] + sorted(
+        [
+            status
+            for status in present_statuses
+            if status not in preferred_status_order
+        ],
+        key=lambda x: str(x).lower(),
+    )
+
+    status_colors = _status_color_map().copy()
+    status_colors["(blank)"] = "#A4AFBA"
+
+    fallback_status_colors = [
+        "#7453C6",
+        "#159786",
+        "#D18A24",
+        "#2D6CDF",
+        "#C65C65",
+    ]
+
+    for idx, status in enumerate(status_order):
+        status_colors.setdefault(
+            status,
+            fallback_status_colors[
+                idx % len(fallback_status_colors)
+            ],
         )
 
-    table_html.extend(['</tr>', '<tr>'])
+    completed_total = int(
+        event_view["Status"].eq("Completed").sum()
+    )
+    confirmed_total = int(
+        event_view["Status"].eq("Confirmed").sum()
+    )
+    planned_total = int(
+        event_view["Status"].eq("Planned").sum()
+    )
+    cancelled_total = int(
+        event_view["Status"].eq("Cancelled").sum()
+    )
+    blank_total = int(
+        event_view["Status"].eq("(blank)").sum()
+    )
 
-    for _campus in campuses:
-        table_html.extend([
-            '<th class="ms-subhead ms-activities">Activities</th>',
-            '<th class="ms-subhead ms-events">Events</th>',
-            '<th class="ms-subhead ms-completed">Completed</th>',
-            '<th class="ms-subhead ms-confirmed">Confirmed</th>',
-            '<th class="ms-subhead ms-planned">Planned</th>',
-            '<th class="ms-subhead ms-cancelled">Cancelled</th>',
+    completion_rate = _pct(
+        completed_total,
+        total_event_count,
+    )
+
+    pipeline_total = (
+        confirmed_total
+        + planned_total
+    )
+
+    event_leader = str(
+        event_totals.index[0]
+    )
+    event_leader_count = int(
+        event_totals.iloc[0]
+    )
+    event_leader_share = _pct(
+        event_leader_count,
+        total_event_count,
+    )
+
+    max_event_count = max(
+        int(event_totals.max()),
+        1,
+    )
+
+    # -----------------------------------------------------
+    # Header
+    # -----------------------------------------------------
+    event_board_parts = [
+        '<div class="event-board">',
+        '<div class="event-board-head">',
+        '<div>',
+        '<div class="event-board-kicker">Campus · Event Intelligence</div>',
+        '<div class="event-board-title">Campus Event & Execution Intelligence</div>',
+        '<div class="event-board-sub">'
+        'Campus-wise event volume and execution status.'
+        '</div>',
+        '</div>',
+        '<div class="event-simple-stats">',
+        f'<span class="event-simple-chip">Events <strong>{total_event_count:,}</strong></span>',
+        f'<span class="event-simple-chip">Campuses <strong>{active_event_campuses}</strong></span>',
+        f'<span class="event-simple-chip">Completed <strong>{completion_rate:.1f}%</strong></span>',
+        '</div>',
+        '</div>',
+        '<div class="event-board-body">',
+        '<div class="event-board-grid">',
+    ]
+
+    # -----------------------------------------------------
+    # LEFT: Event volume by campus
+    # -----------------------------------------------------
+    event_board_parts.extend([
+        '<div class="event-card event-volume-card">',
+        '<div class="event-card-head">',
+        '<div class="event-card-title">Event Volume by Campus</div>',
+        f'<div class="event-card-meta">{total_event_count:,} total events</div>',
+        '</div>',
+    ])
+
+    for campus, count_value in event_totals.items():
+        count_value = int(count_value)
+        width_pct = (
+            count_value
+            / max_event_count
+            * 100.0
+        )
+        share_pct = _pct(
+            count_value,
+            total_event_count,
+        )
+
+        event_board_parts.append(
+            (
+                '<div class="event-volume-row">'
+                    '<div>'
+                        f'<div class="event-campus-name">{html.escape(str(campus))}</div>'
+                        f'<span class="event-share">{share_pct:.1f}% share</span>'
+                    '</div>'
+                    '<div class="event-volume-track">'
+                        f'<div class="event-volume-fill" style="width:{width_pct:.1f}%"></div>'
+                    '</div>'
+                    f'<div class="event-volume-count">{count_value}</div>'
+                '</div>'
+            )
+        )
+
+    event_board_parts.append('</div>')
+
+    # -----------------------------------------------------
+    # RIGHT: Campus event status matrix
+    # -----------------------------------------------------
+    visible_count_columns = [
+        status
+        for status in [
+            "Completed",
+            "Confirmed",
+            "Planned",
+            "Cancelled",
+            "(blank)",
+        ]
+        if status in status_order
+    ]
+
+    event_board_parts.extend([
+        '<div class="event-card event-status-card">',
+        '<div class="event-card-head">',
+        '<div class="event-card-title">Event Status by Campus</div>',
+        '<div class="event-card-meta">execution mix + exact counts</div>',
+        '</div>',
+        '<table class="event-status-table">',
+        '<thead><tr>',
+        '<th>Campus</th>',
+        '<th>Total</th>',
+        '<th style="min-width:210px;">Status Distribution</th>',
+    ])
+
+    for status in visible_count_columns:
+        label = "Blank" if status == "(blank)" else status
+        event_board_parts.append(
+            f'<th>{html.escape(label)}</th>'
+        )
+
+    event_board_parts.extend([
+        '<th>Completion</th>',
+        '</tr></thead>',
+        '<tbody>',
+    ])
+
+    for campus in event_totals.index.tolist():
+        campus_status = event_status[
+            event_status["Campus"].eq(campus)
+        ]
+
+        campus_total = int(
+            campus_status["Count"].sum()
+        )
+
+        count_lookup = {
+            str(row["Status"]): int(row["Count"])
+            for _, row in campus_status.iterrows()
+        }
+
+        completed_count = int(
+            count_lookup.get("Completed", 0)
+        )
+        campus_completion = _pct(
+            completed_count,
+            campus_total,
+        )
+
+        stack_segments = []
+
+        for status in status_order:
+            count_value = int(
+                count_lookup.get(status, 0)
+            )
+
+            if count_value <= 0:
+                continue
+
+            width_pct = _pct(
+                count_value,
+                campus_total,
+            )
+
+            tooltip = (
+                f"{campus} · {status}: {count_value}"
+            )
+
+            stack_segments.append(
+                (
+                    '<span class="event-stack-seg" '
+                    f'title="{html.escape(tooltip)}" '
+                    f'style="width:{width_pct:.2f}%;'
+                    f'background:{status_colors[status]};">'
+                    '</span>'
+                )
+            )
+
+        event_board_parts.extend([
+            '<tr>',
+            f'<td class="event-status-campus">{html.escape(str(campus))}</td>',
+            f'<td class="event-status-total">{campus_total}</td>',
+            f'<td><div class="event-stack">{"".join(stack_segments)}</div></td>',
         ])
 
-    table_html.extend(['</tr>', '</thead>', '<tbody>'])
+        for status in visible_count_columns:
+            count_value = int(
+                count_lookup.get(status, 0)
+            )
+            zero_class = " zero" if count_value == 0 else ""
 
-    for idx, row in enumerate(rows):
-        is_total = idx == len(rows) - 1
-        tr_class = ' class="ms-total-row"' if is_total else ""
-        table_html.append(f'<tr{tr_class}>')
-        table_html.append(
-            f'<td class="ms-month-cell">{html.escape(str(row["Month"]))}</td>'
-        )
+            event_board_parts.append(
+                f'<td class="event-status-number{zero_class}">{count_value}</td>'
+            )
 
-        for campus in campuses:
-            for metric in ["Activities", "Events", "Completed", "Confirmed", "Planned", "Cancelled"]:
-                val = _monthly_num(row.get((campus, metric), 0))
-                table_html.append(f'<td>{val}</td>')
-
-        table_html.append('</tr>')
-
-    table_html.extend(['</tbody>', '</table>', '</div>'])
-
-    key_points = [
-        f"{best_month_activity['Month']} has the highest activity volume ({_monthly_num(best_month_activity['Activities'])}) across all campuses.",
-        f"Event execution (Completed + Confirmed) is strongest in {best_month_execution['Month']} ({_monthly_num(best_month_execution['Execution Ready'])} events).",
-        f"{leader_campus} contributes the highest share of activities ({leader_activity_share:.1f}%) and events ({leader_event_share:.1f}%).",
-        f"Focus on converting planned events, especially around {best_month_activity['Month']} and the current execution pipeline.",
-    ]
-
-    perf_html = [
-        '<table class="monthly-perf-table">',
-        '<thead><tr>',
-        '<th style="width:26%;">Campus</th>',
-        '<th style="width:14%;">Activities</th>',
-        '<th style="width:12%;">Events</th>',
-        '<th style="width:14%;">Completed</th>',
-        '<th style="width:34%;">Completion %</th>',
-        '</tr></thead><tbody>',
-    ]
-
-    for _, prow in campus_perf_df.iterrows():
-        perf_html.extend([
-            '<tr>',
-            f'<td>{html.escape(str(prow["Campus"]))}</td>',
-            f'<td>{_monthly_num(prow["Activities"])}</td>',
-            f'<td>{_monthly_num(prow["Events"])}</td>',
-            f'<td>{_monthly_num(prow["Completed"])}</td>',
-            f'<td>{_monthly_perf_bar(prow["Completion %"])}</td>',
+        event_board_parts.extend([
+            '<td style="text-align:center;">'
+            f'<span class="event-completion-pill">{campus_completion:.1f}%</span>'
+            '</td>',
             '</tr>',
         ])
 
-    total_completion_pct = _monthly_safe_pct(total_completed, total_events_monthly)
-    perf_html.extend([
-        '<tr>',
-        '<td>Total</td>',
-        f'<td>{total_activities_monthly}</td>',
-        f'<td>{total_events_monthly}</td>',
-        f'<td>{total_completed}</td>',
-        f'<td>{_monthly_perf_bar(total_completion_pct)}</td>',
-        '</tr>',
-        '</tbody></table>',
+    event_board_parts.extend([
+        '</tbody>',
+        '</table>',
+        '<div class="event-status-legend">',
     ])
 
-    planned_share = _monthly_safe_pct(total_planned, total_events_monthly)
-    actions = [
-        f"Prioritize execution of {total_planned} planned events ({planned_share:.1f}% of total events).",
-        f"Focus on improving completion rate in {weaker_campus_text}.",
-        "Increase event outcomes in months with high activity volume but lower event conversion.",
-        "Review the latest visible event pipeline to ensure timely execution.",
-    ]
+    for status in status_order:
+        label = "Blank Status" if status == "(blank)" else status
 
-    table_html.append('<div class="monthly-panels">')
+        event_board_parts.append(
+            (
+                '<span class="event-status-key">'
+                f'<span class="event-status-dot" style="background:{status_colors[status]}"></span>'
+                f'{html.escape(label)}'
+                '</span>'
+            )
+        )
 
-    # Key insights
-    table_html.extend([
-        '<div class="monthly-panel">',
-        '<div class="monthly-panel-title">',
-        '<span class="monthly-panel-icon monthly-icon-yellow">💡</span>',
-        'Key Insights',
+    event_board_parts.extend([
         '</div>',
-    ])
-    for i, text in enumerate(key_points, start=1):
-        table_html.extend([
-            '<div class="monthly-point">',
-            f'<div class="monthly-point-badge">{i}</div>',
-            f'<div class="monthly-point-text">{html.escape(text)}</div>',
-            '</div>',
-        ])
-    table_html.append('</div>')
-
-    # Campus performance
-    table_html.extend([
-        '<div class="monthly-panel">',
-        '<div class="monthly-panel-title">',
-        '<span class="monthly-panel-icon monthly-icon-blue">📊</span>',
-        f'Campus Performance Total ({html.escape(month_range)})',
         '</div>',
-        ''.join(perf_html),
-        '</div>',
+        '</div>',  # grid
     ])
 
-    # Recommended actions
-    table_html.extend([
-        '<div class="monthly-panel monthly-actions">',
-        '<div class="monthly-panel-title">',
-        '<span class="monthly-panel-icon monthly-icon-red">🎯</span>',
-        'Recommended Actions',
-        '</div>',
-    ])
-    for i, text in enumerate(actions, start=1):
-        table_html.extend([
-            '<div class="monthly-point">',
-            f'<div class="monthly-point-badge">{i}</div>',
-            f'<div class="monthly-point-text">{html.escape(text)}</div>',
-            '</div>',
-        ])
-    table_html.extend(['</div>', '</div>', '</div>'])
+    # -----------------------------------------------------
+    # Management signal based ONLY on Event + Status
+    # -----------------------------------------------------
+    if blank_total > 0:
+        action_text = (
+            f"Close the {blank_total} blank event-status record"
+            f"{'s' if blank_total != 1 else ''} first. "
+            f"{event_leader} currently leads event volume with "
+            f"{event_leader_count} events ({event_leader_share:.1f}% share). "
+            "Complete status hygiene before comparing execution quality."
+        )
+        risk_note = "Status hygiene"
+    elif pipeline_total > completed_total:
+        action_text = (
+            f"There are {pipeline_total} confirmed/planned events versus "
+            f"{completed_total} completed. Prioritize conversion of the ready "
+            "event pipeline into completed execution, starting with the highest-volume campus."
+        )
+        risk_note = "Pipeline conversion"
+    elif completion_rate < 50:
+        action_text = (
+            f"Event completion is {completion_rate:.1f}%. "
+            "Review owner readiness, confirmations and event closure cadence "
+            "before adding more event volume."
+        )
+        risk_note = "Execution focus"
+    else:
+        action_text = (
+            f"Event completion is {completion_rate:.1f}% and "
+            f"{event_leader} leads event volume. "
+            "Use the strongest campus execution pattern as the benchmark for upcoming events."
+        )
+        risk_note = "Scale best practice"
 
-    st.markdown(''.join(table_html), unsafe_allow_html=True)
+    # One concise management insight instead of multiple cards.
+    event_board_parts.extend([
+        '<div class="event-action-box">'
+        '<strong>Insight:</strong> '
+        f'{html.escape(event_leader)} leads with {event_leader_count} events '
+        f'({event_leader_share:.1f}% share); overall completion is {completion_rate:.1f}%. '
+        '<strong>Action:</strong> '
+        f'{html.escape(action_text)}'
+        '</div>',
+        '</div>',  # body
+        '</div>',  # board
+    ])
+
+    st.markdown(
+        "".join(event_board_parts),
+        unsafe_allow_html=True,
+    )
+
+
+# =========================================================
+# Q3 — MONTHLY ACTIVITY + EVENT MOMENTUM
+# =========================================================
+overview_section(
+    "Q3 · Monthly Momentum",
+    "Monthly Activity Count + Event Count",
+    "Track seasonality and whether event execution is moving at the same pace as the overall outreach plan.",
+)
+
+with st.container(border=True):
+    chart_header(
+        "Monthly Outreach Momentum",
+        "Columns = all activities; line = records where Event is populated.",
+    )
+
+    monthly = pd.DataFrame()
+    if "Activity Date" in filtered.columns and filtered["Activity Date"].notna().any():
+        monthly_base = filtered.dropna(subset=["Activity Date"]).copy()
+        monthly_base["Month Start"] = monthly_base["Activity Date"].dt.to_period("M").dt.to_timestamp()
+
+        activity_month = (
+            monthly_base.groupby("Month Start", observed=True)
+            .size()
+            .rename("Activities")
+        )
+
+        event_month = (
+            monthly_base[monthly_base["Event"].notna()]
+            .groupby("Month Start", observed=True)
+            .size()
+            .rename("Events")
+            if "Event" in monthly_base.columns
+            else pd.Series(dtype=int, name="Events")
+        )
+
+        monthly = (
+            pd.concat([activity_month, event_month], axis=1)
+            .fillna(0)
+            .reset_index()
+            .sort_values("Month Start")
+        )
+        monthly["Activities"] = monthly["Activities"].astype(int)
+        monthly["Events"] = monthly["Events"].astype(int)
+        monthly["Month"] = monthly["Month Start"].dt.strftime("%b %Y")
+
+    if monthly.empty:
+        st.info("Monthly trend cannot be calculated because Activity Date is unavailable for this selection.")
+    else:
+        fig = go.Figure()
+        fig.add_trace(
+            go.Bar(
+                x=monthly["Month"],
+                y=monthly["Activities"],
+                name="Activities",
+                marker_color="#2F6FBC",
+                opacity=.88,
+                text=monthly["Activities"],
+                textposition="outside",
+                textfont=dict(size=9),
+                hovertemplate="<b>%{x}</b><br>Activities: %{y:.0f}<extra></extra>",
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=monthly["Month"],
+                y=monthly["Events"],
+                name="Events",
+                mode="lines+markers+text",
+                line=dict(color="#7C3AED", width=3),
+                marker=dict(size=8, color="#7C3AED", line=dict(color="#FFFFFF", width=1.5)),
+                text=monthly["Events"],
+                textposition="top center",
+                textfont=dict(size=9, color="#6D43C5"),
+                hovertemplate="<b>%{x}</b><br>Events: %{y:.0f}<extra></extra>",
+            )
+        )
+        fig.update_xaxes(title="", showgrid=False)
+        fig.update_yaxes(title="Count", rangemode="tozero", dtick=1)
+        fig = professional_chart(fig, 335, legend=True)
+        fig.update_layout(bargap=.42)
+        st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
+
+        peak_activity_row = monthly.loc[monthly["Activities"].idxmax()]
+        peak_event_row = monthly.loc[monthly["Events"].idxmax()]
+        latest_row = monthly.iloc[-1]
+        previous_row = monthly.iloc[-2] if len(monthly) > 1 else None
+
+        if previous_row is not None and previous_row["Activities"]:
+            momentum_change = (latest_row["Activities"] - previous_row["Activities"]) / previous_row["Activities"] * 100
+            direction = "increased" if momentum_change >= 0 else "decreased"
+            momentum_sentence = f"Latest monthly activity volume has {direction} by {abs(momentum_change):.1f}% versus the previous visible month."
+        else:
+            momentum_sentence = "Only one comparable month is visible under the current filters."
+
+        ems_insight(
+            "EMS · Monthly Momentum Insight",
+            f"{peak_activity_row['Month']} is the peak activity month with {int(peak_activity_row['Activities'])} activities; {peak_event_row['Month']} has the highest event count ({int(peak_event_row['Events'])}).",
+            momentum_sentence,
+            "Use the peak-month activity mix as the capacity baseline; if event growth lags activity growth, review whether the added activity volume is generating sufficiently high-impact engagement.",
+            "violet",
+        )
 
 
 # =========================================================
