@@ -102,8 +102,8 @@ header[data-testid="stHeader"] {
 
 /* ---------- Header ---------- */
 .overview-header {
-    transform: translateY(-27px);
-    margin-bottom: -20px;
+    transform: translateY(-43px);
+    margin-bottom: -37px;
 }
 
 .overview-eyebrow {
@@ -264,13 +264,13 @@ header[data-testid="stHeader"] {
 
 .overview-subtitle {
     color: #71839A;
-    font-size: .86rem;
-    margin-top: .02rem;
+    font-size: .82rem;
+    margin-top: -.03rem;
 }
 
 .overview-accent {
-    height: 3px;
-    margin-top: .42rem;
+    height: 2px;
+    margin-top: .28rem;
     border-radius: 999px;
     background: linear-gradient(
         90deg,
@@ -284,9 +284,9 @@ header[data-testid="stHeader"] {
 /* ---------- Filters ---------- */
 .filter-panel-title {
     color: #0F2A45;
-    font-size: 1.0rem;
-    font-weight: 850;
-    margin: 0 0 .18rem 0;
+    font-size: .94rem;
+    font-weight: 880;
+    margin: -.05rem 0 .08rem 0;
 }
 
 div[data-testid="stSelectbox"] label,
@@ -323,124 +323,181 @@ div[data-testid="stButton"] button {
 }
 
 .overview-filter-reset-spacer {
-    height: 1.46rem;
+    height: 1.34rem;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Overview Reset: same row + same control height */
+div[data-testid="stButton"] {
+    margin: 0 !important;
+}
+
+div[data-testid="stButton"] button {
+    min-height: 2.34rem !important;
+    height: 2.34rem !important;
+    padding: 0 .42rem !important;
+    font-size: .69rem !important;
+    white-space: nowrap !important;
+    border-radius: 9px !important;
 }
 
 /* ---------- KPI cards ---------- */
 .pro-kpi {
     position: relative;
     overflow: hidden;
-    min-height: 94px;
-    border-radius: 14px;
-    padding: .64rem .72rem .60rem .72rem;
-    background: linear-gradient(145deg, #FFF 0%, var(--wash) 100%);
-    border: 1px solid var(--border);
-    box-shadow: 0 6px 18px rgba(15,42,69,.045);
-    animation: kpiFloat 2.05s ease-in-out infinite;
+    min-height: 72px;
+    height: 72px;
+    box-sizing: border-box;
+    border-radius: 13px;
+    padding: .46rem .58rem .42rem .58rem;
+    background:
+        linear-gradient(118deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.95) 58%, var(--wash) 155%);
+    border: 1px solid rgba(216,226,238,.92);
+    box-shadow:
+        0 8px 22px rgba(22,48,78,.055),
+        inset 0 1px 0 rgba(255,255,255,.92);
+    display: grid;
+    grid-template-columns: 31px minmax(0,1fr);
+    grid-template-rows: 15px 25px 14px;
+    column-gap: .48rem;
+    align-items: center;
+    animation: kpiFloat 5.2s ease-in-out infinite;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+}
+
+.pro-kpi:hover {
+    transform: translateY(-3px) scale(1.008);
+    border-color: var(--border);
+    box-shadow:
+        0 13px 30px rgba(20,48,82,.095),
+        0 0 0 1px rgba(255,255,255,.75) inset;
 }
 
 .pro-kpi::before {
     content: "";
     position: absolute;
-    inset: 0 auto 0 0;
-    width: 4px;
-    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    top: 0;
+    left: 0;
+    width: 72%;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 48%, rgba(255,255,255,0) 100%);
+    opacity: .92;
 }
 
 .pro-kpi::after {
     content: "";
     position: absolute;
-    width: 82px;
-    height: 82px;
+    width: 76px;
+    height: 76px;
     border-radius: 50%;
-    right: -32px;
-    top: -34px;
+    right: -31px;
+    bottom: -42px;
     background: radial-gradient(circle, var(--bubble) 0%, rgba(255,255,255,0) 72%);
+    opacity: .72;
+    pointer-events: none;
 }
 
 .pro-kpi .icon {
     position: relative;
     z-index: 2;
-    width: 27px;
-    height: 27px;
-    border-radius: 8px;
+    grid-column: 1;
+    grid-row: 1 / 4;
+    width: 29px;
+    height: 29px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--iconbg);
+    background:
+        linear-gradient(145deg, rgba(255,255,255,.92), var(--iconbg));
     color: var(--accent);
     border: 1px solid var(--border);
-    font-size: 13px;
-    font-weight: 900;
-    margin-bottom: .30rem;
+    box-shadow: 0 5px 12px rgba(15,42,69,.055);
+    font-size: 12px;
+    font-weight: 950;
+    margin: 0;
 }
 
 .pro-kpi .label {
     position: relative;
     z-index: 2;
-    color: #60758C;
-    font-size: .52rem;
-    font-weight: 850;
+    grid-column: 2;
+    grid-row: 1;
+    color: #647A91;
+    font-size: .49rem;
+    font-weight: 900;
+    letter-spacing: .035em;
+    text-transform: uppercase;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .pro-kpi .value {
     position: relative;
     z-index: 2;
-    color: #0F2A45;
-    font-size: 1.72rem;
-    font-weight: 900;
-    line-height: 1;
-    margin-top: .18rem;
+    grid-column: 2;
+    grid-row: 2;
+    color: #102A43;
+    font-size: 1.34rem;
+    font-weight: 950;
+    letter-spacing: -.025em;
+    line-height: .98;
+    margin: 0;
+    white-space: nowrap;
 }
 
 .pro-kpi .sub {
     position: relative;
     z-index: 2;
-    color: #8293A8;
-    font-size: .55rem;
-    margin-top: .17rem;
+    grid-column: 2;
+    grid-row: 3;
+    color: #8394A7;
+    font-size: .46rem;
+    line-height: 1.05;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .pro-kpi .mini-line {
-    position: absolute;
-    left: .72rem;
-    right: .72rem;
-    bottom: .36rem;
-    height: 2px;
-    border-radius: 99px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    opacity: .18;
+    display: none;
 }
 
 @keyframes kpiFloat {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-5px); }
+    50%      { transform: translateY(-1.5px); }
 }
 
 .kpi-blue {
-    --accent:#2563EB; --accent2:#60A5FA; --wash:#F2F7FF;
-    --border:#D7E5FF; --bubble:#DCE9FF; --iconbg:#EAF2FF;
+    --accent:#2D6CDF; --accent2:#79A7F8; --wash:#EEF5FF;
+    --border:#D8E6FB; --bubble:#D9E9FF; --iconbg:#EAF2FF;
 }
 .kpi-cyan {
-    --accent:#0891B2; --accent2:#22D3EE; --wash:#F0FBFD;
-    --border:#D2F0F6; --bubble:#D8F5FA; --iconbg:#E6F9FC;
+    --accent:#0C8FA6; --accent2:#5BC6D4; --wash:#EDF9FB;
+    --border:#D2EDF2; --bubble:#D7F3F6; --iconbg:#E7F8FA;
 }
 .kpi-violet {
-    --accent:#7C3AED; --accent2:#A78BFA; --wash:#F7F3FF;
-    --border:#E6DBFF; --bubble:#E9DEFF; --iconbg:#F0E9FF;
+    --accent:#7453C6; --accent2:#A98AE8; --wash:#F5F1FC;
+    --border:#E5DCF6; --bubble:#E8DFFC; --iconbg:#F0EAFB;
 }
 .kpi-teal {
-    --accent:#0F9F8F; --accent2:#2DD4BF; --wash:#F0FBF8;
-    --border:#D4F2EC; --bubble:#DAF6F0; --iconbg:#E7F9F5;
+    --accent:#159786; --accent2:#5CC9B9; --wash:#EFF9F6;
+    --border:#D5ECE7; --bubble:#D9F1EC; --iconbg:#E8F7F3;
 }
 .kpi-amber {
-    --accent:#D98B16; --accent2:#FBBF24; --wash:#FFF9EE;
-    --border:#F6E6C4; --bubble:#FFF0CF; --iconbg:#FFF5DF;
+    --accent:#D18A24; --accent2:#F1BB58; --wash:#FFF8EC;
+    --border:#F1E2C6; --bubble:#F9EBCB; --iconbg:#FFF4DE;
 }
 .kpi-green {
-    --accent:#238A57; --accent2:#4ADE80; --wash:#F2FAF5;
-    --border:#D6EFDF; --bubble:#DCF4E4; --iconbg:#EAF8EF;
+    --accent:#2A8B5A; --accent2:#6BC78F; --wash:#EFF8F2;
+    --border:#D7E9DE; --bubble:#DCEFE3; --iconbg:#EAF6EE;
 }
 
 /* ---------- Professional chart cards ---------- */
@@ -793,20 +850,20 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 }
 
 .mini-blue {
-    --accent:#2563EB; --accent2:#60A5FA; --wash:#F2F7FF;
-    --border:#D7E5FF; --bubble:#DCE9FF; --iconbg:#EAF2FF;
+    --accent:#2D6CDF; --accent2:#79A7F8; --wash:#EEF5FF;
+    --border:#D8E6FB; --bubble:#D9E9FF; --iconbg:#EAF2FF;
 }
 .mini-cyan {
-    --accent:#0891B2; --accent2:#22D3EE; --wash:#F0FBFD;
-    --border:#D2F0F6; --bubble:#D8F5FA; --iconbg:#E6F9FC;
+    --accent:#0C8FA6; --accent2:#5BC6D4; --wash:#EDF9FB;
+    --border:#D2EDF2; --bubble:#D7F3F6; --iconbg:#E7F8FA;
 }
 .mini-amber {
-    --accent:#D98B16; --accent2:#FBBF24; --wash:#FFF9EE;
-    --border:#F6E6C4; --bubble:#FFF0CF; --iconbg:#FFF5DF;
+    --accent:#D18A24; --accent2:#F1BB58; --wash:#FFF8EC;
+    --border:#F1E2C6; --bubble:#F9EBCB; --iconbg:#FFF4DE;
 }
 .mini-violet {
-    --accent:#7C3AED; --accent2:#A78BFA; --wash:#F7F3FF;
-    --border:#E6DBFF; --bubble:#E9DEFF; --iconbg:#F0E9FF;
+    --accent:#7453C6; --accent2:#A98AE8; --wash:#F5F1FC;
+    --border:#E5DCF6; --bubble:#E8DFFC; --iconbg:#F0EAFB;
 }
 
 /* Status Snapshot: compact executive rows */
@@ -1035,7 +1092,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
 
 /* Pull sections closer */
 [data-testid="stVerticalBlock"] {
-    gap: .55rem;
+    gap: .40rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1457,8 +1514,8 @@ st.markdown(
     """
     <style>
     .overview-section-kicker {
-        margin-top: .32rem;
-        margin-bottom: .04rem;
+        margin-top: .18rem;
+        margin-bottom: .02rem;
         color: #2B6DE8;
         font-size: .63rem;
         font-weight: 900;
@@ -1468,7 +1525,7 @@ st.markdown(
 
     .overview-section-title {
         color: #102A43;
-        font-size: 1.06rem;
+        font-size: .99rem;
         font-weight: 900;
         letter-spacing: -.01em;
         margin-bottom: .04rem;
@@ -1476,9 +1533,9 @@ st.markdown(
 
     .overview-section-sub {
         color: #7B8DA3;
-        font-size: .72rem;
-        line-height: 1.35;
-        margin-bottom: .34rem;
+        font-size: .66rem;
+        line-height: 1.30;
+        margin-bottom: .22rem;
     }
 
     .overview-divider {
@@ -1504,9 +1561,9 @@ st.markdown(
 
     .filter-note {
         color: #8495A9;
-        font-size: .60rem;
-        margin-top: -.10rem;
-        margin-bottom: .08rem;
+        font-size: .57rem;
+        margin-top: -.12rem;
+        margin-bottom: .03rem;
     }
 
     div[data-testid="stButton"] button {
@@ -1543,7 +1600,11 @@ st.markdown(
     }
 
     @media (max-width: 1050px) {
-        .pro-kpi .value { font-size: 1.18rem !important; }
+        .pro-kpi {
+            min-height: 69px !important;
+            height: 69px !important;
+        }
+        .pro-kpi .value { font-size: 1.15rem !important; }
         .mini-upcoming .value { font-size: 1.18rem !important; }
     }
     </style>
@@ -1657,7 +1718,7 @@ st.markdown(
 )
 
 filter_cols = st.columns(
-    [0.86, 1.06, 0.84, 0.86, 1.10, 0.96, 0.76, 1.34, 0.60],
+    [0.82, 1.00, 0.78, 0.82, 1.02, 0.90, 0.70, 1.20, 0.66],
     gap="small",
 )
 
