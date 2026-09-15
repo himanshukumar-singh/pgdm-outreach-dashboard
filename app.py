@@ -6488,6 +6488,176 @@ def render_activity_execution_matrix(frame):
     }
 
 
+
+# =========================================================
+# FINAL FILTER + KPI UI OVERRIDES
+# =========================================================
+st.markdown(
+    """
+    <style>
+    /* ---------- FILTER DECK: compact, stable, colorful ---------- */
+    .custom-filter-deck-marker { display:none !important; }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) {
+        position:relative !important;
+        overflow:visible !important;
+        margin:.10rem 0 .48rem 0 !important;
+        padding:.72rem .78rem .68rem .78rem !important;
+        border:1px solid #DEE6F2 !important;
+        border-radius:18px !important;
+        background:
+            radial-gradient(circle at 4% 20%, rgba(124,58,237,.055), transparent 22%),
+            radial-gradient(circle at 96% 82%, rgba(37,99,235,.055), transparent 24%),
+            linear-gradient(135deg,#FFFFFF 0%,#FBFCFF 58%,#F8F8FF 100%) !important;
+        box-shadow:0 12px 30px rgba(25,52,92,.065), inset 0 1px 0 rgba(255,255,255,.96) !important;
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)::before {
+        content:""; position:absolute; left:16px; right:16px; top:0; height:3px;
+        border-radius:0 0 999px 999px;
+        background:linear-gradient(90deg,#6D5DFB,#2F80ED,#18B99B,#F4A62A,#F05B7A);
+        opacity:.90;
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stHorizontalBlock"] {
+        align-items:flex-end !important; gap:.55rem !important;
+    }
+
+    .cf-label {
+        display:flex !important; align-items:center !important; gap:.38rem !important;
+        min-height:27px !important; margin:0 0 .22rem .02rem !important;
+        color:#173B67 !important; font-size:.70rem !important; font-weight:850 !important;
+        line-height:1 !important; white-space:nowrap !important;
+    }
+    .cf-icon {
+        width:25px !important; height:25px !important; min-width:25px !important;
+        display:inline-flex !important; align-items:center !important; justify-content:center !important;
+        border-radius:9px !important; border:1px solid currentColor !important;
+        box-shadow:0 5px 12px rgba(29,58,105,.08) !important;
+        overflow:hidden !important;
+    }
+    .cf-icon svg { width:14px !important; height:14px !important; min-width:14px !important; max-width:14px !important; display:block !important; }
+
+    .cf-campus .cf-icon   { color:#7650E8 !important; background:#F4EFFF !important; }
+    .cf-activity .cf-icon { color:#F07E1B !important; background:#FFF3E8 !important; }
+    .cf-event .cf-icon    { color:#2B72EC !important; background:#EDF4FF !important; }
+    .cf-status .cf-icon   { color:#18A45E !important; background:#ECFAF2 !important; }
+    .cf-segment .cf-icon  { color:#9A46E9 !important; background:#F8EEFF !important; }
+    .cf-owner .cf-icon    { color:#EE5076 !important; background:#FFF0F4 !important; }
+    .cf-priority .cf-icon { color:#E8A016 !important; background:#FFF7E3 !important; }
+    .cf-date .cf-icon     { color:#2563EB !important; background:#EEF4FF !important; }
+
+    /* per-filter accent variables */
+    div[data-testid="stColumn"]:has(.cf-campus)   { --fc:#7650E8; --fs:#F8F5FF; }
+    div[data-testid="stColumn"]:has(.cf-activity) { --fc:#F07E1B; --fs:#FFF8F1; }
+    div[data-testid="stColumn"]:has(.cf-event)    { --fc:#2B72EC; --fs:#F4F8FF; }
+    div[data-testid="stColumn"]:has(.cf-status)   { --fc:#18A45E; --fs:#F3FCF7; }
+    div[data-testid="stColumn"]:has(.cf-segment)  { --fc:#9A46E9; --fs:#FBF7FF; }
+    div[data-testid="stColumn"]:has(.cf-owner)    { --fc:#EE5076; --fs:#FFF6F8; }
+    div[data-testid="stColumn"]:has(.cf-priority) { --fc:#E8A016; --fs:#FFFAEF; }
+    div[data-testid="stColumn"]:has(.cf-date)     { --fc:#2563EB; --fs:#F4F8FF; }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stPopover"] > button {
+        width:100% !important; height:2.58rem !important; min-height:2.58rem !important;
+        padding:0 .72rem !important; justify-content:space-between !important;
+        border-radius:11px !important; border:1px solid #DCE5F1 !important;
+        border-left:3px solid var(--fc,#4678E8) !important;
+        background:linear-gradient(180deg,#FFFFFF 0%,var(--fs,#F7F9FD) 100%) !important;
+        color:#173B67 !important; font-size:.74rem !important; font-weight:750 !important;
+        box-shadow:0 4px 10px rgba(30,63,112,.045), inset 0 1px 0 rgba(255,255,255,.98) !important;
+        transition:transform .17s ease,box-shadow .17s ease,border-color .17s ease !important;
+    }
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stPopover"] > button:hover {
+        transform:translateY(-2px) !important; border-color:var(--fc,#4678E8) !important;
+        box-shadow:0 10px 20px rgba(28,64,120,.11), 0 0 0 2px color-mix(in srgb,var(--fc,#4678E8) 10%,transparent) !important;
+    }
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stPopover"] > button p {
+        color:#173B67 !important; font-weight:750 !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
+    }
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stPopover"] > button svg {
+        width:15px !important; height:15px !important; max-width:15px !important; color:var(--fc,#4678E8) !important; flex:0 0 15px !important;
+    }
+
+    .custom-filter-reset-spacer { height:1.54rem !important; }
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stButton"] button {
+        height:2.58rem !important; min-height:2.58rem !important; border-radius:11px !important;
+        color:#FFFFFF !important; font-size:.72rem !important; font-weight:850 !important;
+        border:1px solid rgba(38,64,130,.25) !important;
+        background:linear-gradient(110deg,#0E4A82 0%,#245EB8 52%,#5947D9 112%) !important;
+        box-shadow:0 8px 18px rgba(31,73,142,.20), inset 0 1px 0 rgba(255,255,255,.18) !important;
+    }
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stButton"] button:hover {
+        transform:translateY(-2px) !important; box-shadow:0 12px 24px rgba(31,73,142,.27) !important;
+    }
+
+    /* no helper/header strip in filter card */
+    .custom-filter-deck-head,.custom-filter-foot { display:none !important; }
+
+    /* ---------- KPI SNAPSHOT: no banner, only premium cards ---------- */
+    .snapshot-banner { display:none !important; }
+    .snapshot-motion-marker { display:none !important; }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
+        position:relative !important; overflow:visible !important;
+        margin:.02rem 0 .56rem 0 !important; padding:.50rem !important;
+        border:1px solid #DFE7F2 !important; border-radius:18px !important;
+        background:linear-gradient(135deg,#FFFFFF 0%,#FBFCFF 100%) !important;
+        box-shadow:0 12px 30px rgba(25,53,95,.065) !important; gap:.52rem !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker)::before {
+        content:"" !important; position:absolute !important; left:18px !important; right:18px !important; top:0 !important; height:3px !important;
+        border-radius:0 0 999px 999px !important;
+        background:linear-gradient(90deg,#2D6CDF,#16B7C8,#7950D8,#17A78B,#EAA126,#25A869) !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
+        height:86px !important; min-height:86px !important; border-radius:15px !important;
+        padding:.62rem .68rem !important; grid-template-columns:44px minmax(0,1fr) !important;
+        grid-template-rows:29px 18px 16px !important; column-gap:.60rem !important;
+        background:linear-gradient(135deg,#FFFFFF 0%,#FFFFFF 55%,var(--wash) 145%) !important;
+        border:1px solid var(--border) !important;
+        box-shadow:0 8px 18px rgba(27,53,91,.065), inset 0 1px 0 rgba(255,255,255,.96) !important;
+        animation:kpiFinalFloat 5.5s ease-in-out infinite !important;
+    }
+    @keyframes kpiFinalFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1.5px)} }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi:hover {
+        transform:translateY(-4px) scale(1.008) !important;
+        box-shadow:0 15px 30px rgba(27,53,91,.12),0 0 0 1px var(--border) inset !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon {
+        grid-column:1 !important; grid-row:1 / 4 !important; width:42px !important; height:42px !important;
+        border-radius:13px !important; margin:0 !important; font-size:18px !important;
+        background:linear-gradient(145deg,#FFFFFF 0%,var(--iconbg) 100%) !important;
+        color:var(--accent) !important; border:1px solid var(--border) !important;
+        box-shadow:0 7px 16px rgba(27,53,91,.08) !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon svg {
+        width:22px !important; height:22px !important; max-width:22px !important; display:block !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .value {
+        grid-column:2 !important; grid-row:1 !important; color:#0E315C !important; font-size:1.38rem !important; font-weight:950 !important; line-height:1 !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .label {
+        grid-column:2 !important; grid-row:2 !important; color:#294A70 !important; font-size:.55rem !important; font-weight:900 !important; text-transform:none !important; letter-spacing:0 !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .sub {
+        grid-column:2 !important; grid-row:3 !important; color:#8798AC !important; font-size:.43rem !important; line-height:1.08 !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::before {
+        width:100% !important; height:3px !important; background:linear-gradient(90deg,var(--accent),var(--accent2),rgba(255,255,255,0)) !important;
+    }
+
+    @media (max-width:1200px) {
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stHorizontalBlock"] { overflow-x:auto !important; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+        div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi { animation:none !important; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # =========================================================
 # HEADER — preserve existing title motion and styling
 # =========================================================
@@ -6601,6 +6771,7 @@ with st.container(border=True):
             st.rerun()
 
 
+
 # =========================================================
 # APPLY FILTERS
 # =========================================================
@@ -6681,8 +6852,7 @@ reach_achievement = _pct(actual_reach, planned_reach)
 
 
 # =========================================================
-# EXECUTIVE KPI CARDS
-# Clean KPI rail only — no banner / watermark / badges
+# EXECUTIVE KPI SNAPSHOT
 # =========================================================
 k1, k2, k3, k4, k5, k6 = st.columns(6, gap="small")
 
@@ -6696,7 +6866,7 @@ with k1:
         "Total Activities",
         f"{total_activities:,}",
         "Filtered outreach activity volume",
-        "●",
+        """<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M4 13v6M9 9v10M14 5v14M19 11v8'/></svg>""",
         "kpi-blue",
     )
 
@@ -6705,7 +6875,7 @@ with k2:
         "Total Events",
         f"{total_events:,}",
         "Records with Event populated",
-        "✦",
+        """<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='5' width='16' height='15' rx='2'/><path d='M8 3v4M16 3v4M4 10h16'/></svg>""",
         "kpi-cyan",
     )
 
@@ -6714,7 +6884,7 @@ with k3:
         "Institutions",
         f"{institutions:,}",
         "Unique institutions / event names",
-        "◆",
+        """<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20h16M6 20V9l6-4 6 4v11M9 12h2M13 12h2M9 16h2M13 16h2'/></svg>""",
         "kpi-violet",
     )
 
@@ -6723,7 +6893,7 @@ with k4:
         "Cities Covered",
         f"{cities:,}",
         "Current outreach footprint",
-        "⌖",
+        """<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z'/><circle cx='12' cy='10' r='2.5'/></svg>""",
         "kpi-teal",
     )
 
@@ -6732,7 +6902,7 @@ with k5:
         "Planned Reach",
         f"{planned_reach:,}",
         "Planned student / faculty reach",
-        "◎",
+        """<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='9' cy='8' r='3'/><circle cx='17' cy='9' r='2.5'/><path d='M3 20c0-4 2.5-7 6-7s6 3 6 7M14 14c3 0 6 2 6 6'/></svg>""",
         "kpi-amber",
     )
 
@@ -6741,7 +6911,7 @@ with k6:
         "Actual Reach",
         f"{actual_reach:,}",
         f"{reach_achievement:.1f}% of planned reach" if planned_reach else "Actual reach entered",
-        "✓",
+        """<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='8'/><path d='m8.5 12 2.2 2.2 4.8-5'/></svg>""",
         "kpi-green",
     )
 
@@ -6944,1830 +7114,10 @@ if not activity_mix.empty:
 
 
 # =========================================================
-# CAMPUS EVENT & EXECUTION INTELLIGENCE
+# CAMPUS EVENT / MONTHLY SUMMARY SECTIONS REMOVED
+# Per final Overview layout, the dashboard now continues
+# directly from the Activity Type × Campus Matrix to Reach Performance.
 # =========================================================
-
-event_view = filtered.copy()
-
-if "Event" in event_view.columns:
-    event_clean = (
-        event_view["Event"]
-        .astype("string")
-        .str.strip()
-        .replace({
-            "": pd.NA,
-            "nan": pd.NA,
-            "None": pd.NA,
-            "<NA>": pd.NA,
-        })
-    )
-    event_view = event_view[event_clean.notna()].copy()
-else:
-    event_view = event_view.iloc[0:0].copy()
-
-if event_view.empty:
-    st.markdown(
-        (
-            '<div class="event-board">'
-                '<div class="event-board-head">'
-                    '<div>'
-                        '<div class="event-board-kicker">Campus · Event Intelligence</div>'
-                        '<div class="event-board-title">Campus Events & Status</div>'
-                        '<div class="event-board-sub">'
-                            'Campus-wise event volume and execution status for the current filter selection.'
-                        '</div>'
-                    '</div>'
-                '</div>'
-                '<div class="event-board-body">'
-                    '<div class="event-empty-state">'
-                        'No Event records are available for the selected filters.'
-                    '</div>'
-                '</div>'
-            '</div>'
-        ),
-        unsafe_allow_html=True,
-    )
-else:
-    # -----------------------------------------------------
-    # Core event metrics
-    # -----------------------------------------------------
-    event_view["Campus"] = (
-        event_view["Campus"]
-        .astype("string")
-        .str.strip()
-        .replace({
-            "": pd.NA,
-            "nan": pd.NA,
-            "None": pd.NA,
-            "<NA>": pd.NA,
-        })
-    )
-
-    event_view = event_view.dropna(subset=["Campus"]).copy()
-
-    if "Status" not in event_view.columns:
-        event_view["Status"] = pd.NA
-
-    event_view["Status"] = (
-        event_view["Status"]
-        .astype("string")
-        .str.strip()
-        .replace({
-            "": pd.NA,
-            "nan": pd.NA,
-            "None": pd.NA,
-            "<NA>": pd.NA,
-        })
-        .fillna("(blank)")
-    )
-
-    event_totals = (
-        event_view.groupby("Campus", observed=True)
-        .size()
-        .sort_values(ascending=False)
-    )
-
-    event_status = (
-        event_view.groupby(
-            ["Campus", "Status"],
-            observed=True,
-            dropna=False,
-        )
-        .size()
-        .reset_index(name="Count")
-    )
-
-    total_event_count = int(len(event_view))
-    active_event_campuses = int(event_view["Campus"].nunique())
-
-    preferred_status_order = [
-        "Completed",
-        "Confirmed",
-        "Planned",
-        "Cancelled",
-        "Rescheduled",
-        "(blank)",
-    ]
-
-    present_statuses = (
-        event_status["Status"]
-        .astype(str)
-        .unique()
-        .tolist()
-    )
-
-    status_order = [
-        status
-        for status in preferred_status_order
-        if status in present_statuses
-    ] + sorted(
-        [
-            status
-            for status in present_statuses
-            if status not in preferred_status_order
-        ],
-        key=lambda x: str(x).lower(),
-    )
-
-    status_colors = _status_color_map().copy()
-    status_colors["(blank)"] = "#A4AFBA"
-
-    fallback_status_colors = [
-        "#7453C6",
-        "#159786",
-        "#D18A24",
-        "#2D6CDF",
-        "#C65C65",
-    ]
-
-    for idx, status in enumerate(status_order):
-        status_colors.setdefault(
-            status,
-            fallback_status_colors[
-                idx % len(fallback_status_colors)
-            ],
-        )
-
-    completed_total = int(
-        event_view["Status"].eq("Completed").sum()
-    )
-    confirmed_total = int(
-        event_view["Status"].eq("Confirmed").sum()
-    )
-    planned_total = int(
-        event_view["Status"].eq("Planned").sum()
-    )
-    cancelled_total = int(
-        event_view["Status"].eq("Cancelled").sum()
-    )
-    blank_total = int(
-        event_view["Status"].eq("(blank)").sum()
-    )
-
-    completion_rate = _pct(
-        completed_total,
-        total_event_count,
-    )
-
-    pipeline_total = (
-        confirmed_total
-        + planned_total
-    )
-
-    event_leader = str(
-        event_totals.index[0]
-    )
-    event_leader_count = int(
-        event_totals.iloc[0]
-    )
-    event_leader_share = _pct(
-        event_leader_count,
-        total_event_count,
-    )
-
-    max_event_count = max(
-        int(event_totals.max()),
-        1,
-    )
-
-    # -----------------------------------------------------
-    # Header
-    # -----------------------------------------------------
-    event_board_parts = [
-        '<div class="event-board">',
-        '<div class="event-board-head">',
-        '<div>',
-        '<div class="event-board-kicker">Campus · Event Intelligence</div>',
-        '<div class="event-board-title">Campus Event & Execution Intelligence</div>',
-        '<div class="event-board-sub">'
-        'Campus-wise event volume and execution status.'
-        '</div>',
-        '</div>',
-        '<div class="event-simple-stats">',
-        f'<span class="event-simple-chip">Events <strong>{total_event_count:,}</strong></span>',
-        f'<span class="event-simple-chip">Campuses <strong>{active_event_campuses}</strong></span>',
-        f'<span class="event-simple-chip">Completed <strong>{completion_rate:.1f}%</strong></span>',
-        '</div>',
-        '</div>',
-        '<div class="event-board-body">',
-        '<div class="event-board-grid">',
-    ]
-
-    # -----------------------------------------------------
-    # LEFT: Event volume by campus
-    # -----------------------------------------------------
-    event_board_parts.extend([
-        '<div class="event-card event-volume-card">',
-        '<div class="event-card-head">',
-        '<div class="event-card-title">Event Volume by Campus</div>',
-        f'<div class="event-card-meta">{total_event_count:,} total events</div>',
-        '</div>',
-    ])
-
-    for campus, count_value in event_totals.items():
-        count_value = int(count_value)
-        width_pct = (
-            count_value
-            / max_event_count
-            * 100.0
-        )
-        share_pct = _pct(
-            count_value,
-            total_event_count,
-        )
-
-        event_board_parts.append(
-            (
-                '<div class="event-volume-row">'
-                    '<div>'
-                        f'<div class="event-campus-name">{html.escape(str(campus))}</div>'
-                        f'<span class="event-share">{share_pct:.1f}% share</span>'
-                    '</div>'
-                    '<div class="event-volume-track">'
-                        f'<div class="event-volume-fill" style="width:{width_pct:.1f}%"></div>'
-                    '</div>'
-                    f'<div class="event-volume-count">{count_value}</div>'
-                '</div>'
-            )
-        )
-
-    event_board_parts.append('</div>')
-
-    # -----------------------------------------------------
-    # RIGHT: Campus event status matrix
-    # -----------------------------------------------------
-    visible_count_columns = [
-        status
-        for status in [
-            "Completed",
-            "Confirmed",
-            "Planned",
-            "Cancelled",
-            "(blank)",
-        ]
-        if status in status_order
-    ]
-
-    event_board_parts.extend([
-        '<div class="event-card event-status-card">',
-        '<div class="event-card-head">',
-        '<div class="event-card-title">Event Status by Campus</div>',
-        '<div class="event-card-meta">execution mix + exact counts</div>',
-        '</div>',
-        '<table class="event-status-table">',
-        '<thead><tr>',
-        '<th>Campus</th>',
-        '<th>Total</th>',
-        '<th style="min-width:210px;">Status Distribution</th>',
-    ])
-
-    for status in visible_count_columns:
-        label = "Blank" if status == "(blank)" else status
-        event_board_parts.append(
-            f'<th>{html.escape(label)}</th>'
-        )
-
-    event_board_parts.extend([
-        '<th>Completion</th>',
-        '</tr></thead>',
-        '<tbody>',
-    ])
-
-    for campus in event_totals.index.tolist():
-        campus_status = event_status[
-            event_status["Campus"].eq(campus)
-        ]
-
-        campus_total = int(
-            campus_status["Count"].sum()
-        )
-
-        count_lookup = {
-            str(row["Status"]): int(row["Count"])
-            for _, row in campus_status.iterrows()
-        }
-
-        completed_count = int(
-            count_lookup.get("Completed", 0)
-        )
-        campus_completion = _pct(
-            completed_count,
-            campus_total,
-        )
-
-        stack_segments = []
-
-        for status in status_order:
-            count_value = int(
-                count_lookup.get(status, 0)
-            )
-
-            if count_value <= 0:
-                continue
-
-            width_pct = _pct(
-                count_value,
-                campus_total,
-            )
-
-            tooltip = (
-                f"{campus} · {status}: {count_value}"
-            )
-
-            stack_segments.append(
-                (
-                    '<span class="event-stack-seg" '
-                    f'title="{html.escape(tooltip)}" '
-                    f'style="width:{width_pct:.2f}%;'
-                    f'background:{status_colors[status]};">'
-                    '</span>'
-                )
-            )
-
-        event_board_parts.extend([
-            '<tr>',
-            f'<td class="event-status-campus">{html.escape(str(campus))}</td>',
-            f'<td class="event-status-total">{campus_total}</td>',
-            f'<td><div class="event-stack">{"".join(stack_segments)}</div></td>',
-        ])
-
-        for status in visible_count_columns:
-            count_value = int(
-                count_lookup.get(status, 0)
-            )
-            zero_class = " zero" if count_value == 0 else ""
-
-            event_board_parts.append(
-                f'<td class="event-status-number{zero_class}">{count_value}</td>'
-            )
-
-        event_board_parts.extend([
-            '<td style="text-align:center;">'
-            f'<span class="event-completion-pill">{campus_completion:.1f}%</span>'
-            '</td>',
-            '</tr>',
-        ])
-
-    event_board_parts.extend([
-        '</tbody>',
-        '</table>',
-        '<div class="event-status-legend">',
-    ])
-
-    for status in status_order:
-        label = "Blank Status" if status == "(blank)" else status
-
-        event_board_parts.append(
-            (
-                '<span class="event-status-key">'
-                f'<span class="event-status-dot" style="background:{status_colors[status]}"></span>'
-                f'{html.escape(label)}'
-                '</span>'
-            )
-        )
-
-    event_board_parts.extend([
-        '</div>',
-        '</div>',
-        '</div>',  # grid
-    ])
-
-    # -----------------------------------------------------
-    # Management signal based ONLY on Event + Status
-    # -----------------------------------------------------
-    if blank_total > 0:
-        action_text = (
-            f"Close the {blank_total} blank event-status record"
-            f"{'s' if blank_total != 1 else ''} first. "
-            f"{event_leader} currently leads event volume with "
-            f"{event_leader_count} events ({event_leader_share:.1f}% share). "
-            "Complete status hygiene before comparing execution quality."
-        )
-        risk_note = "Status hygiene"
-    elif pipeline_total > completed_total:
-        action_text = (
-            f"There are {pipeline_total} confirmed/planned events versus "
-            f"{completed_total} completed. Prioritize conversion of the ready "
-            "event pipeline into completed execution, starting with the highest-volume campus."
-        )
-        risk_note = "Pipeline conversion"
-    elif completion_rate < 50:
-        action_text = (
-            f"Event completion is {completion_rate:.1f}%. "
-            "Review owner readiness, confirmations and event closure cadence "
-            "before adding more event volume."
-        )
-        risk_note = "Execution focus"
-    else:
-        action_text = (
-            f"Event completion is {completion_rate:.1f}% and "
-            f"{event_leader} leads event volume. "
-            "Use the strongest campus execution pattern as the benchmark for upcoming events."
-        )
-        risk_note = "Scale best practice"
-
-    # One concise management insight instead of multiple cards.
-    event_board_parts.extend([
-        '<div class="event-action-box">'
-        '<strong>Insight:</strong> '
-        f'{html.escape(event_leader)} leads with {event_leader_count} events '
-        f'({event_leader_share:.1f}% share); overall completion is {completion_rate:.1f}%. '
-        '<strong>Action:</strong> '
-        f'{html.escape(action_text)}'
-        '</div>',
-        '</div>',  # body
-        '</div>',  # board
-    ])
-
-    st.markdown(
-        "".join(event_board_parts),
-        unsafe_allow_html=True,
-    )
-
-
-# =========================================================
-# Q3 — MONTHLY CAMPUS-WISE ACTIVITY & EVENT SUMMARY
-# =========================================================
-
-st.markdown(
-    """
-    <style>
-    /* ======================================================
-       MONTHLY SUMMARY — exact reference-style section
-    ====================================================== */
-    .monthly-summary-shell {
-        background: linear-gradient(180deg, #FFFFFF 0%, #FBFCFE 100%);
-        border: 1px solid #DFE8F3;
-        border-radius: 18px;
-        padding: 14px 14px 12px 14px;
-        box-shadow: 0 12px 34px rgba(24, 56, 102, .07);
-        margin-top: 6px;
-        margin-bottom: 14px;
-        overflow: hidden;
-    }
-
-    .monthly-summary-head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 10px;
-    }
-
-    .monthly-summary-title {
-        font-size: 1.08rem;
-        font-weight: 900;
-        color: #173A67;
-        line-height: 1.15;
-        margin-bottom: 2px;
-    }
-
-    .monthly-summary-sub {
-        font-size: .78rem;
-        color: #7288A5;
-        line-height: 1.35;
-    }
-
-    .monthly-table-wrap {
-        overflow-x: auto;
-        border: 1px solid #E3EAF4;
-        border-radius: 14px;
-        background: #FFFFFF;
-    }
-
-    .monthly-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        min-width: 1320px;
-        font-size: 12px;
-        color: #1F3E63;
-    }
-
-    .monthly-table thead th {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-    }
-
-    .monthly-table th,
-    .monthly-table td {
-        border-right: 1px solid #E8EEF6;
-        border-bottom: 1px solid #E8EEF6;
-        text-align: center;
-        padding: 7px 6px;
-        white-space: nowrap;
-    }
-
-    .monthly-table th:first-child,
-    .monthly-table td:first-child {
-        border-left: 1px solid #E8EEF6;
-    }
-
-    .monthly-table tr:first-child th {
-        border-top: 1px solid #E8EEF6;
-    }
-
-    .monthly-table .ms-month-group {
-        background: linear-gradient(180deg, #F3F7FD 0%, #ECF3FB 100%);
-        color: #193C6B;
-        font-size: 12px;
-        font-weight: 900;
-    }
-
-    .monthly-table .ms-campus-group {
-        background: linear-gradient(180deg, #F7FAFE 0%, #EEF4FB 100%);
-        color: #143863;
-        font-size: 12px;
-        font-weight: 900;
-    }
-
-    .monthly-table .ms-subhead {
-        font-size: 11px;
-        font-weight: 800;
-        color: #516B89;
-        background: #FAFCFF;
-    }
-
-    .monthly-table .ms-activities {
-        background: #F3F8FF;
-    }
-
-    .monthly-table .ms-events {
-        background: #F7F9FC;
-    }
-
-    .monthly-table .ms-completed {
-        background: linear-gradient(180deg, #2FA769 0%, #248A56 100%);
-        color: #FFFFFF !important;
-    }
-
-    .monthly-table .ms-confirmed {
-        background: linear-gradient(180deg, #2F6FBC 0%, #21579B 100%);
-        color: #FFFFFF !important;
-    }
-
-    .monthly-table .ms-planned {
-        background: linear-gradient(180deg, #9FD0EE 0%, #80BCDF 100%);
-        color: #FFFFFF !important;
-    }
-
-    .monthly-table .ms-cancelled {
-        background: linear-gradient(180deg, #F2695D 0%, #D9534F 100%);
-        color: #FFFFFF !important;
-    }
-
-    .monthly-table .ms-month-cell {
-        text-align: left;
-        font-weight: 800;
-        color: #173A67;
-        background: #FAFCFF;
-        position: sticky;
-        left: 0;
-        z-index: 1;
-    }
-
-    .monthly-table .ms-total-row td {
-        font-weight: 900;
-        background: #FFF8EF;
-        color: #173A67;
-    }
-
-    .monthly-table .ms-total-row td:first-child {
-        background: #FFF4E2;
-    }
-
-    .monthly-panels {
-        display: grid;
-        grid-template-columns: 1.15fr 1fr 1.15fr;
-        gap: 12px;
-        margin-top: 12px;
-    }
-
-    .monthly-panel {
-        background: linear-gradient(180deg, #FFFFFF 0%, #FBFDFF 100%);
-        border: 1px solid #E3EAF4;
-        border-radius: 16px;
-        padding: 14px 14px 12px 14px;
-        box-shadow: 0 8px 24px rgba(23, 58, 103, .06);
-        min-height: 205px;
-    }
-
-    .monthly-panel-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 1rem;
-        font-weight: 900;
-        color: #173A67;
-        margin-bottom: 10px;
-    }
-
-    .monthly-panel-icon {
-        width: 28px;
-        height: 28px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 999px;
-        font-size: 14px;
-        flex: 0 0 28px;
-    }
-
-    .monthly-icon-yellow { background: rgba(242, 176, 77, .18); color: #E29A18; }
-    .monthly-icon-blue   { background: rgba(43,109,232,.12); color: #2B6DE8; }
-    .monthly-icon-red    { background: rgba(239, 94, 94, .14); color: #E14B4B; }
-
-    .monthly-point {
-        display: grid;
-        grid-template-columns: 26px 1fr;
-        gap: 9px;
-        align-items: start;
-        margin-bottom: 9px;
-    }
-
-    .monthly-point:last-child { margin-bottom: 0; }
-
-    .monthly-point-badge {
-        width: 24px;
-        height: 24px;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(180deg, #2B6DE8 0%, #1D57CC 100%);
-        color: #FFFFFF;
-        font-size: 12px;
-        font-weight: 900;
-        box-shadow: 0 6px 14px rgba(43,109,232,.22);
-    }
-
-    .monthly-point-text {
-        font-size: .80rem;
-        line-height: 1.45;
-        color: #4F6682;
-    }
-
-    .monthly-perf-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-    }
-
-    .monthly-perf-table th {
-        text-align: left;
-        font-size: 11px;
-        color: #6B7F97;
-        font-weight: 900;
-        padding: 0 0 7px 0;
-        border-bottom: 1px solid #E7EEF7;
-    }
-
-    .monthly-perf-table td {
-        padding: 7px 0;
-        border-bottom: 1px solid #EDF2F8;
-        color: #204063;
-        font-weight: 600;
-    }
-
-    .monthly-perf-table tr:last-child td {
-        border-bottom: none;
-        font-weight: 900;
-    }
-
-    .monthly-perf-bar {
-        width: 100%;
-        height: 10px;
-        background: #E9EFF6;
-        border-radius: 999px;
-        overflow: hidden;
-        position: relative;
-    }
-
-    .monthly-perf-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #2FA769 0%, #3CC77F 100%);
-        border-radius: 999px;
-    }
-
-    .monthly-perf-pct {
-        font-size: 11px;
-        font-weight: 800;
-        color: #2A8E58;
-        margin-left: 6px;
-        white-space: nowrap;
-    }
-
-    .monthly-actions .monthly-point-badge {
-        background: linear-gradient(180deg, #2B6DE8 0%, #164AB4 100%);
-    }
-
-    @media (max-width: 1200px) {
-        .monthly-panels {
-            grid-template-columns: 1fr;
-        }
-    }
-    
-
-/* =========================================================
-   FINAL CUSTOM FILTER DECK + EXECUTIVE SNAPSHOT
-   Reliable custom-popover controls; keep at END of style.
-   ========================================================= */
-
-/* Stable left-aligned page heading (remove shuttle movement) */
-.overview-header {
-    transform: translateY(-28px) !important;
-    margin-bottom: -24px !important;
-}
-.overview-title-wrap {
-    height: 1.72rem !important;
-    overflow: visible !important;
-}
-.overview-title {
-    position: static !important;
-    left: auto !important;
-    transform: none !important;
-    animation: none !important;
-    color: #102E57 !important;
-    font-size: 1.36rem !important;
-    font-weight: 900 !important;
-    letter-spacing: -.025em !important;
-}
-.overview-eyebrow {
-    color: #6B3F8D !important;
-    font-size: .63rem !important;
-    font-weight: 900 !important;
-    letter-spacing: .15em !important;
-}
-.overview-subtitle {
-    color: #637C9A !important;
-    font-size: .78rem !important;
-    margin-top: .12rem !important;
-}
-.overview-accent { display:none !important; }
-
-/* Old native-filter styling is no longer used */
-.filter-panel-title,
-.filter-motion-marker { display:none !important; }
-
-/* =========================================================
-   FILTER DECK — PREMIUM COLORFUL VERSION
-   Only filter section styling
-   ========================================================= */
-
-.custom-filter-deck-marker { 
-    display:none !important; 
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) {
-    position: relative !important;
-    overflow: hidden !important;
-    border: 1px solid rgba(196, 208, 228, .88) !important;
-    border-radius: 22px !important;
-    background:
-        radial-gradient(circle at 0% 100%, rgba(37, 99, 235, .08), transparent 24%),
-        radial-gradient(circle at 100% 0%, rgba(139, 92, 246, .10), transparent 22%),
-        radial-gradient(circle at 88% 85%, rgba(255, 170, 0, .08), transparent 22%),
-        linear-gradient(135deg, #FFFFFF 0%, #FBFCFF 46%, #F8F7FF 100%) !important;
-    box-shadow:
-        0 18px 40px rgba(20, 44, 84, .08),
-        0 8px 18px rgba(40, 70, 120, .04),
-        inset 0 1px 0 rgba(255,255,255,.98) !important;
-    padding: .82rem .92rem .80rem .92rem !important;
-    margin: .10rem 0 .56rem 0 !important;
-    backdrop-filter: blur(10px);
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)::before {
-    content:"";
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:4px;
-    border-radius:22px 22px 0 0;
-    background: linear-gradient(
-        90deg,
-        #2563EB 0%,
-        #7C3AED 24%,
-        #EC4899 46%,
-        #F59E0B 70%,
-        #10B981 100%
-    );
-    z-index:4;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)::after {
-    content:"";
-    position:absolute;
-    width:320px;
-    height:170px;
-    right:-120px;
-    bottom:-90px;
-    border-radius:50%;
-    background:
-        radial-gradient(circle, rgba(124, 92, 246, .10) 0%, rgba(37, 99, 235, .05) 45%, transparent 72%);
-    pointer-events:none;
-    animation: customFilterAmbient 8s ease-in-out infinite;
-}
-
-@keyframes customFilterAmbient {
-    0%,100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(-20px,-8px) scale(1.06); }
-}
-
-.custom-filter-deck-head {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:1rem;
-    position:relative;
-    z-index:2;
-    margin-bottom:.55rem;
-}
-
-.custom-filter-title-wrap {
-    display:flex;
-    align-items:center;
-    gap:.72rem;
-}
-
-.custom-filter-funnel {
-    width:42px;
-    height:42px;
-    border-radius:14px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#FFFFFF;
-    background:
-        linear-gradient(145deg, #2563EB 0%, #7C3AED 55%, #A855F7 100%);
-    box-shadow:
-        0 14px 28px rgba(87, 80, 220, .24),
-        inset 0 1px 0 rgba(255,255,255,.28);
-    animation: filterPulse 4.2s ease-in-out infinite;
-}
-
-@keyframes filterPulse {
-    0%,100% { transform: translateY(0px); }
-    50% { transform: translateY(-2px); }
-}
-
-.custom-filter-funnel svg { 
-    width:20px; 
-    height:20px; 
-}
-
-.custom-filter-title {
-    color:#123661;
-    font-size:1.18rem;
-    font-weight:900;
-    letter-spacing:-.02em;
-    line-height:1;
-}
-
-.custom-filter-note {
-    color:#7B8CA6;
-    font-size:.70rem;
-    margin-left:.14rem;
-    padding-left:.72rem;
-    border-left:1px solid #E1E8F2;
-    font-weight:600;
-}
-
-.custom-filter-signature {
-    color:#8B97B6;
-    font-family: Georgia, serif;
-    font-size:.82rem;
-    font-style:italic;
-    letter-spacing:.02em;
-    white-space:nowrap;
-}
-
-/* Row / columns */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stHorizontalBlock"] {
-    align-items:flex-end !important;
-    gap:.62rem !important;
-}
-
-.cf-control-marker { display:none !important; }
-
-.cf-label {
-    display:flex;
-    align-items:center;
-    gap:.42rem;
-    min-height:25px;
-    margin:0 0 .26rem .04rem;
-    color:#1D3F6E;
-    font-size:.86rem;
-    font-weight:850;
-    line-height:1;
-    white-space:nowrap;
-    letter-spacing:-.01em;
-}
-
-.cf-icon {
-    width:28px;
-    height:28px;
-    border-radius:10px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    flex:0 0 28px;
-    border:1px solid currentColor;
-    box-shadow:
-        0 8px 16px rgba(22, 55, 105, .08),
-        inset 0 1px 0 rgba(255,255,255,.85);
-    transition: transform .18s ease, box-shadow .18s ease;
-}
-
-.cf-icon svg { 
-    width:16px; 
-    height:16px; 
-}
-
-.cf-label:hover .cf-icon {
-    transform: translateY(-2px) scale(1.04);
-    box-shadow:
-        0 12px 22px rgba(22, 55, 105, .12),
-        inset 0 1px 0 rgba(255,255,255,.92);
-}
-
-.cf-campus .cf-icon   { color:#7C3AED; background:linear-gradient(180deg,#F8F3FF 0%,#EFE5FF 100%); }
-.cf-activity .cf-icon { color:#F97316; background:linear-gradient(180deg,#FFF6EC 0%,#FFE9D2 100%); }
-.cf-event .cf-icon    { color:#2563EB; background:linear-gradient(180deg,#EEF5FF 0%,#E0EEFF 100%); }
-.cf-status .cf-icon   { color:#16A34A; background:linear-gradient(180deg,#EEFCF3 0%,#DCF7E8 100%); }
-.cf-segment .cf-icon  { color:#9333EA; background:linear-gradient(180deg,#F7F0FF 0%,#EEDFFF 100%); }
-.cf-owner .cf-icon    { color:#F43F5E; background:linear-gradient(180deg,#FFF1F5 0%,#FFE2EA 100%); }
-.cf-priority .cf-icon { color:#EAA200; background:linear-gradient(180deg,#FFF9E9 0%,#FFF1C8 100%); }
-.cf-date .cf-icon     { color:#2563EB; background:linear-gradient(180deg,#EEF5FF 0%,#DCEAFF 100%); }
-
-/* Visible filter box */
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stPopover"] > button {
-    width:100% !important;
-    min-height:3.25rem !important;
-    height:3.25rem !important;
-    justify-content:space-between !important;
-    padding:0 .90rem !important;
-    border-radius:15px !important;
-    border:1px solid #D9E2F0 !important;
-    background:
-        linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%) !important;
-    color:#183C68 !important;
-    font-size:.98rem !important;
-    font-weight:750 !important;
-    box-shadow:
-        0 8px 18px rgba(32, 61, 110, .06),
-        inset 0 1px 0 rgba(255,255,255,.98) !important;
-    transition:
-        transform .18s ease,
-        border-color .18s ease,
-        box-shadow .18s ease,
-        background .18s ease !important;
-    overflow:hidden !important;
-    position:relative !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stPopover"] > button::before {
-    content:"";
-    position:absolute;
-    left:0;
-    top:0;
-    bottom:0;
-    width:4px;
-    border-radius:15px 0 0 15px;
-    background:linear-gradient(180deg,#2563EB 0%, #7C3AED 50%, #F59E0B 100%);
-    opacity:.90;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stPopover"] > button:hover {
-    transform: translateY(-2px) !important;
-    border-color:#AFC4F3 !important;
-    background: linear-gradient(180deg, #FFFFFF 0%, #F4F8FF 100%) !important;
-    box-shadow:
-        0 14px 26px rgba(40, 78, 144, .11),
-        0 0 0 1px rgba(107, 92, 246, .05) inset !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stPopover"] > button:focus-visible {
-    border-color:#6D8EF0 !important;
-    box-shadow:
-        0 0 0 4px rgba(109, 142, 240, .12),
-        0 12px 25px rgba(40, 78, 144, .10) !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stPopover"] > button p {
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
-    white-space:nowrap !important;
-    color:#173B69 !important;
-    font-size:1rem !important;
-    font-weight:750 !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stPopover"] > button svg {
-    color:#4F46E5 !important;
-    width:18px !important;
-    height:18px !important;
-    flex:0 0 18px !important;
-}
-
-/* Reset button */
-.custom-filter-reset-spacer { 
-    height:1.84rem; 
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stButton"] button {
-    min-height:3.25rem !important;
-    height:3.25rem !important;
-    border-radius:15px !important;
-    border:1px solid rgba(33, 75, 144, .28) !important;
-    color:#FFFFFF !important;
-    background:linear-gradient(135deg,#0F4C8A 0%,#235FC4 45%,#5B44E8 100%) !important;
-    box-shadow:
-        0 12px 24px rgba(27, 74, 142, .20),
-        inset 0 1px 0 rgba(255,255,255,.18) !important;
-    font-size:1rem !important;
-    font-weight:800 !important;
-    transition:transform .18s ease, box-shadow .18s ease, filter .18s ease !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-div[data-testid="stButton"] button:hover {
-    transform:translateY(-2px) !important;
-    filter:saturate(1.08) brightness(1.02) !important;
-    box-shadow:
-        0 16px 28px rgba(27, 74, 142, .26),
-        0 0 0 1px rgba(117, 93, 248, .10) inset !important;
-}
-
-/* Bottom helper strip */
-.custom-filter-foot {
-    position:relative;
-    z-index:2;
-    display:flex;
-    align-items:center;
-    gap:.50rem;
-    margin-top:.60rem;
-    padding:.60rem .78rem;
-    border-radius:14px;
-    color:#6F86A3;
-    font-size:.74rem;
-    font-weight:600;
-    background:
-        linear-gradient(90deg,#F5F8FF 0%,#FCFCFF 58%,#FBF7FF 100%);
-    border:1px solid #E4EBF5;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
-}
-
-.custom-filter-foot-dot {
-    width:22px;
-    height:22px;
-    border-radius:50%;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(145deg,#E8EEFF,#F5F8FF);
-    color:#416AA8;
-    font-size:.62rem;
-    font-weight:900;
-    border:1px solid #D7E2F3;
-}
-
-div[data-testid="stPopoverBody"] {
-    border:1px solid #DDE5F1 !important;
-    border-radius:14px !important;
-    box-shadow:0 18px 44px rgba(20,48,88,.17) !important;
-    background:#FFFFFF !important;
-}
-.cf-popover-title {
-    color:#15375F;
-    font-size:.72rem;
-    font-weight:900;
-    margin-bottom:.26rem;
-}
-.cf-popover-sub {
-    color:#8494A8;
-    font-size:.50rem;
-    margin-bottom:.35rem;
-}
-
-/* =========================================================
-   FILTER DECK CLEAN-UP — HEADING REMOVED
-   ========================================================= */
-
-/* Filters title/icon removed intentionally; controls are the focus. */
-.custom-filter-deck-head,
-.custom-filter-title-wrap,
-.custom-filter-funnel,
-.custom-filter-title,
-.custom-filter-note,
-.custom-filter-signature {
-    display: none !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) {
-    padding: .72rem .92rem .72rem .92rem !important;
-}
-
-/* =========================================================
-   EXECUTIVE KPI RAIL — COLORFUL PROFESSIONAL CARDS
-   No banner, no watermark, no management badges.
-   ========================================================= */
-
-.snapshot-banner,
-.snapshot-symbol,
-.snapshot-copy,
-.snapshot-badges,
-.snapshot-eyebrow,
-.snapshot-title,
-.snapshot-sub,
-.snapshot-badge {
-    display: none !important;
-}
-
-.snapshot-motion-marker {
-    display: none !important;
-}
-
-/* One premium shell for all six KPI cards */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
-    position: relative !important;
-    overflow: visible !important;
-    margin: .22rem 0 .48rem 0 !important;
-    padding: .70rem .72rem .72rem .72rem !important;
-    gap: .62rem !important;
-    border: 1px solid #DFE7F2 !important;
-    border-radius: 20px !important;
-    background:
-        radial-gradient(circle at 3% 15%, rgba(45,108,223,.065), transparent 23%),
-        radial-gradient(circle at 97% 12%, rgba(124,58,237,.055), transparent 22%),
-        radial-gradient(circle at 82% 100%, rgba(245,158,11,.045), transparent 24%),
-        linear-gradient(135deg,#FFFFFF 0%,#FBFCFF 52%,#FAF9FF 100%) !important;
-    box-shadow:
-        0 16px 38px rgba(25,50,88,.085),
-        0 5px 14px rgba(25,50,88,.035),
-        inset 0 1px 0 rgba(255,255,255,.98) !important;
-}
-
-/* premium multi-color top line */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker)::before {
-    content: "" !important;
-    position: absolute !important;
-    left: 18px !important;
-    right: 18px !important;
-    top: 0 !important;
-    height: 3px !important;
-    border-radius: 999px !important;
-    background: linear-gradient(
-        90deg,
-        #2D6CDF 0%,
-        #11A6BA 20%,
-        #7C4DDE 40%,
-        #14A38B 60%,
-        #E59A1F 80%,
-        #21A768 100%
-    ) !important;
-    opacity: .95 !important;
-}
-
-/* card base */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
-    position: relative !important;
-    overflow: hidden !important;
-    min-height: 98px !important;
-    height: 98px !important;
-    border-radius: 17px !important;
-    padding: .74rem .74rem .66rem .76rem !important;
-    grid-template-columns: 48px minmax(0,1fr) !important;
-    grid-template-rows: 31px 19px 17px !important;
-    column-gap: .72rem !important;
-    row-gap: .08rem !important;
-    align-items: center !important;
-    background:
-        linear-gradient(135deg,#FFFFFF 0%,#FFFFFF 48%,var(--wash) 145%) !important;
-    border: 1px solid var(--border) !important;
-    box-shadow:
-        0 10px 24px rgba(25,49,86,.065),
-        0 3px 8px rgba(25,49,86,.025),
-        inset 0 1px 0 rgba(255,255,255,.98) !important;
-    animation: kpiExecutiveFloat 5.8s ease-in-out infinite !important;
-    transition:
-        transform .22s ease,
-        box-shadow .22s ease,
-        border-color .22s ease !important;
-}
-
-@keyframes kpiExecutiveFloat {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-1.5px); }
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi:hover {
-    transform: translateY(-5px) scale(1.012) !important;
-    border-color: var(--accent2) !important;
-    box-shadow:
-        0 18px 38px rgba(24,50,91,.145),
-        0 0 0 1px rgba(255,255,255,.82) inset !important;
-}
-
-/* top accent line */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::before {
-    content: "" !important;
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: 0 !important;
-    width: 100% !important;
-    height: 4px !important;
-    border-radius: 17px 17px 0 0 !important;
-    background: linear-gradient(90deg,var(--accent),var(--accent2),rgba(255,255,255,0)) !important;
-    opacity: .97 !important;
-}
-
-/* color glow */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::after {
-    content: "" !important;
-    position: absolute !important;
-    right: -28px !important;
-    bottom: -38px !important;
-    width: 108px !important;
-    height: 108px !important;
-    border-radius: 50% !important;
-    background: radial-gradient(circle,var(--bubble) 0%,rgba(255,255,255,0) 72%) !important;
-    opacity: .92 !important;
-    pointer-events: none !important;
-}
-
-/* vivid icon tile */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon {
-    position: relative !important;
-    z-index: 3 !important;
-    grid-column: 1 !important;
-    grid-row: 1 / 4 !important;
-    width: 46px !important;
-    height: 46px !important;
-    margin: 0 !important;
-    border-radius: 15px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: #FFFFFF !important;
-    background: linear-gradient(145deg,var(--accent),var(--accent2)) !important;
-    border: 1px solid rgba(255,255,255,.45) !important;
-    box-shadow:
-        0 10px 22px color-mix(in srgb, var(--accent) 25%, transparent),
-        inset 0 1px 0 rgba(255,255,255,.30) !important;
-    font-size: 0 !important;
-}
-
-/* force SVG visibility — fixes blank icon boxes */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon svg {
-    position: relative !important;
-    z-index: 4 !important;
-    display: block !important;
-    width: 23px !important;
-    height: 23px !important;
-    color: #FFFFFF !important;
-    stroke: #FFFFFF !important;
-    fill: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon svg * {
-    stroke: #FFFFFF !important;
-}
-
-/* subtle icon sheen */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon::after {
-    content: "" !important;
-    position: absolute !important;
-    inset: 3px !important;
-    z-index: 1 !important;
-    border-radius: 12px !important;
-    background: linear-gradient(145deg,rgba(255,255,255,.32),rgba(255,255,255,0) 55%) !important;
-    pointer-events: none !important;
-}
-
-/* value first */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .value {
-    position: relative !important;
-    z-index: 3 !important;
-    grid-column: 2 !important;
-    grid-row: 1 !important;
-    align-self: end !important;
-    color: #0D2F59 !important;
-    font-size: 1.50rem !important;
-    font-weight: 950 !important;
-    letter-spacing: -.032em !important;
-    line-height: 1 !important;
-}
-
-/* label */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .label {
-    position: relative !important;
-    z-index: 3 !important;
-    grid-column: 2 !important;
-    grid-row: 2 !important;
-    color: #23456D !important;
-    font-size: .58rem !important;
-    font-weight: 900 !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-    line-height: 1.08 !important;
-}
-
-/* description */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .sub {
-    position: relative !important;
-    z-index: 3 !important;
-    grid-column: 2 !important;
-    grid-row: 3 !important;
-    color: #8294AA !important;
-    font-size: .46rem !important;
-    font-weight: 650 !important;
-    line-height: 1.15 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
-
-/* small colored underline */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .mini-line {
-    display: block !important;
-    position: absolute !important;
-    left: 5.00rem !important;
-    bottom: .38rem !important;
-    width: 36% !important;
-    height: 2px !important;
-    border-radius: 999px !important;
-    background: linear-gradient(90deg,var(--accent),var(--accent2),rgba(255,255,255,0)) !important;
-    opacity: .28 !important;
-}
-
-/* richer card color system */
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-blue {
-    --accent:#2E6FF2; --accent2:#72A7FF; --wash:#EEF5FF;
-    --border:#D4E3FF; --bubble:#DDEBFF; --iconbg:#E9F2FF;
-}
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-cyan {
-    --accent:#0FA8BA; --accent2:#52D4E2; --wash:#ECFBFD;
-    --border:#CDEFF4; --bubble:#D6F5F8; --iconbg:#E6FAFC;
-}
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-violet {
-    --accent:#7B4FE1; --accent2:#B48DFF; --wash:#F6F1FF;
-    --border:#E5D9FA; --bubble:#ECE1FF; --iconbg:#F2EAFF;
-}
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-teal {
-    --accent:#14A58E; --accent2:#68D5C2; --wash:#EEFAF7;
-    --border:#D0EEE7; --bubble:#D8F3ED; --iconbg:#E8F9F5;
-}
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-amber {
-    --accent:#E08B18; --accent2:#F6BC55; --wash:#FFF8EB;
-    --border:#F2DFB8; --bubble:#F9E9C7; --iconbg:#FFF3D9;
-}
-div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .kpi-green {
-    --accent:#19A861; --accent2:#68D894; --wash:#EFFAF3;
-    --border:#D2ECDC; --bubble:#DCF4E4; --iconbg:#E9F7EF;
-}
-
-@media (max-width: 1200px) {
-    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)
-    div[data-testid="stHorizontalBlock"] {
-        overflow-x: auto !important;
-    }
-
-    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) {
-        overflow-x: auto !important;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker)::after,
-    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
-        animation: none !important;
-    }
-}
-
-</style>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-def _monthly_status_clean(x):
-    if pd.isna(x):
-        return ""
-    return str(x).strip().title()
-
-
-def _monthly_safe_pct(num, den):
-    try:
-        num = float(num)
-        den = float(den)
-        if den == 0:
-            return 0.0
-        return (num / den) * 100.0
-    except Exception:
-        return 0.0
-
-
-def _monthly_num(v):
-    try:
-        return int(v)
-    except Exception:
-        return 0
-
-
-def _monthly_perf_bar(pct):
-    pct = max(0.0, min(100.0, float(pct)))
-    return f"""
-        <div style="display:flex; align-items:center; gap:6px;">
-            <div class="monthly-perf-bar">
-                <div class="monthly-perf-fill" style="width:{pct:.1f}%;"></div>
-            </div>
-            <span class="monthly-perf-pct">{pct:.0f}%</span>
-        </div>
-    """
-
-
-overview_section(
-    "Q3 · Monthly Momentum",
-    "Monthly Campus-wise Activity & Event Summary",
-    "Detailed count of activities, events and event status by campus and month.",
-)
-
-if "Activity Date" not in filtered.columns or filtered["Activity Date"].dropna().empty:
-    st.info("Monthly summary cannot be calculated because Activity Date is unavailable for this selection.")
-else:
-    monthly_base = filtered.copy()
-    monthly_base = monthly_base.dropna(subset=["Activity Date"]).copy()
-
-    monthly_base["Month Start"] = monthly_base["Activity Date"].dt.to_period("M").dt.to_timestamp()
-    multi_year = monthly_base["Month Start"].dt.year.nunique() > 1
-    monthly_base["Month Label"] = monthly_base["Month Start"].dt.strftime("%b %Y" if multi_year else "%b")
-    monthly_base["Campus"] = monthly_base["Campus"].fillna("Unknown").astype(str).str.strip()
-    monthly_base["Status Clean"] = monthly_base["Status"].apply(_monthly_status_clean) if "Status" in monthly_base.columns else ""
-    monthly_base["Has Event"] = (
-        monthly_base["Event"].fillna("").astype(str).str.strip().ne("")
-        if "Event" in monthly_base.columns
-        else False
-    )
-
-    preferred_campuses = ["Noida", "Lucknow", "Jaipur", "Indore"]
-    visible_campuses = [c for c in preferred_campuses if c in monthly_base["Campus"].unique().tolist()]
-    extra_campuses = sorted([c for c in monthly_base["Campus"].unique().tolist() if c not in visible_campuses])
-    campuses = visible_campuses + extra_campuses
-
-    months_order = (
-        monthly_base[["Month Start", "Month Label"]]
-        .drop_duplicates()
-        .sort_values("Month Start")
-        .reset_index(drop=True)
-    )
-
-    status_order = ["Completed", "Confirmed", "Planned", "Cancelled"]
-
-    # -------------------------------
-    # Build month x campus summary
-    # -------------------------------
-    rows = []
-    export_rows = []
-
-    for _, mrow in months_order.iterrows():
-        month_start = mrow["Month Start"]
-        month_label = mrow["Month Label"]
-
-        row = {"Month": month_label}
-        export_row = {"Month": month_label}
-
-        month_slice = monthly_base[monthly_base["Month Start"] == month_start].copy()
-
-        for campus in campuses:
-            cdf = month_slice[month_slice["Campus"] == campus].copy()
-
-            activities = len(cdf)
-            events = int(cdf["Has Event"].sum()) if "Has Event" in cdf.columns else 0
-            completed = int((cdf["Status Clean"] == "Completed").sum()) if "Status Clean" in cdf.columns else 0
-            confirmed = int((cdf["Status Clean"] == "Confirmed").sum()) if "Status Clean" in cdf.columns else 0
-            planned = int((cdf["Status Clean"] == "Planned").sum()) if "Status Clean" in cdf.columns else 0
-            cancelled = int((cdf["Status Clean"] == "Cancelled").sum()) if "Status Clean" in cdf.columns else 0
-
-            row[(campus, "Activities")] = activities
-            row[(campus, "Events")] = events
-            row[(campus, "Completed")] = completed
-            row[(campus, "Confirmed")] = confirmed
-            row[(campus, "Planned")] = planned
-            row[(campus, "Cancelled")] = cancelled
-
-            export_row[f"{campus} Activities"] = activities
-            export_row[f"{campus} Events"] = events
-            export_row[f"{campus} Completed"] = completed
-            export_row[f"{campus} Confirmed"] = confirmed
-            export_row[f"{campus} Planned"] = planned
-            export_row[f"{campus} Cancelled"] = cancelled
-
-        rows.append(row)
-        export_rows.append(export_row)
-
-    # -------------------------------
-    # Add Total row
-    # -------------------------------
-    total_row = {"Month": "Total"}
-    export_total_row = {"Month": "Total"}
-
-    for campus in campuses:
-        cdf = monthly_base[monthly_base["Campus"] == campus].copy()
-
-        activities = len(cdf)
-        events = int(cdf["Has Event"].sum()) if "Has Event" in cdf.columns else 0
-        completed = int((cdf["Status Clean"] == "Completed").sum()) if "Status Clean" in cdf.columns else 0
-        confirmed = int((cdf["Status Clean"] == "Confirmed").sum()) if "Status Clean" in cdf.columns else 0
-        planned = int((cdf["Status Clean"] == "Planned").sum()) if "Status Clean" in cdf.columns else 0
-        cancelled = int((cdf["Status Clean"] == "Cancelled").sum()) if "Status Clean" in cdf.columns else 0
-
-        total_row[(campus, "Activities")] = activities
-        total_row[(campus, "Events")] = events
-        total_row[(campus, "Completed")] = completed
-        total_row[(campus, "Confirmed")] = confirmed
-        total_row[(campus, "Planned")] = planned
-        total_row[(campus, "Cancelled")] = cancelled
-
-        export_total_row[f"{campus} Activities"] = activities
-        export_total_row[f"{campus} Events"] = events
-        export_total_row[f"{campus} Completed"] = completed
-        export_total_row[f"{campus} Confirmed"] = confirmed
-        export_total_row[f"{campus} Planned"] = planned
-        export_total_row[f"{campus} Cancelled"] = cancelled
-
-    rows.append(total_row)
-    export_rows.append(export_total_row)
-
-    export_df = pd.DataFrame(export_rows)
-
-    # -------------------------------
-    # Monthly insights calculations
-    # -------------------------------
-    month_totals = []
-    for _, mrow in months_order.iterrows():
-        month_start = mrow["Month Start"]
-        month_label = mrow["Month Label"]
-        mdf = monthly_base[monthly_base["Month Start"] == month_start].copy()
-
-        activities = len(mdf)
-        events = int(mdf["Has Event"].sum())
-        completed = int((mdf["Status Clean"] == "Completed").sum())
-        confirmed = int((mdf["Status Clean"] == "Confirmed").sum())
-        planned = int((mdf["Status Clean"] == "Planned").sum())
-        cancelled = int((mdf["Status Clean"] == "Cancelled").sum())
-
-        month_totals.append({
-            "Month": month_label,
-            "Activities": activities,
-            "Events": events,
-            "Completed": completed,
-            "Confirmed": confirmed,
-            "Planned": planned,
-            "Cancelled": cancelled,
-            "Execution Ready": completed + confirmed,
-        })
-
-    month_totals_df = pd.DataFrame(month_totals)
-
-    campus_perf_rows = []
-    for campus in campuses:
-        cdf = monthly_base[monthly_base["Campus"] == campus].copy()
-
-        activities = len(cdf)
-        events = int(cdf["Has Event"].sum())
-        completed = int((cdf["Status Clean"] == "Completed").sum())
-        completion_pct = _monthly_safe_pct(completed, events)
-
-        campus_perf_rows.append({
-            "Campus": campus,
-            "Activities": activities,
-            "Events": events,
-            "Completed": completed,
-            "Completion %": completion_pct,
-        })
-
-    campus_perf_df = pd.DataFrame(campus_perf_rows).sort_values(
-        ["Activities", "Events"], ascending=False
-    ).reset_index(drop=True)
-
-    total_activities = int(len(monthly_base))
-    total_events = int(monthly_base["Has Event"].sum())
-    total_completed = int((monthly_base["Status Clean"] == "Completed").sum())
-    total_confirmed = int((monthly_base["Status Clean"] == "Confirmed").sum())
-    total_planned = int((monthly_base["Status Clean"] == "Planned").sum())
-    total_cancelled = int((monthly_base["Status Clean"] == "Cancelled").sum())
-
-    best_month_activity = month_totals_df.sort_values(["Activities", "Events"], ascending=False).iloc[0]
-    best_month_execution = month_totals_df.sort_values(["Execution Ready", "Completed"], ascending=False).iloc[0]
-    best_month_completion = month_totals_df.copy()
-    best_month_completion["Completion %"] = best_month_completion.apply(
-        lambda x: _monthly_safe_pct(x["Completed"], x["Events"]), axis=1
-    )
-    best_month_completion = best_month_completion.sort_values(["Completion %", "Completed"], ascending=False).iloc[0]
-
-    leader_campus_row = campus_perf_df.iloc[0]
-    leader_campus = str(leader_campus_row["Campus"])
-    leader_activity_share = _monthly_safe_pct(leader_campus_row["Activities"], total_activities)
-    leader_event_share = _monthly_safe_pct(leader_campus_row["Events"], total_events) if total_events else 0
-
-    weaker_campuses = campus_perf_df[campus_perf_df["Completion %"] < campus_perf_df["Completion %"].median()]
-    weaker_campus_text = ", ".join(weaker_campuses["Campus"].tolist()[:2]) if not weaker_campuses.empty else "lower-completion campuses"
-
-    # -------------------------------
-    # Table HTML
-    # -------------------------------
-    table_html = []
-    table_html.append('<div class="monthly-summary-shell">')
-    table_html.append('<div class="monthly-summary-head">')
-    table_html.append(
-        '<div>'
-        '<div class="monthly-summary-title">Monthly Campus-wise Activity &amp; Event Summary</div>'
-        '<div class="monthly-summary-sub">Detailed count of activities, events and event status by campus and month.</div>'
-        '</div>'
-    )
-    table_html.append('</div>')
-
-    table_html.append('<div class="monthly-table-wrap">')
-    table_html.append('<table class="monthly-table">')
-
-    # Header row 1
-    table_html.append('<thead>')
-    table_html.append('<tr>')
-    table_html.append('<th class="ms-month-group" rowspan="2" style="min-width:82px; text-align:left; padding-left:10px;">Month</th>')
-    for campus in campuses:
-        table_html.append(
-            f'<th class="ms-campus-group" colspan="6">{html.escape(str(campus))}</th>'
-        )
-    table_html.append('</tr>')
-
-    # Header row 2
-    table_html.append('<tr>')
-    for _campus in campuses:
-        table_html.append('<th class="ms-subhead ms-activities">Activities</th>')
-        table_html.append('<th class="ms-subhead ms-events">Events</th>')
-        table_html.append('<th class="ms-subhead ms-completed">Completed</th>')
-        table_html.append('<th class="ms-subhead ms-confirmed">Confirmed</th>')
-        table_html.append('<th class="ms-subhead ms-planned">Planned</th>')
-        table_html.append('<th class="ms-subhead ms-cancelled">Cancelled</th>')
-    table_html.append('</tr>')
-    table_html.append('</thead>')
-
-    # Body
-    table_html.append('<tbody>')
-    for idx, row in enumerate(rows):
-        is_total = idx == len(rows) - 1
-        tr_class = ' class="ms-total-row"' if is_total else ""
-        table_html.append(f'<tr{tr_class}>')
-        table_html.append(f'<td class="ms-month-cell">{html.escape(str(row["Month"]))}</td>')
-        for campus in campuses:
-            for metric in ["Activities", "Events", "Completed", "Confirmed", "Planned", "Cancelled"]:
-                val = _monthly_num(row.get((campus, metric), 0))
-                table_html.append(f'<td>{val}</td>')
-        table_html.append('</tr>')
-    table_html.append('</tbody>')
-    table_html.append('</table>')
-    table_html.append('</div>')  # table wrap
-
-    # -------------------------------
-    # Insights panels
-    # -------------------------------
-    # Key Insights panel
-    key_points = [
-        f"{best_month_activity['Month']} has the highest activity volume ({_monthly_num(best_month_activity['Activities'])}) across all campuses.",
-        f"Event execution (Completed + Confirmed) is strongest in {best_month_execution['Month']} ({_monthly_num(best_month_execution['Execution Ready'])} events).",
-        f"{leader_campus} contributes the highest share of activities ({leader_activity_share:.1f}%) and events ({leader_event_share:.1f}%).",
-        f"Focus on converting planned events, especially in {best_month_activity['Month']} and {best_month_execution['Month']}.",
-    ]
-
-    # Campus Performance panel table
-    perf_html = []
-    perf_html.append('<table class="monthly-perf-table">')
-    perf_html.append(
-        '<thead><tr>'
-        '<th style="width:26%;">Campus</th>'
-        '<th style="width:14%;">Activities</th>'
-        '<th style="width:12%;">Events</th>'
-        '<th style="width:14%;">Completed</th>'
-        '<th style="width:34%;">Completion %</th>'
-        '</tr></thead><tbody>'
-    )
-
-    perf_tot_activities = int(campus_perf_df["Activities"].sum())
-    perf_tot_events = int(campus_perf_df["Events"].sum())
-    perf_tot_completed = int(campus_perf_df["Completed"].sum())
-    perf_tot_completion = _monthly_safe_pct(perf_tot_completed, perf_tot_events)
-
-    for _, prow in campus_perf_df.iterrows():
-        perf_html.append(
-            '<tr>'
-            f'<td>{html.escape(str(prow["Campus"]))}</td>'
-            f'<td>{_monthly_num(prow["Activities"])}</td>'
-            f'<td>{_monthly_num(prow["Events"])}</td>'
-            f'<td>{_monthly_num(prow["Completed"])}</td>'
-            f'<td>{_monthly_perf_bar(prow["Completion %"])}</td>'
-            '</tr>'
-        )
-
-    perf_html.append(
-        '<tr>'
-        '<td>Total</td>'
-        f'<td>{perf_tot_activities}</td>'
-        f'<td>{perf_tot_events}</td>'
-        f'<td>{perf_tot_completed}</td>'
-        f'<td>{_monthly_perf_bar(perf_tot_completion)}</td>'
-        '</tr>'
-    )
-    perf_html.append('</tbody></table>')
-
-    # Recommended actions panel
-    actions = [
-        f"Prioritize execution of {total_planned} planned events ({_monthly_safe_pct(total_planned, max(total_events,1)):.1f}% of total events).",
-        f"Focus on improving completion rate in {weaker_campus_text}.",
-        f"Increase event outcomes in months with high activity volume but lower event conversion.",
-        f"Review event pipeline for the latest visible month to ensure timely execution.",
-    ]
-
-    table_html.append('<div class="monthly-panels">')
-
-    # Panel 1
-    table_html.append(
-        '<div class="monthly-panel">'
-        '<div class="monthly-panel-title">'
-        '<span class="monthly-panel-icon monthly-icon-yellow">💡</span>'
-        'Key Insights'
-        '</div>'
-    )
-    for i, text in enumerate(key_points, start=1):
-        table_html.append(
-            '<div class="monthly-point">'
-            f'<div class="monthly-point-badge">{i}</div>'
-            f'<div class="monthly-point-text">{html.escape(text)}</div>'
-            '</div>'
-        )
-    table_html.append('</div>')
-
-    # Panel 2
-    title_month_range = f"Total ({months_order.iloc[0]['Month Label']}–{months_order.iloc[-1]['Month Label']})" if len(months_order) > 1 else f"Total ({months_order.iloc[0]['Month Label']})"
-    table_html.append(
-        '<div class="monthly-panel">'
-        '<div class="monthly-panel-title">'
-        '<span class="monthly-panel-icon monthly-icon-blue">📊</span>'
-        f'Campus Performance {html.escape(title_month_range)}'
-        '</div>'
-        + "".join(perf_html) +
-        '</div>'
-    )
-
-    # Panel 3
-    table_html.append(
-        '<div class="monthly-panel monthly-actions">'
-        '<div class="monthly-panel-title">'
-        '<span class="monthly-panel-icon monthly-icon-red">🎯</span>'
-        'Recommended Actions'
-        '</div>'
-    )
-    for i, text in enumerate(actions, start=1):
-        table_html.append(
-            '<div class="monthly-point">'
-            f'<div class="monthly-point-badge">{i}</div>'
-            f'<div class="monthly-point-text">{html.escape(text)}</div>'
-            '</div>'
-        )
-    table_html.append('</div>')
-
-    table_html.append('</div>')  # monthly-panels
-    table_html.append('</div>')  # shell
-
-    # -------------------------------
-    # Render header + download + section
-    # -------------------------------
-    head_left, head_right = st.columns([10.5, 1.5])
-    with head_left:
-        pass
-    with head_right:
-        st.download_button(
-            "Download",
-            export_df.to_csv(index=False).encode("utf-8"),
-            file_name="monthly_campus_activity_event_summary.csv",
-            mime="text/csv",
-            use_container_width=True,
-        )
-
-    st.markdown("".join(table_html), unsafe_allow_html=True)
 
 # =========================================================
 # REACH PERFORMANCE
