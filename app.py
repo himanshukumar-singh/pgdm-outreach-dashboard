@@ -4,6 +4,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+from html import escape
+
 
 from common import (
     page_config,
@@ -6914,6 +6916,643 @@ with k6:
         """<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='8'/><path d='m8.5 12 2.2 2.2 4.8-5'/></svg>""",
         "kpi-green",
     )
+
+
+# =========================================================
+# ACTIVITY TYPE × EVENT × CAMPUS STATUS MATRIX
+# Professional campus-wise execution matrix shown directly
+# below the Executive KPI cards and above the bubble matrix.
+# =========================================================
+
+def _aev_clean_text(value):
+    if pd.isna(value):
+        return ""
+    return str(value).strip()
+
+
+def _aev_clean_status(value):
+    if pd.isna(value):
+        return ""
+    raw = str(value).strip()
+    if not raw:
+        return ""
+
+    lookup = {
+        "planned": "Planned",
+        "plan": "Planned",
+        "confirmed": "Confirmed",
+        "confirm": "Confirmed",
+        "completed": "Completed",
+        "complete": "Completed",
+        "cancelled": "Cancelled",
+        "canceled": "Cancelled",
+        "cancel": "Cancelled",
+        "rescheduled": "Rescheduled",
+        "reschedule": "Rescheduled",
+    }
+    return lookup.get(raw.lower(), raw.title())
+
+
+def _aev_count_cell(value, status_name):
+    value = int(value or 0)
+    if value <= 0:
+        return '<span class="aev-zero">—</span>'
+    return (
+        f'<span class="aev-count aev-count-{status_name.lower()}">'
+        f'{value:,}'
+        '</span>'
+    )
+
+
+def render_activity_event_status_matrix(matrix_df):
+    required = {"Activity Type", "Event", "Campus", "Status"}
+    missing = [column for column in required if column not in matrix_df.columns]
+    if missing:
+        st.info(
+            "Activity Type × Event & Status Matrix cannot be shown because "
+            f"these columns are unavailable: {', '.join(sorted(missing))}."
+        )
+        return
+
+    source = matrix_df.copy()
+    source["Activity Type"] = source["Activity Type"].apply(_aev_clean_text)
+    source["Event"] = source["Event"].apply(_aev_clean_text)
+    source["Campus"] = source["Campus"].apply(_aev_clean_text)
+    source["Status"] = source["Status"].apply(_aev_clean_status)
+
+    source = source[source["Activity Type"].ne("")].copy()
+    if source.empty:
+        return
+
+    # Keep the four Jaipuria campuses fixed so the matrix does not jump
+    # when a campus filter is applied. A filtered-out campus simply shows 0.
+    campus_order = ["Noida", "Lucknow", "Jaipur", "Indore"]
+    status_order = ["Planned", "Confirmed", "Completed", "Cancelled", "Rescheduled"]
+
+    preferred_activity_order = [
+        "Campus Event",
+        "Coaching Visit",
+        "College Visit",
+        "Education Fair",
+        "Faculty Connect",
+        "Mentor Visit",
+        "Student Workshop",
+    ]
+    present_activities = source["Activity Type"].drop_duplicates().tolist()
+    activity_order = [
+        activity for activity in preferred_activity_order
+        if activity in present_activities
+    ] + sorted(
+        activity for activity in present_activities
+        if activity not in preferred_activity_order
+    )
+
+    # Blank Event values are kept visible rather than silently discarded.
+    source["Event Display"] = source["Event"].where(
+        source["Event"].ne(""),
+        "No Event / Not Tagged",
+    )
+
+    grouped = (
+        source.groupby(
+            ["Activity Type", "Event Display", "Campus", "Status"],
+            observed=True,
+            dropna=False,
+        )
+        .size()
+        .reset_index(name="Count")
+    )
+
+    rows = []
+    for activity in activity_order:
+        activity_source = source[source["Activity Type"].eq(activity)].copy()
+        activity_total = int(len(activity_source))
+
+        event_summary = (
+            activity_source.groupby("Event Display", observed=True, dropna=False)
+            .size()
+            .reset_index(name="Event Total")
+            .sort_values(["Event Total", "Event Display"], ascending=[False, True])
+        )
+
+        for row_index, event_row in event_summary.reset_index(drop=True).iterrows():
+            event_name = str(event_row["Event Display"])
+            event_total = int(event_row["Event Total"])
+            counts = {}
+
+            for campus in campus_order:
+                for status in status_order:
+                    match = grouped[
+                        grouped["Activity Type"].eq(activity)
+                        & grouped["Event Display"].eq(event_name)
+                        & grouped["Campus"].eq(campus)
+                        & grouped["Status"].eq(status)
+                    ]
+                    counts[(campus, status)] = (
+                        int(match["Count"].sum()) if not match.empty else 0
+                    )
+
+            rows.append({
+                "activity": activity,
+                "activity_total": activity_total,
+                "event": event_name,
+                "event_total": event_total,
+                "show_activity": row_index == 0,
+                "rowspan": int(len(event_summary)),
+                "counts": counts,
+            })
+
+    total_records = int(len(source))
+    unique_events = int(source.loc[source["Event"].ne(""), "Event"].nunique())
+
+    campus_totals = (
+        source.groupby("Campus", observed=True)
+        .size()
+        .reindex(campus_order, fill_value=0)
+    )
+    leading_campus = str(campus_totals.idxmax()) if not campus_totals.empty else "—"
+    leading_campus_count = int(campus_totals.max()) if not campus_totals.empty else 0
+
+    activity_totals = source.groupby("Activity Type", observed=True).size().sort_values(ascending=False)
+    leading_activity = str(activity_totals.index[0]) if not activity_totals.empty else "—"
+    leading_activity_count = int(activity_totals.iloc[0]) if not activity_totals.empty else 0
+
+    status_totals = source.groupby("Status", observed=True).size()
+    completed_count = int(status_totals.get("Completed", 0))
+    confirmed_count = int(status_totals.get("Confirmed", 0))
+    planned_count = int(status_totals.get("Planned", 0))
+    cancelled_count = int(status_totals.get("Cancelled", 0))
+    rescheduled_count = int(status_totals.get("Rescheduled", 0))
+    ready_pipeline = confirmed_count + planned_count + rescheduled_count
+
+    event_combo = (
+        source[source["Event"].ne("")]
+        .groupby(["Activity Type", "Event Display"], observed=True)
+        .size()
+        .sort_values(ascending=False)
+    )
+    if not event_combo.empty:
+        top_activity_event = f"{event_combo.index[0][0]} · {event_combo.index[0][1]}"
+        top_activity_event_count = int(event_combo.iloc[0])
+    else:
+        top_activity_event = "No tagged Event"
+        top_activity_event_count = 0
+
+    st.markdown(
+        """
+        <style>
+        /* ======================================================
+           ACTIVITY TYPE × EVENT × CAMPUS STATUS MATRIX
+           ====================================================== */
+        .aev-shell {
+            position: relative;
+            overflow: hidden;
+            margin: .18rem 0 .62rem 0;
+            border: 1px solid #DCE6F2;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 96% 3%, rgba(124,58,237,.055), transparent 23%),
+                radial-gradient(circle at 3% 97%, rgba(20,184,166,.045), transparent 24%),
+                linear-gradient(180deg,#FFFFFF 0%,#FAFCFF 100%);
+            box-shadow:
+                0 13px 32px rgba(22,47,83,.07),
+                inset 0 1px 0 rgba(255,255,255,.96);
+        }
+        .aev-shell::before {
+            content:"";
+            position:absolute;
+            left:-28%;
+            top:0;
+            width:24%;
+            height:3px;
+            z-index:6;
+            background:linear-gradient(90deg,transparent,#20B9A8,#3978ED,#8454E8,#F4A12B,transparent);
+            animation:aevSweep 7.2s ease-in-out infinite;
+        }
+        @keyframes aevSweep {
+            0%,14%{left:-28%;opacity:0}
+            24%{opacity:1}
+            60%{left:108%;opacity:.95}
+            70%,100%{left:108%;opacity:0}
+        }
+        .aev-head {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:1rem;
+            padding:.72rem .85rem .58rem .85rem;
+            border-bottom:1px solid #E5ECF4;
+            background:linear-gradient(100deg,#FFFFFF 0%,#F9FCFF 58%,#FBF9FF 100%);
+        }
+        .aev-head-left {
+            display:flex;
+            align-items:center;
+            gap:.62rem;
+            min-width:0;
+        }
+        .aev-head-icon {
+            width:38px;
+            height:38px;
+            flex:0 0 38px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:12px;
+            color:#FFFFFF;
+            background:linear-gradient(145deg,#14B8A6 0%,#3978ED 52%,#7C3AED 100%);
+            box-shadow:0 8px 18px rgba(57,120,237,.18),inset 0 1px 0 rgba(255,255,255,.22);
+            font-size:17px;
+            animation:aevIconFloat 4.4s ease-in-out infinite;
+        }
+        @keyframes aevIconFloat {
+            0%,100%{transform:translateY(0)}
+            50%{transform:translateY(-2px)}
+        }
+        .aev-kicker {
+            color:#F08C22;
+            font-size:.50rem;
+            font-weight:950;
+            letter-spacing:.11em;
+            text-transform:uppercase;
+        }
+        .aev-title {
+            color:#102F59;
+            font-size:1rem;
+            font-weight:950;
+            line-height:1.08;
+            margin-top:.04rem;
+        }
+        .aev-sub {
+            color:#7A8EA5;
+            font-size:.58rem;
+            line-height:1.32;
+            margin-top:.10rem;
+        }
+        .aev-head-badges {
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:flex-end;
+            gap:6px;
+        }
+        .aev-head-badge {
+            display:inline-flex;
+            align-items:center;
+            gap:5px;
+            padding:.24rem .44rem;
+            border-radius:999px;
+            border:1px solid #DDE6F1;
+            background:#FFFFFF;
+            color:#365474;
+            font-size:.50rem;
+            font-weight:900;
+            box-shadow:0 4px 10px rgba(22,47,83,.035);
+            white-space:nowrap;
+        }
+        .aev-head-badge::before {
+            content:"";
+            width:6px;
+            height:6px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#14B8A6,#4F6FEA);
+            box-shadow:0 0 0 3px rgba(79,111,234,.07);
+        }
+        .aev-scroll {
+            width:100%;
+            overflow-x:auto;
+            overflow-y:hidden;
+            scrollbar-width:thin;
+            scrollbar-color:#C7D5E6 #F4F7FB;
+            padding:.55rem .55rem .20rem .55rem;
+            box-sizing:border-box;
+        }
+        .aev-table {
+            width:100%;
+            min-width:1450px;
+            table-layout:fixed;
+            border-collapse:separate;
+            border-spacing:0;
+            overflow:hidden;
+            border:1px solid #DDE7F1;
+            border-radius:13px;
+            background:#FFFFFF;
+            font-family:Arial,sans-serif;
+        }
+        .aev-table th,
+        .aev-table td {
+            border-right:1px solid #E3EAF2;
+            border-bottom:1px solid #E8EEF5;
+            text-align:center;
+            vertical-align:middle;
+        }
+        .aev-table th:last-child,
+        .aev-table td:last-child { border-right:none; }
+        .aev-table tbody tr:last-child td { border-bottom:none; }
+        .aev-left-head {
+            color:#FFFFFF;
+            background:linear-gradient(145deg,#183B66 0%,#285889 100%);
+            font-size:.58rem;
+            font-weight:950;
+            padding:.46rem .42rem;
+        }
+        .aev-campus-head {
+            color:#12365E;
+            font-size:.68rem;
+            font-weight:950;
+            padding:.38rem .30rem;
+            letter-spacing:.01em;
+        }
+        .aev-campus-head.noida   { background:linear-gradient(180deg,#D9EAFF 0%,#EAF4FF 100%); }
+        .aev-campus-head.lucknow { background:linear-gradient(180deg,#DDF4E3 0%,#ECF9EF 100%); }
+        .aev-campus-head.jaipur  { background:linear-gradient(180deg,#FFE6D2 0%,#FFF2E7 100%); }
+        .aev-campus-head.indore  { background:linear-gradient(180deg,#E8DDFB 0%,#F2ECFF 100%); }
+        .aev-status-head {
+            padding:.35rem .19rem;
+            font-size:.48rem;
+            font-weight:950;
+            white-space:nowrap;
+        }
+        .aev-status-head.planned     { color:#235E98; background:#DCEEFF; }
+        .aev-status-head.confirmed   { color:#1D7047; background:#DCF4E6; }
+        .aev-status-head.completed   { color:#087C67; background:#D5F3ED; }
+        .aev-status-head.cancelled   { color:#AC3841; background:#FFE0E2; }
+        .aev-status-head.rescheduled { color:#98690B; background:#FFF0C9; }
+        .aev-activity-cell {
+            width:142px;
+            padding:.43rem .42rem;
+            text-align:left !important;
+            color:#173A62;
+            font-size:.58rem;
+            font-weight:950;
+            line-height:1.25;
+            background:linear-gradient(180deg,#F8FBFF 0%,#F2F7FC 100%);
+            border-left:3px solid #4B7BEC;
+        }
+        .aev-activity-count {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:24px;
+            margin-left:5px;
+            padding:.09rem .25rem;
+            border-radius:999px;
+            color:#425C79;
+            background:#E8F0FA;
+            border:1px solid #D7E3F0;
+            font-size:.47rem;
+            font-weight:950;
+        }
+        .aev-event-cell {
+            width:164px;
+            padding:.36rem .42rem;
+            text-align:left !important;
+            color:#304F70;
+            font-size:.56rem;
+            font-weight:780;
+            background:#FFFFFF;
+        }
+        .aev-event-count {
+            color:#8395A9;
+            font-size:.48rem;
+            font-weight:800;
+            margin-left:3px;
+        }
+        .aev-table tbody tr:nth-child(even) .aev-event-cell,
+        .aev-table tbody tr:nth-child(even) td:not(.aev-activity-cell) {
+            background:#FBFCFE;
+        }
+        .aev-table tbody tr:hover td:not(.aev-activity-cell) {
+            background:#F4F8FE;
+        }
+        .aev-data-cell {
+            padding:.29rem .14rem;
+            min-width:48px;
+            height:30px;
+            font-size:.53rem;
+        }
+        .aev-zero {
+            color:#C1CBD7;
+            font-weight:700;
+        }
+        .aev-count {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:25px;
+            height:20px;
+            padding:0 .20rem;
+            border-radius:6px;
+            font-size:.51rem;
+            font-weight:950;
+            font-variant-numeric:tabular-nums;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
+        }
+        .aev-count-planned     { color:#245F96; background:#DEEEFF; border:1px solid #CDE3FA; }
+        .aev-count-confirmed   { color:#1D754A; background:#DCF5E7; border:1px solid #CBEAD8; }
+        .aev-count-completed   { color:#087965; background:#D8F3ED; border:1px solid #C6E9E1; }
+        .aev-count-cancelled   { color:#B43B45; background:#FFE2E4; border:1px solid #F2CDD1; }
+        .aev-count-rescheduled { color:#97650A; background:#FFF0CE; border:1px solid #F0DCA8; }
+        .aev-insights {
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:8px;
+            padding:.50rem .55rem .62rem .55rem;
+        }
+        .aev-insight-card {
+            position:relative;
+            overflow:hidden;
+            min-height:76px;
+            padding:.54rem .58rem;
+            border:1px solid var(--border);
+            border-radius:12px;
+            background:linear-gradient(145deg,#FFFFFF 0%,var(--wash) 150%);
+            box-shadow:0 5px 14px rgba(22,47,83,.04);
+            transition:transform .20s ease,box-shadow .20s ease;
+        }
+        .aev-insight-card:hover {
+            transform:translateY(-2px);
+            box-shadow:0 10px 22px rgba(22,47,83,.08);
+        }
+        .aev-insight-card::before {
+            content:"";
+            position:absolute;
+            left:0;
+            right:0;
+            top:0;
+            height:3px;
+            background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);
+        }
+        .aev-insight-card.blue   { --accent:#2D6CDF;--accent2:#6EA5F7;--wash:#EEF5FF;--border:#D8E6FB; }
+        .aev-insight-card.green  { --accent:#159A6A;--accent2:#61C991;--wash:#EFF9F4;--border:#D6ECE1; }
+        .aev-insight-card.violet { --accent:#7453C6;--accent2:#A88AE8;--wash:#F5F1FC;--border:#E5DCF6; }
+        .aev-insight-card.amber  { --accent:#D88C21;--accent2:#F2B755;--wash:#FFF8EB;--border:#F0E0C1; }
+        .aev-insight-label {
+            color:#71849B;
+            font-size:.47rem;
+            font-weight:950;
+            text-transform:uppercase;
+            letter-spacing:.06em;
+        }
+        .aev-insight-value {
+            color:#153A61;
+            font-size:.77rem;
+            font-weight:950;
+            line-height:1.15;
+            margin-top:.14rem;
+        }
+        .aev-insight-note {
+            color:#7F91A5;
+            font-size:.48rem;
+            line-height:1.28;
+            margin-top:.16rem;
+        }
+        .aev-action-strip {
+            margin:0 .55rem .58rem .55rem;
+            padding:.46rem .56rem;
+            border:1px solid #F0DFC2;
+            border-left:4px solid #E99A28;
+            border-radius:10px;
+            background:linear-gradient(90deg,#FFF9EF 0%,#FFFCF7 100%);
+            color:#5E7289;
+            font-size:.52rem;
+            line-height:1.36;
+        }
+        .aev-action-strip strong { color:#1D4E7C;font-weight:950; }
+        @media(max-width:1150px) {
+            .aev-insights { grid-template-columns:repeat(2,minmax(0,1fr)); }
+        }
+        @media(prefers-reduced-motion:reduce) {
+            .aev-shell::before,.aev-head-icon { animation:none !important; }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    parts = [
+        '<div class="aev-shell">',
+        '<div class="aev-head">',
+        '<div class="aev-head-left">',
+        '<div class="aev-head-icon">▦</div>',
+        '<div>',
+        '<div class="aev-kicker">Activity Execution Matrix</div>',
+        '<div class="aev-title">Activity Type – Event & Status Matrix</div>',
+        '<div class="aev-sub">Event-level execution status across Noida, Lucknow, Jaipur and Indore. Counts respond to the active Overview filters.</div>',
+        '</div></div>',
+        '<div class="aev-head-badges">',
+        f'<span class="aev-head-badge">{total_records:,} records</span>',
+        f'<span class="aev-head-badge">{len(activity_order):,} activity types</span>',
+        f'<span class="aev-head-badge">{unique_events:,} tagged events</span>',
+        '</div>',
+        '</div>',
+        '<div class="aev-scroll">',
+        '<table class="aev-table">',
+        '<thead><tr>',
+        '<th class="aev-left-head" rowspan="2">Activity Type</th>',
+        '<th class="aev-left-head" rowspan="2">Event</th>',
+    ]
+
+    campus_class = {
+        "Noida": "noida",
+        "Lucknow": "lucknow",
+        "Jaipur": "jaipur",
+        "Indore": "indore",
+    }
+
+    for campus in campus_order:
+        parts.append(
+            f'<th class="aev-campus-head {campus_class[campus]}" colspan="{len(status_order)}">'
+            f'{escape(campus)}</th>'
+        )
+
+    parts.append('</tr><tr>')
+    for _campus in campus_order:
+        for status in status_order:
+            parts.append(
+                f'<th class="aev-status-head {status.lower()}">{escape(status)}</th>'
+            )
+    parts.append('</tr></thead><tbody>')
+
+    for row in rows:
+        parts.append('<tr>')
+
+        if row["show_activity"]:
+            parts.append(
+                f'<td class="aev-activity-cell" rowspan="{row["rowspan"]}">'
+                f'{escape(row["activity"])}'
+                f'<span class="aev-activity-count">{row["activity_total"]:,}</span>'
+                '</td>'
+            )
+
+        event_label = escape(row["event"])
+        parts.append(
+            '<td class="aev-event-cell">'
+            f'{event_label}<span class="aev-event-count">({row["event_total"]:,})</span>'
+            '</td>'
+        )
+
+        for campus in campus_order:
+            for status in status_order:
+                value = row["counts"].get((campus, status), 0)
+                parts.append(
+                    '<td class="aev-data-cell">'
+                    + _aev_count_cell(value, status)
+                    + '</td>'
+                )
+
+        parts.append('</tr>')
+
+    parts.extend(['</tbody></table></div>'])
+
+    parts.append('<div class="aev-insights">')
+    parts.append(
+        '<div class="aev-insight-card blue">'
+        '<div class="aev-insight-label">Leading Campus</div>'
+        f'<div class="aev-insight-value">{escape(leading_campus)}</div>'
+        f'<div class="aev-insight-note">{leading_campus_count:,} records in the current filtered selection.</div>'
+        '</div>'
+    )
+    parts.append(
+        '<div class="aev-insight-card green">'
+        '<div class="aev-insight-label">Leading Activity</div>'
+        f'<div class="aev-insight-value">{escape(leading_activity)}</div>'
+        f'<div class="aev-insight-note">{leading_activity_count:,} records across the visible campus portfolio.</div>'
+        '</div>'
+    )
+    parts.append(
+        '<div class="aev-insight-card violet">'
+        '<div class="aev-insight-label">Top Event Combination</div>'
+        f'<div class="aev-insight-value">{escape(top_activity_event)}</div>'
+        f'<div class="aev-insight-note">{top_activity_event_count:,} tagged event records in this combination.</div>'
+        '</div>'
+    )
+    parts.append(
+        '<div class="aev-insight-card amber">'
+        '<div class="aev-insight-label">Execution Pipeline</div>'
+        f'<div class="aev-insight-value">{ready_pipeline:,} ready · {completed_count:,} completed</div>'
+        f'<div class="aev-insight-note">{cancelled_count:,} cancelled · {rescheduled_count:,} rescheduled.</div>'
+        '</div>'
+    )
+    parts.append('</div>')
+
+    action_text = (
+        f"Convert the {ready_pipeline:,} planned / confirmed / rescheduled records into completed execution, "
+        f"starting with {leading_campus} and the highest-volume activity ({leading_activity})."
+        if ready_pipeline > 0
+        else f"Maintain execution quality in {leading_campus}; no ready pipeline is visible in the current selection."
+    )
+    parts.append(
+        '<div class="aev-action-strip">'
+        '<strong>Recommended Action:</strong> '
+        f'{escape(action_text)}'
+        '</div>'
+    )
+
+    parts.append('</div>')
+    st.markdown(''.join(parts), unsafe_allow_html=True)
+
+
+# Render immediately below the Total Activity / KPI cards.
+render_activity_event_status_matrix(filtered)
 
 
 # =========================================================
