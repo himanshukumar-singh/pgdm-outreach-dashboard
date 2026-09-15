@@ -2264,6 +2264,357 @@ div[data-testid="stHorizontalBlock"]:has(.q1-brand-chart-marker) {
     }
 }
 
+
+/* =========================================================
+   PREMIUM DYNAMIC FILTER BAR
+   ========================================================= */
+
+.filter-motion-marker {
+    display: none;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker) {
+    position: relative;
+    overflow: visible;
+    align-items: end !important;
+    padding: .42rem .48rem .46rem .48rem !important;
+    border: 1px solid #E5DDD4;
+    border-radius: 15px;
+    background:
+        radial-gradient(circle at 92% 10%, rgba(112,65,125,.050), transparent 22%),
+        radial-gradient(circle at 4% 90%, rgba(229,140,43,.045), transparent 20%),
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(251,248,244,.96));
+    box-shadow:
+        0 10px 26px rgba(51,44,40,.045),
+        inset 0 1px 0 rgba(255,255,255,.94);
+}
+
+/* Animated brand accent on the filter panel */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -24%;
+    width: 22%;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        rgba(229,140,43,0),
+        rgba(229,140,43,.98),
+        rgba(112,65,125,.88),
+        rgba(229,140,43,0)
+    );
+    animation: filterBrandSweep 7.2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 5;
+}
+
+@keyframes filterBrandSweep {
+    0%,18%  { left:-24%; opacity:0; }
+    30%     { opacity:1; }
+    58%     { left:106%; opacity:.95; }
+    70%,100%{ left:106%; opacity:0; }
+}
+
+/* Filter labels */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stSelectbox"] label,
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] label {
+    color: #53677B !important;
+    font-size: .62rem !important;
+    font-weight: 850 !important;
+    letter-spacing: .018em !important;
+    margin-bottom: .12rem !important;
+}
+
+/* Individual filter tabs */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-baseweb="select"] > div,
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] input {
+    min-height: 2.34rem !important;
+    height: 2.34rem !important;
+    border-radius: 10px !important;
+    border: 1px solid #E4DDD4 !important;
+    background:
+        linear-gradient(145deg, #FFFFFF 0%, #FBF8F3 100%) !important;
+    color: #17395A !important;
+    box-shadow:
+        0 4px 11px rgba(55,46,42,.035),
+        inset 0 1px 0 rgba(255,255,255,.95) !important;
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease,
+        background .18s ease !important;
+}
+
+/* Hover lift for each tab */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-baseweb="select"] > div:hover,
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] input:hover {
+    transform: translateY(-2px);
+    border-color: #D9C6B3 !important;
+    background:
+        linear-gradient(145deg, #FFFFFF 0%, #FFF9F1 100%) !important;
+    box-shadow:
+        0 9px 19px rgba(70,51,42,.070),
+        0 0 0 1px rgba(229,140,43,.05) inset !important;
+}
+
+/* Active / focused control */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-baseweb="select"] > div:focus-within,
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stDateInput"] input:focus {
+    border-color: #B68A62 !important;
+    box-shadow:
+        0 10px 22px rgba(84,57,45,.085),
+        0 0 0 2px rgba(229,140,43,.12) !important;
+}
+
+/* Brand-colored dropdown arrow area */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+svg {
+    color: #6B3F7D !important;
+}
+
+/* Reset button gets a premium branded gradient */
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stButton"] button {
+    min-height: 2.34rem !important;
+    height: 2.34rem !important;
+    border-radius: 10px !important;
+    border: 1px solid #D8C5B2 !important;
+    color: #FFFFFF !important;
+    background:
+        linear-gradient(115deg,#17395A 0%,#254F74 42%,#6B3F7D 72%,#E58C2B 120%) !important;
+    background-size: 180% 100% !important;
+    box-shadow:
+        0 8px 18px rgba(23,57,90,.18),
+        inset 0 1px 0 rgba(255,255,255,.14) !important;
+    animation: resetBrandFlow 6s ease-in-out infinite !important;
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease !important;
+}
+
+@keyframes resetBrandFlow {
+    0%,100% { background-position: 0% 50%; }
+    50%     { background-position: 100% 50%; }
+}
+
+div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+div[data-testid="stButton"] button:hover {
+    transform: translateY(-2px) scale(1.01) !important;
+    box-shadow:
+        0 12px 24px rgba(23,57,90,.24),
+        0 0 0 1px rgba(255,255,255,.12) inset !important;
+}
+
+
+/* =========================================================
+   EXECUTIVE KPI TILES — MORE DYNAMIC, STILL PROFESSIONAL
+   ========================================================= */
+
+.pro-kpi {
+    isolation: isolate;
+}
+
+.pro-kpi::after {
+    transition: transform .35s ease, opacity .35s ease !important;
+}
+
+.pro-kpi:hover::after {
+    transform: scale(1.18) translate(-3px, -2px);
+    opacity: .92 !important;
+}
+
+/* very soft sheen across KPI tiles */
+.pro-kpi .icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+        115deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.50),
+        rgba(255,255,255,0)
+    );
+    transform: translateX(-125%);
+    animation: kpiIconSheen 7.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes kpiIconSheen {
+    0%,24% { transform: translateX(-125%); opacity:0; }
+    36%    { opacity:.8; }
+    56%    { transform: translateX(125%); opacity:0; }
+    100%   { transform: translateX(125%); opacity:0; }
+}
+
+
+/* =========================================================
+   MANAGEMENT SIGNAL — PREMIUM DYNAMIC MICRO-CARDS
+   ========================================================= */
+
+.q1-brand-hero-card,
+.q1-brand-fact,
+.q1-brand-signal,
+.q1-brand-action {
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform .20s ease,
+        box-shadow .20s ease,
+        border-color .20s ease,
+        background .20s ease;
+}
+
+/* distinct top accents */
+.q1-brand-hero-card::before,
+.q1-brand-fact::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 36%;
+    height: 2px;
+    border-radius: 999px;
+    opacity: .92;
+}
+
+.q1-brand-hero-card:nth-child(1)::before {
+    background: linear-gradient(90deg,#E58C2B,#F2B24E,rgba(242,178,78,0));
+}
+
+.q1-brand-hero-card:nth-child(2)::before {
+    background: linear-gradient(90deg,#6B3F7D,#9C72AE,rgba(156,114,174,0));
+}
+
+.q1-brand-fact:nth-child(1)::before {
+    background: linear-gradient(90deg,#159786,#64CDBA,rgba(100,205,186,0));
+}
+
+.q1-brand-fact:nth-child(2)::before {
+    background: linear-gradient(90deg,#2D6CDF,#79A7F8,rgba(121,167,248,0));
+}
+
+.q1-brand-hero-card:hover,
+.q1-brand-fact:hover {
+    transform: translateY(-3px);
+    border-color: #D7CBBF;
+    box-shadow:
+        0 11px 22px rgba(54,45,40,.080),
+        inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+/* staggered soft float */
+.q1-brand-hero-card:nth-child(1) {
+    animation: microCardFloatA 5.4s ease-in-out infinite;
+}
+.q1-brand-hero-card:nth-child(2) {
+    animation: microCardFloatB 5.8s ease-in-out infinite;
+}
+.q1-brand-fact:nth-child(1) {
+    animation: microCardFloatB 6.0s ease-in-out infinite;
+}
+.q1-brand-fact:nth-child(2) {
+    animation: microCardFloatA 6.2s ease-in-out infinite;
+}
+
+@keyframes microCardFloatA {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-1.5px); }
+}
+@keyframes microCardFloatB {
+    0%,100% { transform: translateY(-1px); }
+    50%     { transform: translateY(1px); }
+}
+
+/* signal panel: subtle light movement */
+.q1-brand-signal {
+    background:
+        radial-gradient(circle at 90% 15%, rgba(112,65,125,.06), transparent 28%),
+        linear-gradient(100deg,#FFF5E8 0%,#FFF9F1 58%,#FBF6FA 100%) !important;
+}
+
+.q1-brand-signal::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -34%;
+    width: 24%;
+    transform: skewX(-18deg);
+    background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.70),
+        rgba(255,255,255,0)
+    );
+    animation: signalSheen 6.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes signalSheen {
+    0%,22% { left:-34%; opacity:0; }
+    34%    { opacity:.75; }
+    56%    { left:112%; opacity:0; }
+    100%   { left:112%; opacity:0; }
+}
+
+/* animated progress line */
+.q1-brand-progress span {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(90deg,#E58C2B 0%,#F2B24E 48%,#6B3F7D 100%) !important;
+    background-size: 180% 100% !important;
+    animation: progressBrandFlow 4.8s ease-in-out infinite;
+}
+
+@keyframes progressBrandFlow {
+    0%,100% { background-position: 0% 50%; }
+    50%     { background-position: 100% 50%; }
+}
+
+/* action card looks more like a decision module */
+.q1-brand-action {
+    background:
+        radial-gradient(circle at 98% 12%, rgba(112,65,125,.055), transparent 30%),
+        linear-gradient(90deg,#FFF7EC 0%,#FFFDFC 100%) !important;
+    border-left: 4px solid #E58C2B !important;
+}
+
+.q1-brand-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 18px rgba(59,48,42,.065);
+    border-color: #DFC8AF;
+}
+
+
+/* =========================================================
+   REDUCED MOTION ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)::before,
+    div[data-testid="stHorizontalBlock"]:has(.filter-motion-marker)
+    div[data-testid="stButton"] button,
+    .pro-kpi .icon::after,
+    .q1-brand-hero-card,
+    .q1-brand-fact,
+    .q1-brand-signal::after,
+    .q1-brand-progress span {
+        animation: none !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -3271,6 +3622,10 @@ filter_cols = st.columns(
 )
 
 with filter_cols[0]:
+    st.markdown(
+        '<span class="filter-motion-marker"></span>',
+        unsafe_allow_html=True,
+    )
     campus_filter = st.selectbox(
         "Campus",
         _options(df, "Campus"),
@@ -3733,7 +4088,7 @@ else:
             '<div class="q1-brand-insight">'
                 '<div class="q1-brand-head">'
                     '<div class="q1-brand-kicker">Jaipuria · Activity Intelligence</div>'
-                    '<div class="q1-brand-title">Management Signal</div>'
+                    '<div class="q1-brand-title">Management Signal</div><div style="width:42px;height:2px;margin-top:.24rem;border-radius:999px;background:linear-gradient(90deg,#F3AF52,#FFFFFF55);"></div>'
                     '<div class="q1-brand-sub">'
                         'A compact readout of portfolio concentration, activity mix and the next management action.'
                     '</div>'
