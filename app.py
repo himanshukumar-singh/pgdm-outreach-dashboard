@@ -7164,27 +7164,53 @@ def render_activity_event_status_matrix(matrix_df):
         .aev-count-rescheduled{color:#7C5205;background:#FFE7B7;border:1px solid #F0D295;}
         .aev-total-row td{background:linear-gradient(180deg,#FFF9E9 0%,#FFF4D8 100%)!important;color:#153A5F;font-weight:950;border-top:1px solid #ECD9A8;font-size:.57rem;line-height:1.08;padding:.38rem .07rem!important;}
         .aev-total-label{text-align:left!important;padding:.39rem .50rem!important;font-size:.59rem!important;font-weight:950!important;}
-        .aev-intel-panel{margin:.66rem .80rem .82rem .80rem;padding:.84rem .86rem .82rem .86rem;border:1px solid #D8E4F1;border-radius:17px;background:radial-gradient(circle at 96% 8%,rgba(45,108,223,.075),transparent 23%),radial-gradient(circle at 4% 92%,rgba(28,169,110,.055),transparent 24%),linear-gradient(135deg,#F8FBFF 0%,#FFFFFF 52%,#FBF9FF 100%);box-shadow:0 10px 26px rgba(22,49,88,.06),inset 0 1px 0 rgba(255,255,255,.96);position:relative;overflow:hidden;}
-        .aev-intel-panel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#2D6CDF,#7156D9,#1CA96E);} .aev-intel-panel::after{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;background:linear-gradient(90deg,rgba(45,108,223,.85),rgba(113,86,217,.58),rgba(28,169,110,.56),rgba(45,108,223,0));border-radius:0 0 999px 999px;}
-        .aev-intel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.90rem;margin-bottom:.68rem;padding-left:.10rem;position:relative;z-index:1;}
-        .aev-intel-title{color:#12365F;font-size:.88rem;font-weight:950;line-height:1.10;letter-spacing:-.01em;}
-        .aev-intel-sub{color:#72869F;font-size:.55rem;line-height:1.40;margin-top:.11rem;max-width:780px;}
-        .aev-intel-tag{display:inline-flex;align-items:center;gap:6px;padding:.28rem .50rem;border-radius:999px;background:linear-gradient(135deg,#EEF5FF,#F6F2FF);border:1px solid #D8E4F4;color:#2D64A4;font-size:.48rem;font-weight:900;white-space:nowrap;box-shadow:0 4px 10px rgba(37,99,235,.05);}
-        .aev-intel-tag::before{content:"";width:5px;height:5px;border-radius:50%;background:#2F80ED;box-shadow:0 0 0 3px rgba(47,128,237,.09);}
-        .aev-signal-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;position:relative;z-index:1;}
-        .aev-signal-card{min-height:84px;padding:.62rem .64rem;border-radius:13px;background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%);border:1px solid #DEE7F1;box-shadow:0 6px 16px rgba(22,49,88,.045),inset 0 1px 0 rgba(255,255,255,.95);transition:transform .18s ease,box-shadow .18s ease;} .aev-signal-card:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(22,49,88,.075),inset 0 1px 0 rgba(255,255,255,.95);}
-        .aev-signal-card.c1{border-top:2px solid #2F80ED;}.aev-signal-card.c2{border-top:2px solid #7554D8;}.aev-signal-card.c3{border-top:2px solid #E4A02A;}.aev-signal-card.c4{border-top:2px solid #20A56B;}
-        .aev-signal-label{color:#71859D;font-size:.47rem;font-weight:950;letter-spacing:.07em;text-transform:uppercase;}
-        .aev-signal-value{color:#12385F;font-size:.91rem;font-weight:950;line-height:1.08;margin-top:.16rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .aev-signal-note{color:#7C8FA5;font-size:.47rem;line-height:1.30;margin-top:.10rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .aev-campus-pulse{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:.62rem;padding-top:.56rem;border-top:1px solid #E4EBF3;position:relative;z-index:1;}
-        .aev-campus-pulse-label{color:#5D748D;font-size:.51rem;font-weight:950;margin-right:4px;}
-        .aev-campus-chip{display:inline-flex;align-items:center;gap:5px;padding:.27rem .45rem;border-radius:9px;background:#FFFFFF;border:1px solid #DDE6F0;color:#365574;font-size:.48rem;font-weight:850;box-shadow:0 3px 8px rgba(22,49,88,.025);}
-        .aev-campus-chip strong{color:#1B5E46;font-weight:950;}
-        .aev-focus-ribbon{display:flex;align-items:center;gap:.50rem;margin-top:.56rem;padding:.48rem .58rem;border-radius:10px;background:linear-gradient(90deg,#FFF6E3 0%,#FFFDF8 56%,#F3F8FF 100%);border:1px solid #EEDDB0;border-left:4px solid #E4A02A;color:#526B84;font-size:.51rem;line-height:1.42;box-shadow:0 4px 10px rgba(126,91,21,.035);position:relative;z-index:1;}
-        .aev-focus-ribbon strong{color:#244B72;font-weight:950;}
-        @media(max-width:1100px){.aev-head{flex-direction:column;align-items:flex-start;}.aev-head-badges{justify-content:flex-start;}.aev-signal-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
-        @media(max-width:720px){.aev-signal-grid{grid-template-columns:1fr;}}
+        .aev-intel-panel{margin:.72rem .80rem .86rem .80rem;padding:.94rem .96rem .90rem .96rem;border:1px solid #D7E3F0;border-radius:18px;background:radial-gradient(circle at 96% 6%,rgba(45,108,223,.085),transparent 24%),radial-gradient(circle at 5% 96%,rgba(28,169,110,.060),transparent 25%),linear-gradient(135deg,#F8FBFF 0%,#FFFFFF 52%,#FBF9FF 100%);box-shadow:0 13px 30px rgba(22,49,88,.075),inset 0 1px 0 rgba(255,255,255,.97);position:relative;overflow:hidden;}
+        .aev-intel-panel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,#2D6CDF 0%,#7156D9 48%,#1CA96E 100%);}
+        .aev-intel-panel::after{content:"";position:absolute;left:18px;right:18px;top:0;height:3px;background:linear-gradient(90deg,#2D6CDF 0%,#7554D8 38%,#F0A12A 68%,#1CA96E 100%);border-radius:0 0 999px 999px;opacity:.88;}
+        .aev-intel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.78rem;padding-left:.10rem;position:relative;z-index:1;}
+        .aev-intel-kicker{color:#2D6CDF;font-size:.48rem;font-weight:950;letter-spacing:.10em;text-transform:uppercase;margin-bottom:.12rem;}
+        .aev-intel-title{color:#12365F;font-size:1.02rem;font-weight:950;line-height:1.10;letter-spacing:-.018em;}
+        .aev-intel-sub{color:#72869F;font-size:.59rem;line-height:1.42;margin-top:.13rem;max-width:820px;}
+        .aev-intel-tag{display:inline-flex;align-items:center;gap:6px;padding:.31rem .55rem;border-radius:999px;background:linear-gradient(135deg,#EEF5FF,#F6F2FF);border:1px solid #D8E4F4;color:#2D64A4;font-size:.50rem;font-weight:900;white-space:nowrap;box-shadow:0 4px 11px rgba(37,99,235,.055);}
+        .aev-intel-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:#2F80ED;box-shadow:0 0 0 3px rgba(47,128,237,.10);}
+        .aev-command-grid{display:grid;grid-template-columns:1.18fr .96fr .96fr;gap:12px;position:relative;z-index:1;}
+        .aev-command-card{position:relative;overflow:hidden;min-height:156px;padding:.78rem .82rem .74rem .82rem;border-radius:15px;background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%);border:1px solid #DDE6F1;box-shadow:0 7px 18px rgba(22,49,88,.05),inset 0 1px 0 rgba(255,255,255,.96);transition:transform .18s ease,box-shadow .18s ease;}
+        .aev-command-card:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(22,49,88,.085),inset 0 1px 0 rgba(255,255,255,.96);}
+        .aev-command-card.hero{background:radial-gradient(circle at 92% 12%,rgba(45,108,223,.10),transparent 28%),linear-gradient(145deg,#F7FBFF,#FFFFFF 65%);border-color:#CBDDF5;}
+        .aev-command-card.hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#2D6CDF;}
+        .aev-command-card.health::before,.aev-command-card.momentum::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;}
+        .aev-command-card.health::before{background:linear-gradient(90deg,#1CA96E,#4CCB8A);}
+        .aev-command-card.momentum::before{background:linear-gradient(90deg,#7554D8,#A17BEA);}
+        .aev-command-label{color:#72859A;font-size:.48rem;font-weight:950;letter-spacing:.075em;text-transform:uppercase;}
+        .aev-command-value{color:#12385F;font-size:1.34rem;font-weight:950;line-height:1.02;margin-top:.18rem;letter-spacing:-.025em;}
+        .aev-command-value.small{font-size:1.06rem;line-height:1.08;}
+        .aev-command-note{color:#71869D;font-size:.53rem;line-height:1.38;margin-top:.13rem;}
+        .aev-command-callout{display:inline-flex;align-items:center;gap:5px;margin-top:.48rem;padding:.24rem .40rem;border-radius:8px;background:#EEF5FF;border:1px solid #D7E7FA;color:#2B5F96;font-size:.48rem;font-weight:900;}
+        .aev-mini-status-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:.50rem;}
+        .aev-mini-status{display:inline-flex;align-items:center;gap:4px;padding:.23rem .38rem;border-radius:8px;background:#F7F9FC;border:1px solid #E2E9F2;color:#567089;font-size:.46rem;font-weight:850;}
+        .aev-mini-status strong{color:#173F67;font-size:.49rem;font-weight:950;}
+        .aev-health-track{height:10px;border-radius:999px;background:#E8EEF5;overflow:hidden;margin-top:.50rem;box-shadow:inset 0 1px 2px rgba(18,56,95,.05);}
+        .aev-health-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#1CA96E,#55CD91);}
+        .aev-health-row{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-top:.36rem;color:#70849B;font-size:.47rem;}
+        .aev-health-row strong{color:#1B7550;font-size:.50rem;font-weight:950;}
+        .aev-campus-stack{display:grid;gap:5px;margin-top:.48rem;}
+        .aev-campus-line{display:grid;grid-template-columns:58px 1fr 31px;gap:6px;align-items:center;color:#536E89;font-size:.46rem;font-weight:850;}
+        .aev-campus-line-track{height:7px;border-radius:999px;background:#E9EEF5;overflow:hidden;}
+        .aev-campus-line-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#7554D8,#9A78E4);}
+        .aev-campus-line-pct{text-align:right;color:#5E4BB8;font-weight:950;font-size:.47rem;}
+        .aev-action-queue{margin-top:.70rem;padding-top:.66rem;border-top:1px solid #E2EAF3;position:relative;z-index:1;}
+        .aev-action-head{display:flex;align-items:center;justify-content:space-between;gap:.7rem;margin-bottom:.42rem;}
+        .aev-action-title{color:#173A60;font-size:.66rem;font-weight:950;}
+        .aev-action-caption{color:#7B8EA4;font-size:.48rem;}
+        .aev-action-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+        .aev-action-item{display:grid;grid-template-columns:28px 1fr;gap:.45rem;align-items:start;padding:.50rem .55rem;border-radius:11px;background:#FFFFFF;border:1px solid #DEE7F1;box-shadow:0 3px 9px rgba(22,49,88,.025);}
+        .aev-action-no{width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#2D6CDF,#5B59D7);color:#FFFFFF;font-size:.48rem;font-weight:950;box-shadow:0 5px 11px rgba(50,77,189,.18);}
+        .aev-action-item:nth-child(2) .aev-action-no{background:linear-gradient(145deg,#E39A24,#F0B64A);}
+        .aev-action-item:nth-child(3) .aev-action-no{background:linear-gradient(145deg,#D94E62,#ED7483);}
+        .aev-action-item-title{color:#244A70;font-size:.52rem;font-weight:950;line-height:1.18;}
+        .aev-action-item-text{color:#73879D;font-size:.47rem;line-height:1.36;margin-top:.08rem;}
+        @media(max-width:1100px){.aev-head{flex-direction:column;align-items:flex-start;}.aev-head-badges{justify-content:flex-start;}.aev-command-grid{grid-template-columns:1fr 1fr;}.aev-command-card.hero{grid-column:1/-1;}.aev-action-grid{grid-template-columns:1fr;}}
+        @media(max-width:720px){.aev-command-grid{grid-template-columns:1fr;}.aev-command-card.hero{grid-column:auto;}}
         </style>
         """,
         unsafe_allow_html=True,
@@ -7254,61 +7280,104 @@ def render_activity_event_status_matrix(matrix_df):
         f'Address {cancelled_count:,} cancelled and {rescheduled_count:,} rescheduled records before adding avoidable new volume.',
     ]
 
+    pipeline_pct = (ready_pipeline / total_records * 100.0) if total_records else 0.0
+    strongest_completion_row = campus_perf_df[campus_perf_df["Total"] > 0].sort_values(
+        ["Completion %", "Completed", "Total"], ascending=False
+    ).iloc[0]
+    strongest_completion_campus = str(strongest_completion_row["Campus"])
+    strongest_completion_pct = float(strongest_completion_row["Completion %"])
+
+    pipeline_by_campus = []
+    for campus in campus_order:
+        c = campus_status[campus]
+        pending = int(c["Planned"] + c["Confirmed"] + c["Rescheduled"])
+        pipeline_by_campus.append((campus, pending))
+    pipeline_by_campus.sort(key=lambda x: x[1], reverse=True)
+    focus_campus, focus_pipeline = pipeline_by_campus[0] if pipeline_by_campus else (leading_campus, 0)
+    exception_count = cancelled_count + rescheduled_count
+
     parts.append('<div class="aev-intel-panel">')
     parts.append(
         '<div class="aev-intel-head">'
-        '<div><div class="aev-intel-title">Execution Intelligence</div>'
-        '<div class="aev-intel-sub">Current execution health, campus momentum and the next operational priorities from the active filters.</div></div>'
+        '<div><div class="aev-intel-kicker">Management View</div>'
+        '<div class="aev-intel-title">Execution Command Center</div>'
+        '<div class="aev-intel-sub">A focused read of conversion opportunity, execution health and campus momentum from the current filtered portfolio.</div></div>'
         '<span class="aev-intel-tag">Live filtered view</span>'
         '</div>'
     )
-    parts.append('<div class="aev-signal-grid">')
-    parts.append(
-        '<div class="aev-signal-card c1">'
-        '<div class="aev-signal-label">Lead Campus</div>'
-        f'<div class="aev-signal-value">{escape(leading_campus)}</div>'
-        f'<div class="aev-signal-note">{leading_campus_count:,} records · {total_activity_share:.1f}% share</div>'
-        '</div>'
-    )
-    parts.append(
-        '<div class="aev-signal-card c2">'
-        '<div class="aev-signal-label">Top Activity</div>'
-        f'<div class="aev-signal-value">{escape(leading_activity)}</div>'
-        f'<div class="aev-signal-note">{leading_activity_count:,} records in current view</div>'
-        '</div>'
-    )
-    parts.append(
-        '<div class="aev-signal-card c3">'
-        '<div class="aev-signal-label">Ready Pipeline</div>'
-        f'<div class="aev-signal-value">{ready_pipeline:,}</div>'
-        '<div class="aev-signal-note">Planned + Confirmed + Rescheduled</div>'
-        '</div>'
-    )
-    parts.append(
-        '<div class="aev-signal-card c4">'
-        '<div class="aev-signal-label">Completion</div>'
-        f'<div class="aev-signal-value">{overall_completion:.0f}%</div>'
-        f'<div class="aev-signal-note">{completed_count:,} completed of {total_records:,} records</div>'
-        '</div>'
-    )
-    parts.append('</div>')
 
-    parts.append('<div class="aev-campus-pulse"><span class="aev-campus-pulse-label">Campus completion pulse</span>')
+    parts.append('<div class="aev-command-grid">')
+    parts.append(
+        '<div class="aev-command-card hero">'
+        '<div class="aev-command-label">Conversion Opportunity</div>'
+        f'<div class="aev-command-value">{ready_pipeline:,} <span style="font-size:.62rem;color:#6C8198;font-weight:850;">records</span></div>'
+        f'<div class="aev-command-note">{pipeline_pct:.1f}% of the current portfolio is still in an executable pipeline and can move toward completion.</div>'
+        f'<div class="aev-command-callout">Highest open pipeline: {escape(focus_campus)} · {focus_pipeline:,}</div>'
+        '<div class="aev-mini-status-row">'
+        f'<span class="aev-mini-status">Planned <strong>{planned_count:,}</strong></span>'
+        f'<span class="aev-mini-status">Confirmed <strong>{confirmed_count:,}</strong></span>'
+        f'<span class="aev-mini-status">Rescheduled <strong>{rescheduled_count:,}</strong></span>'
+        '</div></div>'
+    )
+
+    parts.append(
+        '<div class="aev-command-card health">'
+        '<div class="aev-command-label">Execution Health</div>'
+        f'<div class="aev-command-value">{overall_completion:.0f}%</div>'
+        f'<div class="aev-command-note">{completed_count:,} of {total_records:,} records are completed in the current view.</div>'
+        '<div class="aev-health-track">'
+        f'<div class="aev-health-fill" style="width:{max(0.0,min(100.0,overall_completion)):.1f}%"></div>'
+        '</div>'
+        f'<div class="aev-health-row"><span>Completed <strong>{completed_count:,}</strong></span><span>Exceptions <strong>{exception_count:,}</strong></span></div>'
+        '</div>'
+    )
+
+    parts.append('<div class="aev-command-card momentum">')
+    parts.append('<div class="aev-command-label">Campus Momentum</div>')
+    parts.append(f'<div class="aev-command-value small">{escape(strongest_completion_campus)} · {strongest_completion_pct:.0f}%</div>')
+    parts.append(f'<div class="aev-command-note">Strongest completion rate. Volume leader: {escape(leading_campus)} with {leading_campus_count:,} records.</div>')
+    parts.append('<div class="aev-campus-stack">')
     for _, perf in campus_perf_df.iterrows():
         pct = max(0.0, min(100.0, float(perf["Completion %"])))
         parts.append(
-            f'<span class="aev-campus-chip">{escape(str(perf["Campus"]))} <strong>{pct:.0f}%</strong></span>'
+            '<div class="aev-campus-line">'
+            f'<span>{escape(str(perf["Campus"]))}</span>'
+            '<span class="aev-campus-line-track">'
+            f'<span class="aev-campus-line-fill" style="display:block;width:{pct:.1f}%"></span>'
+            '</span>'
+            f'<span class="aev-campus-line-pct">{pct:.0f}%</span>'
+            '</div>'
         )
+    parts.append('</div></div>')
     parts.append('</div>')
 
+    parts.append('<div class="aev-action-queue">')
     parts.append(
-        '<div class="aev-focus-ribbon">'
-        '<span>◎</span>'
-        '<span><strong>Priority action:</strong> '
-        f'Review {planned_count:,} planned and {confirmed_count:,} confirmed records first; '
-        f'keep {cancelled_count:,} cancelled and {rescheduled_count:,} rescheduled records on exception watch.</span>'
+        '<div class="aev-action-head">'
+        '<div class="aev-action-title">Priority Action Queue</div>'
+        '<div class="aev-action-caption">Next best operational moves from this matrix</div>'
         '</div>'
     )
+    parts.append('<div class="aev-action-grid">')
+    parts.append(
+        '<div class="aev-action-item"><span class="aev-action-no">01</span><div>'
+        '<div class="aev-action-item-title">Move confirmed activity to execution</div>'
+        f'<div class="aev-action-item-text">Work the {confirmed_count:,} confirmed records first; they are closest to completion.</div>'
+        '</div></div>'
+    )
+    parts.append(
+        '<div class="aev-action-item"><span class="aev-action-no">02</span><div>'
+        f'<div class="aev-action-item-title">Focus {escape(focus_campus)} pipeline</div>'
+        f'<div class="aev-action-item-text">{focus_pipeline:,} open records sit in the largest campus pipeline; assign ownership and dates.</div>'
+        '</div></div>'
+    )
+    parts.append(
+        '<div class="aev-action-item"><span class="aev-action-no">03</span><div>'
+        '<div class="aev-action-item-title">Clear execution exceptions</div>'
+        f'<div class="aev-action-item-text">Review {cancelled_count:,} cancelled and {rescheduled_count:,} rescheduled records before adding avoidable new volume.</div>'
+        '</div></div>'
+    )
+    parts.append('</div></div>')
     parts.append('</div></div>')
     st.markdown(''.join(parts), unsafe_allow_html=True)
 
