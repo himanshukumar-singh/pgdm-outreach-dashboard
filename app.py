@@ -941,7 +941,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
     min-width: 1040px;
     border-collapse: separate;
     border-spacing: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Aptos", "Segoe UI", Arial, sans-serif;
 }
 
 .upcoming-pro-table thead th {
@@ -1219,7 +1219,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.status-card-marker)
     table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Aptos", "Segoe UI", Arial, sans-serif;
     color: #405872;
 }
 
@@ -5383,10 +5383,12 @@ def professional_kpi(label, value, subtitle, icon, css_class):
     st.markdown(
         (
             f'<div class="pro-kpi {css_class}">'
-            f'<div class="icon">{icon_html}</div>'
-            f'<div class="label">{html.escape(str(label))}</div>'
+            f'<div class="kpi-icon-zone"><div class="icon">{icon_html}</div></div>'
+            f'<div class="kpi-content">'
             f'<div class="value">{value}</div>'
+            f'<div class="label">{html.escape(str(label))}</div>'
             f'<div class="sub">{html.escape(str(subtitle))}</div>'
+            f'</div>'
             f'<div class="mini-line"></div>'
             f'</div>'
         ),
@@ -5648,7 +5650,7 @@ def professional_chart(fig, height=275, legend=True):
         paper_bgcolor="#FFFFFF",
         plot_bgcolor="#FFFFFF",
         font=dict(
-            family="Arial, sans-serif",
+            family="Aptos, Segoe UI, Arial, sans-serif",
             size=11,
             color="#61758C",
         ),
@@ -7132,7 +7134,7 @@ def render_activity_event_status_matrix(matrix_df):
         .aev-head-badge{display:inline-flex;align-items:center;gap:5px;padding:.28rem .48rem;border-radius:999px;border:1px solid #DCE5F1;background:#FFFFFF;color:#365574;font-size:.49rem;font-weight:900;box-shadow:0 4px 10px rgba(23,52,90,.04);white-space:nowrap;}
         .aev-head-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:#3978ED;box-shadow:0 0 0 3px rgba(57,120,237,.10);}
         .aev-scroll{width:100%;overflow-x:auto;overflow-y:hidden;padding:.18rem .80rem .16rem .80rem;scrollbar-width:thin;scrollbar-color:#BFCDE0 #F1F5FA;}
-        .aev-table{width:100%;min-width:1330px;border-collapse:separate;border-spacing:0;table-layout:fixed;color:#274766;background:#FFFFFF;border:1px solid #DCE6F1;border-radius:14px;overflow:hidden;font-family:Arial,sans-serif;}
+        .aev-table{width:100%;min-width:1330px;border-collapse:separate;border-spacing:0;table-layout:fixed;color:#274766;background:#FFFFFF;border:1px solid #DCE6F1;border-radius:14px;overflow:hidden;font-family:"Aptos", "Segoe UI", Arial, sans-serif;}
         .aev-table th,.aev-table td{border-right:1px solid #E1E8F1;border-bottom:1px solid #E7EDF4;text-align:center;vertical-align:middle;}
         .aev-table th:last-child,.aev-table td:last-child{border-right:none;}
         .aev-left-head{background:linear-gradient(180deg,#EEF4FB 0%,#E8F0F9 100%);color:#17375E;font-size:.56rem;font-weight:950;padding:.48rem .36rem;text-align:left!important;}
@@ -8010,7 +8012,7 @@ else:
                 margin=dict(l=8, r=72, t=34, b=26),
                 paper_bgcolor="#FFFFFF",
                 plot_bgcolor="#FFFFFF",
-                font=dict(family="Arial, sans-serif", size=11, color="#60758C"),
+                font=dict(family="Aptos, Segoe UI, Arial, sans-serif", size=11, color="#60758C"),
                 legend=dict(
                     orientation="h",
                     yanchor="bottom",
@@ -8907,7 +8909,7 @@ st.markdown(
         border-spacing:0;
         table-layout:fixed;
         color:#294B6D;
-        font-family:Arial,sans-serif;
+        font-family:"Aptos", "Segoe UI", Arial, sans-serif;
         font-size:11.5px;
     }
     .campus-detail-table col.sr{width:54px;}
@@ -9213,3 +9215,397 @@ _detail_html = (
 )
 
 st.markdown(_detail_html, unsafe_allow_html=True)
+
+
+# =========================================================
+# FINAL TYPOGRAPHY + KPI ALIGNMENT SYSTEM
+# One font family, stronger hierarchy, readable dashboard text.
+# =========================================================
+st.markdown(
+    r"""
+    <style>
+    :root {
+        --dashboard-font: "Aptos", "Segoe UI", Arial, sans-serif;
+        --dashboard-navy: #12365F;
+        --dashboard-muted: #71849B;
+    }
+
+    html,
+    body,
+    [data-testid="stAppViewContainer"],
+    [data-testid="stSidebar"],
+    .block-container,
+    button,
+    input,
+    textarea,
+    select,
+    table {
+        font-family: var(--dashboard-font) !important;
+    }
+
+    /* Keep the same font inside all custom dashboard components. */
+    .overview-header,
+    .overview-section-kicker,
+    .overview-section-title,
+    .overview-section-sub,
+    .custom-filter-deck-marker,
+    .pro-kpi,
+    .chart-title,
+    .chart-subtitle,
+    .chart-insight,
+    .q1-matrix-shell,
+    .q1-exec-insight,
+    .aev-shell,
+    .activity-bubble-board,
+    .reach-left-card,
+    .reach-intel-panel,
+    .month-report-shell,
+    .campus-master-shell,
+    .upcoming-table-shell {
+        font-family: var(--dashboard-font) !important;
+    }
+
+    /* ---------- Main visual hierarchy ---------- */
+    .overview-eyebrow {
+        font-size: .69rem !important;
+        font-weight: 900 !important;
+        letter-spacing: .12em !important;
+    }
+    .overview-title {
+        font-size: 1.38rem !important;
+        font-weight: 950 !important;
+        line-height: 1.05 !important;
+    }
+    .overview-subtitle {
+        font-size: .82rem !important;
+        line-height: 1.35 !important;
+    }
+
+    .overview-section-kicker {
+        font-size: .66rem !important;
+        font-weight: 950 !important;
+        letter-spacing: .105em !important;
+    }
+    .overview-section-title {
+        font-size: 1.08rem !important;
+        font-weight: 950 !important;
+        line-height: 1.14 !important;
+        color: var(--dashboard-navy) !important;
+    }
+    .overview-section-sub {
+        font-size: .71rem !important;
+        line-height: 1.38 !important;
+        color: var(--dashboard-muted) !important;
+    }
+
+    .chart-title,
+    .table-title,
+    .q1-table-heading .title {
+        font-size: 1.02rem !important;
+        font-weight: 950 !important;
+        line-height: 1.15 !important;
+        color: var(--dashboard-navy) !important;
+    }
+    .chart-subtitle,
+    .table-subtitle,
+    .q1-table-heading .sub {
+        font-size: .70rem !important;
+        line-height: 1.35 !important;
+        color: var(--dashboard-muted) !important;
+    }
+
+    /* ======================================================
+       KPI CARDS — exact icon/content vertical alignment
+       ====================================================== */
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
+        position: relative !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        height: 88px !important;
+        min-height: 88px !important;
+        padding: 0 12px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        border-radius: 15px !important;
+        background: linear-gradient(135deg,#FFFFFF 0%,#FFFFFF 55%,var(--wash) 145%) !important;
+        border: 1px solid var(--border) !important;
+        box-shadow: 0 8px 20px rgba(27,53,91,.07), inset 0 1px 0 rgba(255,255,255,.98) !important;
+        animation: kpiFinalFloat 5.5s ease-in-out infinite !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .kpi-icon-zone {
+        width: 46px !important;
+        min-width: 46px !important;
+        height: 100% !important;
+        flex: 0 0 46px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon {
+        position: relative !important;
+        z-index: 2 !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        flex: 0 0 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 13px !important;
+        background: linear-gradient(145deg,#FFFFFF 0%,var(--iconbg) 100%) !important;
+        color: var(--accent) !important;
+        border: 1px solid var(--border) !important;
+        box-shadow: 0 6px 15px rgba(27,53,91,.085), inset 0 1px 0 rgba(255,255,255,.95) !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon svg {
+        display: block !important;
+        width: 22px !important;
+        height: 22px !important;
+        min-width: 22px !important;
+        min-height: 22px !important;
+        max-width: 22px !important;
+        max-height: 22px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .kpi-content {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .value {
+        position: static !important;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #0E315C !important;
+        font-size: 1.42rem !important;
+        font-weight: 950 !important;
+        line-height: 1 !important;
+        letter-spacing: -.025em !important;
+        white-space: nowrap !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .label {
+        position: static !important;
+        display: block !important;
+        width: 100% !important;
+        margin: 5px 0 0 0 !important;
+        padding: 0 !important;
+        color: #294A70 !important;
+        font-size: .56rem !important;
+        font-weight: 900 !important;
+        line-height: 1.08 !important;
+        letter-spacing: 0 !important;
+        text-transform: none !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .sub {
+        position: static !important;
+        display: block !important;
+        width: 100% !important;
+        margin: 4px 0 0 0 !important;
+        padding: 0 !important;
+        color: #8194AA !important;
+        font-size: .46rem !important;
+        font-weight: 550 !important;
+        line-height: 1.12 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi::before {
+        width: 100% !important;
+        height: 3px !important;
+        background: linear-gradient(90deg,var(--accent),var(--accent2),rgba(255,255,255,0)) !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi:hover {
+        transform: translateY(-3px) scale(1.006) !important;
+        box-shadow: 0 14px 28px rgba(27,53,91,.11), inset 0 1px 0 rgba(255,255,255,.98) !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi:hover .icon {
+        transform: translateY(-1px) scale(1.035) !important;
+    }
+
+    /* ---------- Activity / event matrix readability ---------- */
+    .aev-title {
+        font-size: 1.05rem !important;
+        font-weight: 950 !important;
+    }
+    .aev-sub {
+        font-size: .62rem !important;
+        line-height: 1.38 !important;
+    }
+    .aev-left-head { font-size: .59rem !important; font-weight: 950 !important; }
+    .aev-campus-head { font-size: .66rem !important; font-weight: 950 !important; }
+    .aev-status-head { font-size: .46rem !important; font-weight: 950 !important; }
+    .aev-activity-cell { font-size: .60rem !important; font-weight: 900 !important; }
+    .aev-event-main { font-size: .57rem !important; font-weight: 800 !important; }
+    .aev-count { font-size: .49rem !important; }
+    .aev-total-row td { font-size: .57rem !important; font-weight: 950 !important; }
+    .aev-total-label { font-size: .59rem !important; font-weight: 950 !important; }
+
+    /* ---------- Bubble matrix ---------- */
+    .activity-bubble-kicker {
+        font-size: .64rem !important;
+        font-weight: 950 !important;
+    }
+    .activity-bubble-title {
+        font-size: 1.05rem !important;
+        font-weight: 950 !important;
+        color: var(--dashboard-navy) !important;
+    }
+    .activity-bubble-sub {
+        font-size: .62rem !important;
+        line-height: 1.36 !important;
+    }
+
+    /* ---------- Reach intelligence ---------- */
+    .reach-intel-title {
+        font-size: 1.08rem !important;
+        font-weight: 950 !important;
+        color: var(--dashboard-navy) !important;
+    }
+    .reach-intel-sub {
+        font-size: .61rem !important;
+        line-height: 1.36 !important;
+    }
+    .reach-metric-label {
+        font-size: .49rem !important;
+        font-weight: 950 !important;
+    }
+    .reach-metric-value {
+        font-size: 1rem !important;
+        font-weight: 950 !important;
+    }
+    .reach-readout-title {
+        font-size: .68rem !important;
+        font-weight: 950 !important;
+    }
+
+    /* ---------- Monthly report ---------- */
+    .month-report-title {
+        font-size: 1.06rem !important;
+        font-weight: 950 !important;
+        color: var(--dashboard-navy) !important;
+    }
+    .month-report-sub {
+        font-size: .65rem !important;
+        line-height: 1.35 !important;
+    }
+    .month-report-table th {
+        font-weight: 950 !important;
+    }
+    .month-card-title {
+        font-size: .73rem !important;
+        font-weight: 950 !important;
+    }
+
+    /* ---------- Campus master detail table ---------- */
+    .campus-master-kicker {
+        font-size: .66rem !important;
+        font-weight: 950 !important;
+    }
+    .campus-master-title {
+        font-size: 1.22rem !important;
+        font-weight: 950 !important;
+        color: var(--dashboard-navy) !important;
+    }
+    .campus-master-sub {
+        font-size: .68rem !important;
+        line-height: 1.38 !important;
+    }
+    .campus-master-kpi-label {
+        font-size: .55rem !important;
+        font-weight: 950 !important;
+    }
+    .campus-master-kpi-value {
+        font-size: 1.20rem !important;
+        font-weight: 950 !important;
+    }
+    .campus-master-kpi-note {
+        font-size: .56rem !important;
+        line-height: 1.28 !important;
+    }
+    .campus-group-head {
+        font-size: 11.5px !important;
+        font-weight: 950 !important;
+    }
+    .campus-detail-head {
+        font-size: 11px !important;
+        font-weight: 950 !important;
+    }
+    .campus-detail-table tbody td {
+        font-size: 11.5px !important;
+        line-height: 1.30 !important;
+    }
+    .detail-chip {
+        font-size: 10.5px !important;
+        font-weight: 900 !important;
+    }
+
+    /* Filter labels / buttons stay readable without increasing card height. */
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stPopover"] > button p,
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) div[data-testid="stButton"] button {
+        font-size: .73rem !important;
+        font-weight: 850 !important;
+    }
+
+    @media (max-width: 1250px) {
+        div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi {
+            gap: 9px !important;
+            padding: 0 10px !important;
+        }
+        div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .kpi-icon-zone {
+            width: 42px !important;
+            min-width: 42px !important;
+            flex-basis: 42px !important;
+        }
+        div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon {
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
+            min-height: 40px !important;
+        }
+        div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .value {
+            font-size: 1.27rem !important;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi,
+        div[data-testid="stHorizontalBlock"]:has(.snapshot-motion-marker) .pro-kpi .icon {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
