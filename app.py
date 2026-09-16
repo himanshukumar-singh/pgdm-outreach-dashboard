@@ -9609,3 +9609,182 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+# =========================================================
+# FINAL HEADER + LIVE BADGE + ANIMATED BORDER OVERRIDES
+# =========================================================
+st.markdown(
+    r"""
+    <style>
+    /* -----------------------------------------------------
+       1) REMOVE TOP-RIGHT LIVE GOOGLE SHEET BADGE
+       ----------------------------------------------------- */
+    .live-badge-custom,
+    .live-badge,
+    .live-google-sheet,
+    .live-google-sheet-badge,
+    .live-sheet-badge,
+    .calendar-live,
+    .action-live,
+    .team-live,
+    .geo-live {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* -----------------------------------------------------
+       2) PGDM OUTREACH INTELLIGENCE — AUTO MULTI-COLOR TEXT
+       ----------------------------------------------------- */
+    .overview-eyebrow {
+        display: inline-block !important;
+        color: #6B3F7D !important;
+        background: linear-gradient(
+            90deg,
+            #6B3F7D 0%,
+            #2D6CDF 18%,
+            #0F9F8F 36%,
+            #E58C2B 54%,
+            #D84A7F 72%,
+            #7C3AED 88%,
+            #6B3F7D 100%
+        ) !important;
+        background-size: 320% 100% !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        font-weight: 950 !important;
+        letter-spacing: .13em !important;
+        animation: pgdmEyebrowColorFlow 7s linear infinite !important;
+        filter: drop-shadow(0 1px 2px rgba(31,55,88,.08));
+    }
+
+    @keyframes pgdmEyebrowColorFlow {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* -----------------------------------------------------
+       3) PROFESSIONAL ANIMATED BORDER SYSTEM
+       Subtle brand-color movement — no layout shift.
+       ----------------------------------------------------- */
+    @keyframes dashboardBorderPulse {
+        0% {
+            border-color: rgba(45,108,223,.34);
+            box-shadow:
+                0 8px 24px rgba(45,108,223,.040),
+                inset 0 1px 0 rgba(255,255,255,.96);
+        }
+        25% {
+            border-color: rgba(124,58,237,.34);
+            box-shadow:
+                0 9px 25px rgba(124,58,237,.045),
+                inset 0 1px 0 rgba(255,255,255,.96);
+        }
+        50% {
+            border-color: rgba(15,159,143,.34);
+            box-shadow:
+                0 9px 25px rgba(15,159,143,.045),
+                inset 0 1px 0 rgba(255,255,255,.96);
+        }
+        75% {
+            border-color: rgba(229,140,43,.36);
+            box-shadow:
+                0 9px 25px rgba(229,140,43,.045),
+                inset 0 1px 0 rgba(255,255,255,.96);
+        }
+        100% {
+            border-color: rgba(45,108,223,.34);
+            box-shadow:
+                0 8px 24px rgba(45,108,223,.040),
+                inset 0 1px 0 rgba(255,255,255,.96);
+        }
+    }
+
+    /* Native bordered Streamlit containers */
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+        animation: dashboardBorderPulse 9s ease-in-out infinite !important;
+    }
+
+    /* Custom major dashboard shells */
+    .q1-matrix-shell,
+    .aev-shell,
+    .month-report-shell,
+    .campus-master-shell,
+    .upcoming-table-shell,
+    .reach-intel,
+    .reach-readout,
+    .campus-master-kpi,
+    .reach-kpi {
+        animation: dashboardBorderPulse 9s ease-in-out infinite !important;
+    }
+
+    /* Preserve existing motion while adding border animation */
+    .pro-kpi {
+        animation:
+            kpiFloat 5.2s ease-in-out infinite,
+            dashboardBorderPulse 9s ease-in-out infinite !important;
+    }
+
+    .chart-insight {
+        animation:
+            insightFloat 3.8s ease-in-out infinite,
+            dashboardBorderPulse 9s ease-in-out infinite !important;
+    }
+
+    .mini-upcoming {
+        animation:
+            upcomingFloat 2.4s ease-in-out infinite,
+            dashboardBorderPulse 9s ease-in-out infinite !important;
+    }
+
+    .activity-bubble-board {
+        animation:
+            activityBubbleBoardBreath 7s ease-in-out infinite,
+            dashboardBorderPulse 9s ease-in-out infinite !important;
+    }
+
+    /* Slightly slower stagger for visually adjacent components */
+    .aev-shell,
+    .month-report-shell,
+    .reach-intel {
+        animation-delay: .35s !important;
+    }
+
+    .campus-master-shell,
+    .upcoming-table-shell {
+        animation-delay: .70s !important;
+    }
+
+    /* Keep filter deck polished with the same moving border language */
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.custom-filter-deck-marker) {
+        animation: dashboardBorderPulse 8s ease-in-out infinite !important;
+    }
+
+    /* Motion accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        .overview-eyebrow,
+        div[data-testid="stVerticalBlockBorderWrapper"],
+        .q1-matrix-shell,
+        .aev-shell,
+        .month-report-shell,
+        .campus-master-shell,
+        .upcoming-table-shell,
+        .reach-intel,
+        .reach-readout,
+        .campus-master-kpi,
+        .reach-kpi,
+        .pro-kpi,
+        .chart-insight,
+        .mini-upcoming,
+        .activity-bubble-board {
+            animation: none !important;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
