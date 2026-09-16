@@ -7638,6 +7638,11 @@ st.markdown(
         gap:.8rem;
         margin-bottom:.12rem;
     }
+    .reach-card-head-compact {
+        justify-content:flex-end;
+        min-height:22px;
+        margin-bottom:-.22rem;
+    }
     .reach-card-kicker {
         color:#6E55C7;
         font-size:.50rem;
@@ -7951,12 +7956,7 @@ else:
         with st.container(border=True):
             st.markdown('<span class="reach-chart-marker"></span>', unsafe_allow_html=True)
             st.markdown(
-                '<div class="reach-card-head">'
-                '<div>'
-                '<div class="reach-card-kicker">Reach delivery</div>'
-                '<div class="reach-card-title">Campus Reach Achievement</div>'
-                '<div class="reach-card-sub">Planned reach forms the target bar; delivered reach is overlaid and color-coded by achievement level.</div>'
-                '</div>'
+                '<div class="reach-card-head reach-card-head-compact">'
                 '<span class="reach-live-pill">Filtered view</span>'
                 '</div>',
                 unsafe_allow_html=True,
