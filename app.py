@@ -7594,108 +7594,500 @@ if not activity_mix.empty:
 overview_section(
     "Reach Performance",
     "Campus Planned vs Actual Reach",
-    "A bullet-style comparison shows whether outreach execution is translating into the intended student/faculty reach.",
+    "A compact execution view compares planned reach with delivered reach and surfaces the campuses requiring management attention.",
 )
 
-with st.container(border=True):
-    chart_header(
-        "Campus Reach Achievement",
-        "Wide bar = Planned Reach; overlay = Actual Reach. Percentage label shows achievement against plan.",
+st.markdown(
+    r"""
+    <style>
+    .reach-chart-marker,
+    .reach-insight-marker { display:none !important; }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.reach-chart-marker),
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.reach-insight-marker) {
+        position:relative !important;
+        overflow:hidden !important;
+        min-height:410px !important;
+        height:410px !important;
+        padding:.82rem .88rem .64rem .88rem !important;
+        border:1px solid #DCE6F1 !important;
+        border-radius:18px !important;
+        background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%) !important;
+        box-shadow:0 12px 28px rgba(22,49,88,.060), inset 0 1px 0 rgba(255,255,255,.96) !important;
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.reach-chart-marker)::before,
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.reach-insight-marker)::before {
+        content:"";
+        position:absolute;
+        left:0; right:0; top:0;
+        height:3px;
+        background:linear-gradient(90deg,#2D6CDF,#6A67E8,#19A38D,#F0A12B);
+        z-index:4;
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.reach-chart-marker) .js-plotly-plot,
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.reach-chart-marker) [data-testid="stPlotlyChart"] {
+        width:100% !important;
+    }
+
+    .reach-card-head {
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:.8rem;
+        margin-bottom:.12rem;
+    }
+    .reach-card-kicker {
+        color:#6E55C7;
+        font-size:.50rem;
+        font-weight:950;
+        letter-spacing:.11em;
+        text-transform:uppercase;
+    }
+    .reach-card-title {
+        color:#17395F;
+        font-size:1.01rem;
+        font-weight:950;
+        line-height:1.12;
+        margin-top:.08rem;
+    }
+    .reach-card-sub {
+        color:#7A8EA4;
+        font-size:.56rem;
+        line-height:1.36;
+        margin-top:.12rem;
+    }
+    .reach-live-pill {
+        flex:0 0 auto;
+        display:inline-flex;
+        align-items:center;
+        gap:5px;
+        padding:.25rem .45rem;
+        border-radius:999px;
+        border:1px solid #D8E5F2;
+        background:#F8FBFF;
+        color:#486985;
+        font-size:.45rem;
+        font-weight:900;
+        white-space:nowrap;
+    }
+    .reach-live-pill::before {
+        content:"";
+        width:6px;
+        height:6px;
+        border-radius:50%;
+        background:#18A36F;
+        box-shadow:0 0 0 3px rgba(24,163,111,.10);
+    }
+
+    .reach-intel {
+        height:100%;
+        display:flex;
+        flex-direction:column;
+    }
+    .reach-intel-top {
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:.65rem;
+        margin-bottom:.58rem;
+    }
+    .reach-intel-title {
+        color:#17395F;
+        font-size:1.00rem;
+        font-weight:950;
+        line-height:1.12;
+    }
+    .reach-intel-sub {
+        color:#7A8EA4;
+        font-size:.54rem;
+        line-height:1.34;
+        margin-top:.11rem;
+    }
+    .reach-health-badge {
+        flex:0 0 auto;
+        padding:.23rem .42rem;
+        border-radius:999px;
+        font-size:.44rem;
+        font-weight:950;
+        border:1px solid #E0E7F0;
+        background:#FFFFFF;
+        color:#526B84;
+        box-shadow:0 3px 10px rgba(22,49,88,.035);
+    }
+
+    .reach-kpi-grid {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+        margin-bottom:.55rem;
+    }
+    .reach-kpi {
+        position:relative;
+        overflow:hidden;
+        min-height:76px;
+        padding:.52rem .56rem .47rem .56rem;
+        border:1px solid #E0E7F0;
+        border-radius:13px;
+        background:#FFFFFF;
+        box-shadow:0 5px 14px rgba(22,49,88,.035);
+    }
+    .reach-kpi::before {
+        content:"";
+        position:absolute;
+        left:0; top:0; bottom:0;
+        width:3px;
+        background:var(--reach-accent,#2D6CDF);
+    }
+    .reach-kpi-label {
+        color:#7B8DA3;
+        font-size:.43rem;
+        font-weight:950;
+        letter-spacing:.065em;
+        text-transform:uppercase;
+    }
+    .reach-kpi-value {
+        color:#17395F;
+        font-size:.91rem;
+        font-weight:950;
+        line-height:1.05;
+        margin-top:.13rem;
+    }
+    .reach-kpi-note {
+        color:#7F91A5;
+        font-size:.44rem;
+        line-height:1.28;
+        margin-top:.12rem;
+    }
+
+    .reach-readout {
+        flex:1;
+        padding:.56rem .60rem;
+        border:1px solid #DDE8F2;
+        border-radius:13px;
+        background:linear-gradient(135deg,#F8FBFF 0%,#FFFFFF 100%);
+    }
+    .reach-readout-title {
+        display:flex;
+        align-items:center;
+        gap:.35rem;
+        color:#21466B;
+        font-size:.58rem;
+        font-weight:950;
+        margin-bottom:.42rem;
+    }
+    .reach-readout-title::before {
+        content:"";
+        width:7px;
+        height:7px;
+        border-radius:50%;
+        background:#2D6CDF;
+        box-shadow:0 0 0 3px rgba(45,108,223,.10);
+    }
+    .reach-signal {
+        display:grid;
+        grid-template-columns:22px 1fr;
+        gap:.36rem;
+        align-items:start;
+        margin-bottom:.38rem;
+    }
+    .reach-signal:last-child { margin-bottom:0; }
+    .reach-signal-num {
+        width:20px;
+        height:20px;
+        border-radius:7px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#EAF2FF;
+        color:#2D6CDF;
+        font-size:.46rem;
+        font-weight:950;
+    }
+    .reach-signal-text {
+        color:#5E748C;
+        font-size:.49rem;
+        line-height:1.36;
+    }
+    .reach-signal-text strong { color:#244A70; font-weight:950; }
+
+    .reach-action {
+        margin-top:.50rem;
+        padding:.49rem .55rem;
+        border:1px solid #F1D7A2;
+        border-left:4px solid #E9A11B;
+        border-radius:11px;
+        background:linear-gradient(90deg,#FFF9EB 0%,#FFFDF7 100%);
+        color:#64758A;
+        font-size:.48rem;
+        line-height:1.34;
+    }
+    .reach-action strong { color:#805D13; font-weight:950; }
+
+    @media(max-width:1100px){
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.reach-chart-marker),
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.reach-insight-marker) {
+            min-height:auto !important;
+            height:auto !important;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+reach_data = pd.DataFrame()
+if "Campus" in filtered.columns:
+    reach_base = filtered.copy()
+    reach_base["Planned Student Reach"] = pd.to_numeric(
+        reach_base["Planned Student Reach"], errors="coerce"
+    )
+    reach_base["Actual Student Reach"] = pd.to_numeric(
+        reach_base["Actual Student Reach"], errors="coerce"
     )
 
-    reach_data = pd.DataFrame()
-    if "Campus" in filtered.columns:
-        reach_base = filtered.copy()
-        reach_base["Planned Student Reach"] = pd.to_numeric(reach_base["Planned Student Reach"], errors="coerce")
-        reach_base["Actual Student Reach"] = pd.to_numeric(reach_base["Actual Student Reach"], errors="coerce")
-
-        reach_data = (
-            reach_base.groupby("Campus", observed=True)[["Planned Student Reach", "Actual Student Reach"]]
-            .sum(min_count=1)
-            .reset_index()
-            .rename(columns={
+    reach_data = (
+        reach_base.groupby("Campus", observed=True)[
+            ["Planned Student Reach", "Actual Student Reach"]
+        ]
+        .sum(min_count=1)
+        .reset_index()
+        .rename(
+            columns={
                 "Planned Student Reach": "Planned Reach",
                 "Actual Student Reach": "Actual Reach",
-            })
+            }
         )
-        reach_data = reach_data[
-            reach_data[["Planned Reach", "Actual Reach"]].notna().any(axis=1)
-        ].copy()
-        reach_data[["Planned Reach", "Actual Reach"]] = reach_data[["Planned Reach", "Actual Reach"]].fillna(0)
-        reach_data["Achievement %"] = reach_data.apply(
-            lambda r: _pct(r["Actual Reach"], r["Planned Reach"]), axis=1
-        )
-        reach_data = reach_data.sort_values(["Planned Reach", "Actual Reach"], ascending=False)
+    )
+    reach_data = reach_data[
+        reach_data[["Planned Reach", "Actual Reach"]].notna().any(axis=1)
+    ].copy()
+    reach_data[["Planned Reach", "Actual Reach"]] = reach_data[
+        ["Planned Reach", "Actual Reach"]
+    ].fillna(0)
+    reach_data["Achievement %"] = reach_data.apply(
+        lambda r: _pct(r["Actual Reach"], r["Planned Reach"]), axis=1
+    )
+    reach_data["Gap"] = (
+        reach_data["Planned Reach"] - reach_data["Actual Reach"]
+    ).clip(lower=0)
+    reach_data = reach_data.sort_values(
+        ["Planned Reach", "Actual Reach"], ascending=False
+    ).reset_index(drop=True)
 
-    if reach_data.empty or reach_data[["Planned Reach", "Actual Reach"]].sum().sum() == 0:
-        st.info("No Planned/Actual Reach values are available for the selected filters.")
+if reach_data.empty or reach_data[["Planned Reach", "Actual Reach"]].sum().sum() == 0:
+    st.info("No Planned/Actual Reach values are available for the selected filters.")
+else:
+    overall_planned = float(reach_data["Planned Reach"].sum())
+    overall_actual = float(reach_data["Actual Reach"].sum())
+    overall_pct = _pct(overall_actual, overall_planned)
+    overall_gap = max(overall_planned - overall_actual, 0)
+
+    reliable_reach = reach_data[reach_data["Planned Reach"] > 0].copy()
+    if not reliable_reach.empty:
+        best_reach_row = reliable_reach.sort_values(
+            ["Achievement %", "Actual Reach"], ascending=False
+        ).iloc[0]
+        weakest_reach_row = reliable_reach.sort_values(
+            ["Achievement %", "Planned Reach"], ascending=[True, False]
+        ).iloc[0]
+        gap_row = reliable_reach.sort_values(
+            ["Gap", "Planned Reach"], ascending=False
+        ).iloc[0]
     else:
-        campus_order = reach_data["Campus"].tolist()
-        actual_text = [
-            f"{int(v):,}  ·  {p:.0f}%"
-            for v, p in zip(reach_data["Actual Reach"], reach_data["Achievement %"])
-        ]
+        best_reach_row = reach_data.iloc[0]
+        weakest_reach_row = reach_data.iloc[-1]
+        gap_row = reach_data.iloc[0]
 
-        fig = go.Figure()
-        fig.add_trace(
-            go.Bar(
-                x=reach_data["Planned Reach"],
-                y=reach_data["Campus"],
-                name="Planned Reach",
-                orientation="h",
-                width=.64,
-                marker_color="#D9E6F4",
-                hovertemplate="<b>%{y}</b><br>Planned Reach: %{x:,.0f}<extra></extra>",
+    best_campus = str(best_reach_row["Campus"])
+    best_pct = float(best_reach_row["Achievement %"])
+    weakest_campus = str(weakest_reach_row["Campus"])
+    weakest_pct = float(weakest_reach_row["Achievement %"])
+    gap_campus = str(gap_row["Campus"])
+    largest_gap = float(gap_row["Gap"])
+
+    actual_leader_row = reach_data.sort_values("Actual Reach", ascending=False).iloc[0]
+    actual_leader = str(actual_leader_row["Campus"])
+    actual_leader_value = float(actual_leader_row["Actual Reach"])
+    actual_share = _pct(actual_leader_value, overall_actual)
+
+    zero_actual = reliable_reach[reliable_reach["Actual Reach"] <= 0]
+    zero_actual_count = int(len(zero_actual))
+
+    if overall_pct >= 90:
+        health_label = "Strong delivery"
+        health_accent = "#17A36B"
+    elif overall_pct >= 70:
+        health_label = "On track"
+        health_accent = "#2D6CDF"
+    elif overall_pct >= 50:
+        health_label = "Needs acceleration"
+        health_accent = "#E9A11B"
+    else:
+        health_label = "Execution risk"
+        health_accent = "#E05555"
+
+    achievement_colors = []
+    for pct in reach_data["Achievement %"]:
+        if pct >= 90:
+            achievement_colors.append("#18A36F")
+        elif pct >= 70:
+            achievement_colors.append("#2F7BD8")
+        elif pct >= 50:
+            achievement_colors.append("#EAA325")
+        else:
+            achievement_colors.append("#E35A59")
+
+    campus_order = reach_data["Campus"].astype(str).tolist()
+    actual_text = [
+        f"{int(v):,} · {p:.0f}%"
+        for v, p in zip(reach_data["Actual Reach"], reach_data["Achievement %"])
+    ]
+
+    reach_left, reach_right = st.columns([1.68, .82], gap="small")
+
+    with reach_left:
+        with st.container(border=True):
+            st.markdown('<span class="reach-chart-marker"></span>', unsafe_allow_html=True)
+            st.markdown(
+                '<div class="reach-card-head">'
+                '<div>'
+                '<div class="reach-card-kicker">Reach delivery</div>'
+                '<div class="reach-card-title">Campus Reach Achievement</div>'
+                '<div class="reach-card-sub">Planned reach forms the target bar; delivered reach is overlaid and color-coded by achievement level.</div>'
+                '</div>'
+                '<span class="reach-live-pill">Filtered view</span>'
+                '</div>',
+                unsafe_allow_html=True,
             )
-        )
-        fig.add_trace(
-            go.Bar(
-                x=reach_data["Actual Reach"],
-                y=reach_data["Campus"],
-                name="Actual Reach",
-                orientation="h",
-                width=.34,
-                marker_color="#0F9F8F",
-                text=actual_text,
-                textposition="outside",
-                textfont=dict(size=9, color="#0C776C"),
-                customdata=reach_data[["Planned Reach", "Achievement %"]].values,
-                hovertemplate=(
-                    "<b>%{y}</b><br>"
-                    "Actual Reach: %{x:,.0f}<br>"
-                    "Planned Reach: %{customdata[0]:,.0f}<br>"
-                    "Achievement: %{customdata[1]:.1f}%<extra></extra>"
+
+            fig = go.Figure()
+            fig.add_trace(
+                go.Bar(
+                    x=reach_data["Planned Reach"],
+                    y=reach_data["Campus"],
+                    name="Planned Reach",
+                    orientation="h",
+                    width=.62,
+                    marker=dict(color="#E1EAF4", line=dict(color="#D5E0EC", width=.7)),
+                    customdata=reach_data[["Actual Reach", "Achievement %", "Gap"]].values,
+                    hovertemplate=(
+                        "<b>%{y}</b><br>"
+                        "Planned: %{x:,.0f}<br>"
+                        "Actual: %{customdata[0]:,.0f}<br>"
+                        "Achievement: %{customdata[1]:.1f}%<br>"
+                        "Gap: %{customdata[2]:,.0f}<extra></extra>"
+                    ),
+                )
+            )
+            fig.add_trace(
+                go.Bar(
+                    x=reach_data["Actual Reach"],
+                    y=reach_data["Campus"],
+                    name="Actual Reach",
+                    orientation="h",
+                    width=.30,
+                    marker=dict(color=achievement_colors),
+                    text=actual_text,
+                    textposition="outside",
+                    cliponaxis=False,
+                    textfont=dict(size=10, color="#284A68"),
+                    customdata=reach_data[["Planned Reach", "Achievement %", "Gap"]].values,
+                    hovertemplate=(
+                        "<b>%{y}</b><br>"
+                        "Actual: %{x:,.0f}<br>"
+                        "Planned: %{customdata[0]:,.0f}<br>"
+                        "Achievement: %{customdata[1]:.1f}%<br>"
+                        "Gap: %{customdata[2]:,.0f}<extra></extra>"
+                    ),
+                )
+            )
+            fig.update_layout(
+                barmode="overlay",
+                bargap=.34,
+                height=315,
+                margin=dict(l=8, r=72, t=34, b=26),
+                paper_bgcolor="#FFFFFF",
+                plot_bgcolor="#FFFFFF",
+                font=dict(family="Arial, sans-serif", size=11, color="#60758C"),
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.035,
+                    xanchor="right",
+                    x=1,
+                    font=dict(size=10, color="#536B84"),
                 ),
+                hoverlabel=dict(bgcolor="#102A43", font_color="#FFFFFF", bordercolor="#102A43"),
             )
-        )
-        fig.update_layout(barmode="overlay")
-        fig.update_xaxes(title="Reach", rangemode="tozero")
-        fig.update_yaxes(
-            title="",
-            categoryorder="array",
-            categoryarray=campus_order,
-            autorange="reversed",
-        )
-        fig = professional_chart(fig, 320, legend=True)
-        st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
-
-        reliable_reach = reach_data[reach_data["Planned Reach"] > 0].copy()
-        if not reliable_reach.empty:
-            best_reach_row = reliable_reach.sort_values(["Achievement %", "Actual Reach"], ascending=False).iloc[0]
-            weakest_reach_row = reliable_reach.sort_values(["Achievement %", "Planned Reach"], ascending=[True, False]).iloc[0]
-
-            best_campus = str(best_reach_row["Campus"])
-            best_pct = float(best_reach_row["Achievement %"])
-            weak_campus = str(weakest_reach_row["Campus"])
-            weak_pct = float(weakest_reach_row["Achievement %"])
-
-            ems_insight(
-                "EMS · Reach Efficiency Insight",
-                f"{best_campus} has the strongest visible reach achievement at {best_pct:.1f}% of plan; {weak_campus} is currently lowest at {weak_pct:.1f}%.",
-                f"The gap between the best and lowest campus is {best_pct - weak_pct:.1f} percentage points, indicating different execution efficiency or data-completion levels.",
-                f"Review activity type, audience quality and actual-reach data capture for {weak_campus} before increasing its planned volume.",
-                "teal",
+            fig.update_xaxes(
+                title="Reach",
+                rangemode="tozero",
+                showgrid=True,
+                gridcolor="#EDF2F7",
+                gridwidth=1,
+                zeroline=False,
+                linecolor="#E1E8F0",
+                tickfont=dict(size=9, color="#7B8DA3"),
+                title_font=dict(size=9, color="#657B92"),
+                automargin=True,
             )
+            fig.update_yaxes(
+                title="",
+                categoryorder="array",
+                categoryarray=campus_order,
+                autorange="reversed",
+                showgrid=False,
+                linecolor="#E1E8F0",
+                tickfont=dict(size=10, color="#365777"),
+                automargin=True,
+            )
+            st.plotly_chart(fig, width="stretch", config=CHART_CONFIG)
+
+    zero_signal = (
+        f"{zero_actual_count} campus{'es' if zero_actual_count != 1 else ''} currently show planned reach but no actual reach."
+        if zero_actual_count
+        else "All campuses with a plan currently have some actual reach captured."
+    )
+
+    priority_action = (
+        f"Close the {largest_gap:,.0f} reach gap in {gap_campus} first; then protect delivery momentum in {best_campus}."
+        if largest_gap > 0
+        else f"Maintain delivery momentum in {best_campus} and keep actual-reach capture current across campuses."
+    )
+
+    with reach_right:
+        with st.container(border=True):
+            st.markdown('<span class="reach-insight-marker"></span>', unsafe_allow_html=True)
+            insight_html = (
+                '<div class="reach-intel">'
+                '<div class="reach-intel-top">'
+                '<div>'
+                '<div class="reach-intel-title">Reach Intelligence</div>'
+                '<div class="reach-intel-sub">Executive readout derived directly from the chart and current filters.</div>'
+                '</div>'
+                f'<span class="reach-health-badge" style="border-color:{health_accent}33;color:{health_accent};">{escape(health_label)}</span>'
+                '</div>'
+                '<div class="reach-kpi-grid">'
+                f'<div class="reach-kpi" style="--reach-accent:{health_accent};"><div class="reach-kpi-label">Overall achievement</div><div class="reach-kpi-value">{overall_pct:.0f}%</div><div class="reach-kpi-note">{overall_actual:,.0f} delivered of {overall_planned:,.0f} planned</div></div>'
+                f'<div class="reach-kpi" style="--reach-accent:#18A36F;"><div class="reach-kpi-label">Best efficiency</div><div class="reach-kpi-value">{escape(best_campus)}</div><div class="reach-kpi-note">{best_pct:.1f}% of plan achieved</div></div>'
+                f'<div class="reach-kpi" style="--reach-accent:#E9A11B;"><div class="reach-kpi-label">Largest gap</div><div class="reach-kpi-value">{largest_gap:,.0f}</div><div class="reach-kpi-note">{escape(gap_campus)} planned vs actual shortfall</div></div>'
+                f'<div class="reach-kpi" style="--reach-accent:#6A67E8;"><div class="reach-kpi-label">Actual reach leader</div><div class="reach-kpi-value">{escape(actual_leader)}</div><div class="reach-kpi-note">{actual_leader_value:,.0f} reach · {actual_share:.1f}% of actual</div></div>'
+                '</div>'
+                '<div class="reach-readout">'
+                '<div class="reach-readout-title">Management Readout</div>'
+                '<div class="reach-signal"><span class="reach-signal-num">1</span>'
+                f'<span class="reach-signal-text"><strong>{escape(best_campus)}</strong> is the most efficient campus at {best_pct:.1f}% achievement, while <strong>{escape(weakest_campus)}</strong> is lowest at {weakest_pct:.1f}%.</span></div>'
+                '<div class="reach-signal"><span class="reach-signal-num">2</span>'
+                f'<span class="reach-signal-text"><strong>{escape(gap_campus)}</strong> carries the largest absolute shortfall of {largest_gap:,.0f}, making it the biggest current reach recovery opportunity.</span></div>'
+                '<div class="reach-signal"><span class="reach-signal-num">3</span>'
+                f'<span class="reach-signal-text">{escape(zero_signal)}</span></div>'
+                '</div>'
+                f'<div class="reach-action"><strong>Priority action:</strong> {escape(priority_action)}</div>'
+                '</div>'
+            )
+            st.markdown(insight_html, unsafe_allow_html=True)
 
 
 # =========================================================
