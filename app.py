@@ -8792,3 +8792,614 @@ chart_insight(
     ),
     "violet",
 )
+
+
+# =========================================================
+# CAMPUS-WISE ACTIVITY DETAIL TABLE
+# Management-ready master view matching the requested design.
+# Uses the already-filtered Overview dataset; no existing logic is changed.
+# =========================================================
+
+def _detail_first_existing(frame, names):
+    for name in names:
+        if name in frame.columns:
+            return frame[name]
+    return pd.Series(pd.NA, index=frame.index, dtype="object")
+
+
+def _detail_clean_text(value, fallback="—"):
+    if pd.isna(value):
+        return fallback
+    text_value = str(value).strip()
+    if not text_value or text_value.lower() in {"nan", "none", "<na>"}:
+        return fallback
+    return text_value
+
+
+def _detail_date(value):
+    if pd.isna(value):
+        return "—"
+    try:
+        dt_value = pd.to_datetime(value, errors="coerce")
+        if pd.isna(dt_value):
+            return "—"
+        return dt_value.strftime("%d %b %Y")
+    except Exception:
+        return "—"
+
+
+def _detail_number(value):
+    if pd.isna(value):
+        return "—"
+    try:
+        number = float(value)
+        if math.isnan(number):
+            return "—"
+        if number.is_integer():
+            return f"{int(number):,}"
+        return f"{number:,.1f}"
+    except Exception:
+        return _detail_clean_text(value)
+
+
+def _detail_class_token(value):
+    raw = _detail_clean_text(value, "").lower()
+    return "".join(ch if ch.isalnum() else "-" for ch in raw).strip("-")
+
+
+_detail_source = filtered.copy()
+
+# Standardise only for this visual. Source data remains unchanged.
+_detail_table = pd.DataFrame(index=_detail_source.index)
+_detail_table["Campus"] = _detail_first_existing(_detail_source, ["Campus"])
+_detail_table["State"] = _detail_first_existing(
+    _detail_source,
+    ["State", "Correspondence State", "Present State"],
+)
+_detail_table["City"] = _detail_first_existing(
+    _detail_source,
+    ["City", "Present City", "Correspondence City"],
+)
+_detail_table["Activity Date"] = _detail_first_existing(_detail_source, ["Activity Date"])
+_detail_table["Activity Type"] = _detail_first_existing(_detail_source, ["Activity Type"])
+_detail_table["Event"] = _detail_first_existing(_detail_source, ["Event"])
+_detail_table["Status"] = _detail_first_existing(_detail_source, ["Status"])
+_detail_table["Event Date"] = _detail_first_existing(_detail_source, ["Event Date"])
+_detail_table["Institution / Event Name"] = _detail_first_existing(
+    _detail_source,
+    ["Institution / Event Name", "Institution/Event Name", "Institution Name", "Event Name"],
+)
+_detail_table["Activity Owner"] = _detail_first_existing(_detail_source, ["Activity Owner", "Owner"])
+_detail_table["Supporting Team Member"] = _detail_first_existing(
+    _detail_source,
+    [
+        "Supporting Team Member",
+        "Supporting Team   Member",
+        "Supporting Team member",
+        "Supporting Team",
+    ],
+)
+_detail_table["Priority"] = _detail_first_existing(_detail_source, ["Priority"])
+_detail_table["Relationship Strength"] = _detail_first_existing(
+    _detail_source,
+    ["Relationship Strength", "Relationship   Strength"],
+)
+_detail_table["Participation Type"] = _detail_first_existing(
+    _detail_source,
+    ["Participation Type", "Participation   Type"],
+)
+_detail_table["Planned Reach"] = _detail_first_existing(
+    _detail_source,
+    [
+        "Planned Student Reach",
+        "Planned Student / faculty Reach",
+        "Planned Student / Faculty Reach",
+        "Planned Student   / faculty Reach",
+    ],
+)
+_detail_table["Actual Reach"] = _detail_first_existing(
+    _detail_source,
+    [
+        "Actual Student Reach",
+        "Actual Student / Faculty Reach",
+        "Actual Student / faculty Reach",
+        "Actual Student   / Faculty Reach",
+    ],
+)
+
+_detail_table = _detail_table.reset_index(drop=True)
+_detail_table.insert(0, "Sr. No", range(1, len(_detail_table) + 1))
+
+_detail_total_records = int(len(_detail_table))
+_detail_campuses = [
+    str(value)
+    for value in _detail_table["Campus"].dropna().astype(str).str.strip().unique().tolist()
+    if str(value).strip()
+]
+_detail_campus_count = len(_detail_campuses)
+_detail_completed = int(
+    _detail_table["Status"].astype("string").str.strip().str.casefold().eq("completed").sum()
+)
+_detail_high_priority = int(
+    _detail_table["Priority"].astype("string").str.strip().str.casefold().eq("high").sum()
+)
+_detail_completed_pct = _pct(_detail_completed, _detail_total_records)
+_detail_high_pct = _pct(_detail_high_priority, _detail_total_records)
+
+_detail_campus_order = ["Noida", "Lucknow", "Jaipur", "Indore"]
+_detail_present_campuses = [campus for campus in _detail_campus_order if campus in _detail_campuses]
+_detail_extra_campuses = sorted([campus for campus in _detail_campuses if campus not in _detail_present_campuses])
+_detail_badge_campuses = _detail_present_campuses + _detail_extra_campuses
+
+st.markdown(
+    r"""
+    <style>
+    .campus-master-shell {
+        position: relative;
+        overflow: hidden;
+        margin: .82rem 0 .28rem 0;
+        padding: .94rem .96rem .86rem .96rem;
+        border: 1px solid #DDE6F1;
+        border-radius: 20px;
+        background:
+            radial-gradient(circle at 98% 0%, rgba(45,108,223,.055), transparent 22%),
+            radial-gradient(circle at 3% 100%, rgba(28,169,110,.035), transparent 24%),
+            linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%);
+        box-shadow: 0 16px 36px rgba(22,49,88,.075), inset 0 1px 0 rgba(255,255,255,.96);
+    }
+    .campus-master-shell::before {
+        content:"";
+        position:absolute;
+        top:0;
+        left:-32%;
+        width:28%;
+        height:3px;
+        z-index:5;
+        background:linear-gradient(90deg,rgba(45,108,223,0),#2D6CDF,#7655E6,#F1A12B,#20A99A,rgba(32,169,154,0));
+        animation: campusMasterSweep 7s ease-in-out infinite;
+    }
+    @keyframes campusMasterSweep {
+        0%,14%{left:-32%;opacity:0;}
+        25%{opacity:1;}
+        58%{left:108%;opacity:.95;}
+        70%,100%{left:108%;opacity:0;}
+    }
+    .campus-master-head {
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:1.2rem;
+        margin-bottom:.72rem;
+    }
+    .campus-master-kicker {
+        color:#7650A2;
+        font-size:.63rem;
+        font-weight:950;
+        letter-spacing:.12em;
+        text-transform:uppercase;
+        margin-bottom:.14rem;
+    }
+    .campus-master-title {
+        color:#12365F;
+        font-size:1.20rem;
+        font-weight:950;
+        line-height:1.08;
+        letter-spacing:-.02em;
+    }
+    .campus-master-sub {
+        margin-top:.18rem;
+        color:#7387A0;
+        font-size:.64rem;
+        line-height:1.38;
+    }
+    .campus-master-tabs {
+        display:flex;
+        align-items:center;
+        justify-content:flex-end;
+        flex-wrap:wrap;
+        gap:7px;
+        padding-top:.10rem;
+    }
+    .campus-master-tab {
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        min-height:30px;
+        padding:.30rem .62rem;
+        border-radius:999px;
+        border:1px solid #DCE5F1;
+        background:#FFFFFF;
+        color:#49637E;
+        font-size:.54rem;
+        font-weight:900;
+        box-shadow:0 5px 13px rgba(25,55,95,.045);
+        white-space:nowrap;
+        transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    }
+    .campus-master-tab:hover {
+        transform:translateY(-2px);
+        box-shadow:0 9px 18px rgba(25,55,95,.085);
+        border-color:#C7D7EC;
+    }
+    .campus-master-tab.active {
+        color:#1D63D5;
+        border-color:#9EC0FF;
+        background:linear-gradient(135deg,#EDF5FF,#F7FAFF);
+        box-shadow:0 6px 15px rgba(45,108,223,.10);
+    }
+    .campus-tab-dot {width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 4px rgba(47,128,237,.08);}
+    .campus-tab-dot.all {background:#2F80ED;}
+    .campus-tab-dot.noida {background:#2DA9D6;}
+    .campus-tab-dot.lucknow {background:#8A5AE8;}
+    .campus-tab-dot.jaipur {background:#F0A12B;}
+    .campus-tab-dot.indore {background:#28B4AE;}
+    .campus-tab-dot.other {background:#7890A8;}
+
+    .campus-master-kpis {
+        display:grid;
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:12px;
+        margin-bottom:.78rem;
+    }
+    .campus-master-kpi {
+        position:relative;
+        overflow:hidden;
+        min-height:92px;
+        display:grid;
+        grid-template-columns:46px 1fr;
+        gap:.68rem;
+        align-items:center;
+        padding:.72rem .78rem;
+        border:1px solid #DBE5F1;
+        border-radius:14px;
+        background:#FFFFFF;
+        box-shadow:0 8px 19px rgba(26,54,91,.045);
+        transition:transform .22s ease,box-shadow .22s ease;
+    }
+    .campus-master-kpi:hover {transform:translateY(-3px);box-shadow:0 14px 28px rgba(26,54,91,.09);}
+    .campus-master-kpi::before {content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:14px 0 0 14px;}
+    .campus-master-kpi.blue {background:linear-gradient(135deg,#F8FBFF,#EDF5FF);}
+    .campus-master-kpi.teal {background:linear-gradient(135deg,#FAFFFF,#EBFAFB);}
+    .campus-master-kpi.violet {background:linear-gradient(135deg,#FCFAFF,#F4EFFF);}
+    .campus-master-kpi.amber {background:linear-gradient(135deg,#FFFDF8,#FFF5E6);}
+    .campus-master-kpi.blue::before{background:#2F80ED;}
+    .campus-master-kpi.teal::before{background:#22B4B2;}
+    .campus-master-kpi.violet::before{background:#8B5CE8;}
+    .campus-master-kpi.amber::before{background:#F0A12B;}
+    .campus-master-kpi-icon {
+        width:43px;height:43px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+        font-size:1.05rem;font-weight:950;border:1px solid rgba(255,255,255,.75);box-shadow:0 6px 14px rgba(30,62,104,.055);
+    }
+    .campus-master-kpi.blue .campus-master-kpi-icon{background:#E8F2FF;color:#2F80ED;}
+    .campus-master-kpi.teal .campus-master-kpi-icon{background:#DFF8F7;color:#20A5A2;}
+    .campus-master-kpi.violet .campus-master-kpi-icon{background:#EEE6FF;color:#8154DC;}
+    .campus-master-kpi.amber .campus-master-kpi-icon{background:#FFF0D5;color:#E39318;}
+    .campus-master-kpi-label{color:#607690;font-size:.51rem;font-weight:950;letter-spacing:.055em;text-transform:uppercase;}
+    .campus-master-kpi-value{color:#16385F;font-size:1.15rem;font-weight:950;line-height:1;margin-top:.13rem;}
+    .campus-master-kpi-note{color:#7B8EA5;font-size:.53rem;line-height:1.25;margin-top:.18rem;}
+
+    .campus-detail-wrap {
+        position:relative;
+        width:100%;
+        max-height:590px;
+        overflow:auto;
+        border:1px solid #DDE6F1;
+        border-radius:14px;
+        background:#FFFFFF;
+        box-shadow:0 7px 17px rgba(24,54,94,.035);
+        scrollbar-width:thin;
+        scrollbar-color:#BFD0E5 #F4F7FB;
+    }
+    .campus-detail-table {
+        width:100%;
+        min-width:2050px;
+        border-collapse:separate;
+        border-spacing:0;
+        table-layout:fixed;
+        color:#294B6D;
+        font-family:Arial,sans-serif;
+        font-size:11.5px;
+    }
+    .campus-detail-table col.sr{width:54px;}
+    .campus-detail-table col.campus{width:92px;}
+    .campus-detail-table col.state{width:118px;}
+    .campus-detail-table col.city{width:110px;}
+    .campus-detail-table col.date{width:102px;}
+    .campus-detail-table col.activity{width:118px;}
+    .campus-detail-table col.event{width:115px;}
+    .campus-detail-table col.status{width:105px;}
+    .campus-detail-table col.inst{width:190px;}
+    .campus-detail-table col.owner{width:126px;}
+    .campus-detail-table col.support{width:145px;}
+    .campus-detail-table col.priority{width:93px;}
+    .campus-detail-table col.relationship{width:118px;}
+    .campus-detail-table col.participation{width:115px;}
+    .campus-detail-table col.reach{width:126px;}
+
+    .campus-detail-table th,
+    .campus-detail-table td {
+        border-right:1px solid #E3EAF2;
+        border-bottom:1px solid #E6EDF5;
+        vertical-align:middle;
+    }
+    .campus-detail-table th:last-child,.campus-detail-table td:last-child{border-right:none;}
+    .campus-detail-table thead th {position:sticky;z-index:3;}
+    .campus-detail-table thead tr:first-child th {top:0;}
+    .campus-detail-table thead tr:nth-child(2) th {top:36px;}
+    .campus-group-head {
+        height:36px;
+        padding:.42rem .30rem;
+        font-size:11px;
+        font-weight:950;
+        text-align:center;
+        letter-spacing:.015em;
+        color:#29486B;
+    }
+    .campus-group-head.location{background:linear-gradient(180deg,#EDF5FF,#E8F1FC);color:#1F59A5;}
+    .campus-group-head.activity{background:linear-gradient(180deg,#F6F0FF,#EEE6FD);color:#7441C4;}
+    .campus-group-head.ownership{background:linear-gradient(180deg,#FFF7E6,#FFF0D2);color:#A76506;}
+    .campus-group-head.reach{background:linear-gradient(180deg,#E9FAFB,#DDF5F6);color:#137B81;}
+    .campus-detail-head {
+        height:58px;
+        padding:.44rem .34rem;
+        background:linear-gradient(180deg,#F8FBFF,#F3F7FC);
+        color:#23486F;
+        font-size:10.5px;
+        font-weight:950;
+        line-height:1.18;
+        text-align:center;
+    }
+    .campus-detail-head.left{text-align:left;}
+    .campus-detail-table tbody tr {
+        opacity:0;
+        transform:translateY(8px);
+        animation:campusRowIn .46s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+    @keyframes campusRowIn {to{opacity:1;transform:translateY(0);}}
+    .campus-detail-table tbody td {
+        padding:.50rem .42rem;
+        background:#FFFFFF;
+        color:#405F7D;
+        font-size:11.3px;
+        line-height:1.28;
+        transition:background .17s ease,color .17s ease,box-shadow .17s ease;
+    }
+    .campus-detail-table tbody tr:nth-child(even) td {background:#FBFCFE;}
+    .campus-detail-table tbody tr:hover td {
+        background:#F1F7FF;
+        color:#244A70;
+        box-shadow:inset 0 1px 0 rgba(47,128,237,.06),inset 0 -1px 0 rgba(47,128,237,.06);
+    }
+    .campus-detail-table tbody tr:hover td:first-child {box-shadow:inset 4px 0 0 #2F80ED;}
+    .detail-sr {text-align:center;font-weight:950;color:#173B62!important;font-variant-numeric:tabular-nums;}
+    .detail-campus {font-weight:950;color:#183F68!important;}
+    .detail-nowrap{white-space:nowrap;}
+    .detail-wrap{white-space:normal;word-break:normal;overflow-wrap:anywhere;}
+    .detail-muted{color:#8A9AAF!important;font-style:italic;}
+    .detail-reach{text-align:center;font-weight:850;color:#315777!important;font-variant-numeric:tabular-nums;}
+
+    .detail-chip {
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        min-height:24px;
+        padding:.20rem .48rem;
+        border-radius:7px;
+        border:1px solid transparent;
+        font-size:10px;
+        font-weight:950;
+        line-height:1;
+        white-space:nowrap;
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
+    }
+    .status-planned{color:#2165C7;background:#E4F0FF;border-color:#D2E4FA;}
+    .status-confirmed{color:#087F72;background:#DFF7F0;border-color:#C9EEE4;}
+    .status-completed{color:#11814B;background:#DDF6E9;border-color:#CBEEDB;}
+    .status-cancelled{color:#C93A45;background:#FFE5E8;border-color:#FAD2D7;}
+    .status-rescheduled{color:#A76B08;background:#FFF0CF;border-color:#F6DFAD;}
+    .status-other{color:#60748A;background:#EEF2F6;border-color:#E1E7EE;}
+
+    .priority-high{color:#C83A4A;background:#FFE3E8;border-color:#FAD1D8;}
+    .priority-medium{color:#A46908;background:#FFF1D3;border-color:#F8E0AB;}
+    .priority-low{color:#15805A;background:#E2F7ED;border-color:#CEEFE0;}
+    .priority-other{color:#667A90;background:#EEF2F6;border-color:#E0E7EF;}
+
+    .relationship-strong{color:#147D49;background:#DDF5E8;border-color:#CBECD9;}
+    .relationship-moderate{color:#2868C6;background:#E4EEFF;border-color:#D2E2FA;}
+    .relationship-new{color:#A66A08;background:#FFF1D3;border-color:#F7E0B0;}
+    .relationship-other{color:#65798F;background:#EEF2F6;border-color:#E0E6EE;}
+
+    .participation-student{color:#2167C9;background:#E5F0FF;border-color:#D4E4FA;}
+    .participation-faculty{color:#7440C4;background:#EFE5FF;border-color:#E2D3FA;}
+    .participation-mixed{color:#684CC6;background:#ECEAFF;border-color:#DDD8FA;}
+    .participation-other{color:#60758B;background:#EEF2F6;border-color:#E0E6EE;}
+
+    .campus-detail-footer {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:1rem;
+        padding:.63rem .12rem .02rem .12rem;
+        color:#70869E;
+        font-size:.57rem;
+        line-height:1.3;
+    }
+    .campus-detail-footer strong{color:#234A72;}
+    .campus-detail-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+    .campus-detail-legend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+    .campus-detail-legend i{width:7px;height:7px;border-radius:50%;display:inline-block;}
+
+    @media(max-width:1100px){
+        .campus-master-head{flex-direction:column;}
+        .campus-master-tabs{justify-content:flex-start;}
+        .campus-master-kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    @media(max-width:680px){.campus-master-kpis{grid-template-columns:1fr;}}
+    @media(prefers-reduced-motion:reduce){
+        .campus-master-shell::before,.campus-detail-table tbody tr{animation:none!important;opacity:1!important;transform:none!important;}
+        .campus-master-kpi,.campus-master-tab{transition:none!important;}
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+_detail_campus_tabs_html = [
+    '<span class="campus-master-tab active"><span class="campus-tab-dot all"></span>All Campuses</span>'
+]
+for _campus_name in _detail_badge_campuses:
+    _campus_class = _detail_class_token(_campus_name)
+    if _campus_class not in {"noida", "lucknow", "jaipur", "indore"}:
+        _campus_class = "other"
+    _detail_campus_tabs_html.append(
+        f'<span class="campus-master-tab"><span class="campus-tab-dot {_campus_class}"></span>{html.escape(_campus_name)}</span>'
+    )
+
+_detail_table_rows = []
+for _row_idx, _row in _detail_table.iterrows():
+    _campus = _detail_clean_text(_row["Campus"])
+    _state = _detail_clean_text(_row["State"])
+    _city = _detail_clean_text(_row["City"])
+    _activity_date = _detail_date(_row["Activity Date"])
+    _activity_type = _detail_clean_text(_row["Activity Type"])
+    _event = _detail_clean_text(_row["Event"], "No Event")
+    _status = _detail_clean_text(_row["Status"])
+    _event_date = _detail_date(_row["Event Date"])
+    _institution = _detail_clean_text(_row["Institution / Event Name"])
+    _owner = _detail_clean_text(_row["Activity Owner"])
+    _support = _detail_clean_text(_row["Supporting Team Member"])
+    _priority = _detail_clean_text(_row["Priority"])
+    _relationship = _detail_clean_text(_row["Relationship Strength"])
+    _participation = _detail_clean_text(_row["Participation Type"])
+    _planned_reach = _detail_number(_row["Planned Reach"])
+    _actual_reach = _detail_number(_row["Actual Reach"])
+
+    _status_token = _detail_class_token(_status)
+    if _status_token not in {"planned", "confirmed", "completed", "cancelled", "rescheduled"}:
+        _status_token = "other"
+    _priority_token = _detail_class_token(_priority)
+    if _priority_token not in {"high", "medium", "low"}:
+        _priority_token = "other"
+    _relationship_token = _detail_class_token(_relationship)
+    if _relationship_token not in {"strong", "moderate", "new"}:
+        _relationship_token = "other"
+    _participation_token = _detail_class_token(_participation)
+    if _participation_token not in {"student", "faculty", "mixed"}:
+        _participation_token = "other"
+
+    _delay = min((_row_idx % 18) * 0.025, 0.40)
+    _event_class = "detail-muted" if _event == "No Event" else ""
+
+    _detail_table_rows.append(
+        f'<tr style="animation-delay:{_delay:.3f}s">'
+        f'<td class="detail-sr">{int(_row["Sr. No"]):,}</td>'
+        f'<td class="detail-campus detail-nowrap">{html.escape(_campus)}</td>'
+        f'<td class="detail-wrap">{html.escape(_state)}</td>'
+        f'<td class="detail-wrap">{html.escape(_city)}</td>'
+        f'<td class="detail-nowrap">{html.escape(_activity_date)}</td>'
+        f'<td class="detail-wrap">{html.escape(_activity_type)}</td>'
+        f'<td class="detail-wrap {_event_class}">{html.escape(_event)}</td>'
+        f'<td><span class="detail-chip status-{_status_token}">{html.escape(_status)}</span></td>'
+        f'<td class="detail-nowrap">{html.escape(_event_date)}</td>'
+        f'<td class="detail-wrap">{html.escape(_institution)}</td>'
+        f'<td class="detail-wrap">{html.escape(_owner)}</td>'
+        f'<td class="detail-wrap">{html.escape(_support)}</td>'
+        f'<td><span class="detail-chip priority-{_priority_token}">{html.escape(_priority)}</span></td>'
+        f'<td><span class="detail-chip relationship-{_relationship_token}">{html.escape(_relationship)}</span></td>'
+        f'<td><span class="detail-chip participation-{_participation_token}">{html.escape(_participation)}</span></td>'
+        f'<td class="detail-reach">{html.escape(_planned_reach)}</td>'
+        f'<td class="detail-reach">{html.escape(_actual_reach)}</td>'
+        '</tr>'
+    )
+
+_detail_html = (
+    '<div class="campus-master-shell">'
+        '<div class="campus-master-head">'
+            '<div>'
+                '<div class="campus-master-kicker">Campus Outreach Master View</div>'
+                '<div class="campus-master-title">Campus-wise Activity Detail Table</div>'
+                '<div class="campus-master-sub">Detailed activity-level records across campuses for management review. The table follows the active Overview filters.</div>'
+            '</div>'
+            '<div class="campus-master-tabs">'
+                + ''.join(_detail_campus_tabs_html) +
+            '</div>'
+        '</div>'
+        '<div class="campus-master-kpis">'
+            '<div class="campus-master-kpi blue">'
+                '<div class="campus-master-kpi-icon">▣</div>'
+                '<div><div class="campus-master-kpi-label">Total Records</div>'
+                f'<div class="campus-master-kpi-value">{_detail_total_records:,}</div>'
+                '<div class="campus-master-kpi-note">Campus outreach activities</div></div>'
+            '</div>'
+            '<div class="campus-master-kpi teal">'
+                '<div class="campus-master-kpi-icon">●</div>'
+                '<div><div class="campus-master-kpi-label">Campuses Covered</div>'
+                f'<div class="campus-master-kpi-value">{_detail_campus_count:,}</div>'
+                f'<div class="campus-master-kpi-note">{html.escape(", ".join(_detail_badge_campuses) if _detail_badge_campuses else "No campus available")}</div></div>'
+            '</div>'
+            '<div class="campus-master-kpi violet">'
+                '<div class="campus-master-kpi-icon">✓</div>'
+                '<div><div class="campus-master-kpi-label">Completed Activities</div>'
+                f'<div class="campus-master-kpi-value">{_detail_completed:,}</div>'
+                f'<div class="campus-master-kpi-note">{_detail_completed_pct:.1f}% of total records</div></div>'
+            '</div>'
+            '<div class="campus-master-kpi amber">'
+                '<div class="campus-master-kpi-icon">!</div>'
+                '<div><div class="campus-master-kpi-label">High Priority</div>'
+                f'<div class="campus-master-kpi-value">{_detail_high_priority:,}</div>'
+                f'<div class="campus-master-kpi-note">{_detail_high_pct:.1f}% of total records</div></div>'
+            '</div>'
+        '</div>'
+        '<div class="campus-detail-wrap">'
+            '<table class="campus-detail-table">'
+                '<colgroup>'
+                    '<col class="sr"><col class="campus"><col class="state"><col class="city">'
+                    '<col class="date"><col class="activity"><col class="event"><col class="status"><col class="date"><col class="inst">'
+                    '<col class="owner"><col class="support"><col class="priority"><col class="relationship"><col class="participation">'
+                    '<col class="reach"><col class="reach">'
+                '</colgroup>'
+                '<thead>'
+                    '<tr>'
+                        '<th class="campus-group-head location" rowspan="2">Sr.<br>No</th>'
+                        '<th class="campus-group-head location" colspan="3">Location</th>'
+                        '<th class="campus-group-head activity" colspan="6">Activity Details</th>'
+                        '<th class="campus-group-head ownership" colspan="5">Ownership &amp; Priority</th>'
+                        '<th class="campus-group-head reach" colspan="2">Reach</th>'
+                    '</tr>'
+                    '<tr>'
+                        '<th class="campus-detail-head left">Campus</th>'
+                        '<th class="campus-detail-head left">State</th>'
+                        '<th class="campus-detail-head left">City</th>'
+                        '<th class="campus-detail-head">Activity<br>Date</th>'
+                        '<th class="campus-detail-head left">Activity Type</th>'
+                        '<th class="campus-detail-head left">Event</th>'
+                        '<th class="campus-detail-head">Status</th>'
+                        '<th class="campus-detail-head">Event Date</th>'
+                        '<th class="campus-detail-head left">Institution / Event Name</th>'
+                        '<th class="campus-detail-head left">Activity Owner</th>'
+                        '<th class="campus-detail-head left">Supporting Team Member</th>'
+                        '<th class="campus-detail-head">Priority</th>'
+                        '<th class="campus-detail-head">Relationship Strength</th>'
+                        '<th class="campus-detail-head">Participation Type</th>'
+                        '<th class="campus-detail-head">Planned<br>Student / Faculty Reach</th>'
+                        '<th class="campus-detail-head">Actual<br>Student / Faculty Reach</th>'
+                    '</tr>'
+                '</thead>'
+                '<tbody>'
+                    + ''.join(_detail_table_rows) +
+                '</tbody>'
+            '</table>'
+        '</div>'
+        '<div class="campus-detail-footer">'
+            f'<span>Showing <strong>{_detail_total_records:,}</strong> filtered activity records · scroll vertically and horizontally for full detail.</span>'
+            '<div class="campus-detail-legend">'
+                '<span><i style="background:#2F80ED"></i>Planned</span>'
+                '<span><i style="background:#18A56B"></i>Completed</span>'
+                '<span><i style="background:#EF5B64"></i>Cancelled</span>'
+                '<span><i style="background:#F0A12B"></i>Priority / Rescheduled</span>'
+            '</div>'
+        '</div>'
+    '</div>'
+)
+
+st.markdown(_detail_html, unsafe_allow_html=True)
