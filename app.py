@@ -7162,26 +7162,26 @@ def render_activity_event_status_matrix(matrix_df):
         .aev-count-completed{color:#FFFFFF;background:#2EA069;border:1px solid #29945F;}
         .aev-count-cancelled{color:#FFFFFF;background:#EF625D;border:1px solid #E15752;}
         .aev-count-rescheduled{color:#7C5205;background:#FFE7B7;border:1px solid #F0D295;}
-        .aev-total-row td{background:linear-gradient(180deg,#FFF9E9 0%,#FFF4D8 100%)!important;color:#153A5F;font-weight:900;border-top:1px solid #ECD9A8;font-size:.50rem;line-height:1.05;padding:.34rem .06rem!important;}
-        .aev-total-label{text-align:left!important;padding:.36rem .48rem!important;font-size:.53rem!important;font-weight:950!important;}
-        .aev-intel-panel{margin:.58rem .80rem .78rem .80rem;padding:.68rem .72rem .70rem .72rem;border:1px solid #DCE6F1;border-radius:15px;background:linear-gradient(135deg,#F8FBFF 0%,#FFFFFF 52%,#FBF9FF 100%);box-shadow:0 7px 20px rgba(22,49,88,.045);position:relative;overflow:hidden;}
-        .aev-intel-panel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#2D6CDF,#7156D9,#1CA96E);}
-        .aev-intel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin-bottom:.52rem;padding-left:.16rem;}
-        .aev-intel-title{color:#16385F;font-size:.70rem;font-weight:950;line-height:1.12;}
-        .aev-intel-sub{color:#7B8DA3;font-size:.49rem;line-height:1.35;margin-top:.08rem;}
-        .aev-intel-tag{display:inline-flex;align-items:center;gap:5px;padding:.22rem .42rem;border-radius:999px;background:#EEF5FF;border:1px solid #D9E7F8;color:#2D64A4;font-size:.44rem;font-weight:900;white-space:nowrap;}
+        .aev-total-row td{background:linear-gradient(180deg,#FFF9E9 0%,#FFF4D8 100%)!important;color:#153A5F;font-weight:950;border-top:1px solid #ECD9A8;font-size:.57rem;line-height:1.08;padding:.38rem .07rem!important;}
+        .aev-total-label{text-align:left!important;padding:.39rem .50rem!important;font-size:.59rem!important;font-weight:950!important;}
+        .aev-intel-panel{margin:.66rem .80rem .82rem .80rem;padding:.84rem .86rem .82rem .86rem;border:1px solid #D8E4F1;border-radius:17px;background:radial-gradient(circle at 96% 8%,rgba(45,108,223,.075),transparent 23%),radial-gradient(circle at 4% 92%,rgba(28,169,110,.055),transparent 24%),linear-gradient(135deg,#F8FBFF 0%,#FFFFFF 52%,#FBF9FF 100%);box-shadow:0 10px 26px rgba(22,49,88,.06),inset 0 1px 0 rgba(255,255,255,.96);position:relative;overflow:hidden;}
+        .aev-intel-panel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#2D6CDF,#7156D9,#1CA96E);} .aev-intel-panel::after{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;background:linear-gradient(90deg,rgba(45,108,223,.85),rgba(113,86,217,.58),rgba(28,169,110,.56),rgba(45,108,223,0));border-radius:0 0 999px 999px;}
+        .aev-intel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.90rem;margin-bottom:.68rem;padding-left:.10rem;position:relative;z-index:1;}
+        .aev-intel-title{color:#12365F;font-size:.88rem;font-weight:950;line-height:1.10;letter-spacing:-.01em;}
+        .aev-intel-sub{color:#72869F;font-size:.55rem;line-height:1.40;margin-top:.11rem;max-width:780px;}
+        .aev-intel-tag{display:inline-flex;align-items:center;gap:6px;padding:.28rem .50rem;border-radius:999px;background:linear-gradient(135deg,#EEF5FF,#F6F2FF);border:1px solid #D8E4F4;color:#2D64A4;font-size:.48rem;font-weight:900;white-space:nowrap;box-shadow:0 4px 10px rgba(37,99,235,.05);}
         .aev-intel-tag::before{content:"";width:5px;height:5px;border-radius:50%;background:#2F80ED;box-shadow:0 0 0 3px rgba(47,128,237,.09);}
-        .aev-signal-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
-        .aev-signal-card{min-height:66px;padding:.48rem .50rem;border-radius:11px;background:#FFFFFF;border:1px solid #E1E8F1;box-shadow:0 3px 10px rgba(22,49,88,.025);}
+        .aev-signal-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;position:relative;z-index:1;}
+        .aev-signal-card{min-height:84px;padding:.62rem .64rem;border-radius:13px;background:linear-gradient(180deg,#FFFFFF 0%,#FBFCFF 100%);border:1px solid #DEE7F1;box-shadow:0 6px 16px rgba(22,49,88,.045),inset 0 1px 0 rgba(255,255,255,.95);transition:transform .18s ease,box-shadow .18s ease;} .aev-signal-card:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(22,49,88,.075),inset 0 1px 0 rgba(255,255,255,.95);}
         .aev-signal-card.c1{border-top:2px solid #2F80ED;}.aev-signal-card.c2{border-top:2px solid #7554D8;}.aev-signal-card.c3{border-top:2px solid #E4A02A;}.aev-signal-card.c4{border-top:2px solid #20A56B;}
-        .aev-signal-label{color:#7A8CA2;font-size:.43rem;font-weight:900;letter-spacing:.055em;text-transform:uppercase;}
-        .aev-signal-value{color:#143A60;font-size:.72rem;font-weight:950;line-height:1.08;margin-top:.10rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .aev-signal-note{color:#8495A8;font-size:.43rem;line-height:1.25;margin-top:.07rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .aev-campus-pulse{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:.48rem;padding-top:.44rem;border-top:1px solid #E7EDF4;}
-        .aev-campus-pulse-label{color:#657A92;font-size:.46rem;font-weight:900;margin-right:2px;}
-        .aev-campus-chip{display:inline-flex;align-items:center;gap:5px;padding:.22rem .38rem;border-radius:8px;background:#FFFFFF;border:1px solid #E0E7F0;color:#365574;font-size:.44rem;font-weight:800;}
+        .aev-signal-label{color:#71859D;font-size:.47rem;font-weight:950;letter-spacing:.07em;text-transform:uppercase;}
+        .aev-signal-value{color:#12385F;font-size:.91rem;font-weight:950;line-height:1.08;margin-top:.16rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .aev-signal-note{color:#7C8FA5;font-size:.47rem;line-height:1.30;margin-top:.10rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .aev-campus-pulse{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:.62rem;padding-top:.56rem;border-top:1px solid #E4EBF3;position:relative;z-index:1;}
+        .aev-campus-pulse-label{color:#5D748D;font-size:.51rem;font-weight:950;margin-right:4px;}
+        .aev-campus-chip{display:inline-flex;align-items:center;gap:5px;padding:.27rem .45rem;border-radius:9px;background:#FFFFFF;border:1px solid #DDE6F0;color:#365574;font-size:.48rem;font-weight:850;box-shadow:0 3px 8px rgba(22,49,88,.025);}
         .aev-campus-chip strong{color:#1B5E46;font-weight:950;}
-        .aev-focus-ribbon{display:flex;align-items:center;gap:.44rem;margin-top:.44rem;padding:.39rem .48rem;border-radius:9px;background:linear-gradient(90deg,#FFF7E7 0%,#FFFDF7 58%,#F5FAFF 100%);border:1px solid #F0E2BE;border-left:3px solid #E4A02A;color:#5B7087;font-size:.47rem;line-height:1.35;}
+        .aev-focus-ribbon{display:flex;align-items:center;gap:.50rem;margin-top:.56rem;padding:.48rem .58rem;border-radius:10px;background:linear-gradient(90deg,#FFF6E3 0%,#FFFDF8 56%,#F3F8FF 100%);border:1px solid #EEDDB0;border-left:4px solid #E4A02A;color:#526B84;font-size:.51rem;line-height:1.42;box-shadow:0 4px 10px rgba(126,91,21,.035);position:relative;z-index:1;}
         .aev-focus-ribbon strong{color:#244B72;font-weight:950;}
         @media(max-width:1100px){.aev-head{flex-direction:column;align-items:flex-start;}.aev-head-badges{justify-content:flex-start;}.aev-signal-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
         @media(max-width:720px){.aev-signal-grid{grid-template-columns:1fr;}}
@@ -7258,8 +7258,8 @@ def render_activity_event_status_matrix(matrix_df):
     parts.append(
         '<div class="aev-intel-head">'
         '<div><div class="aev-intel-title">Execution Intelligence</div>'
-        '<div class="aev-intel-sub">A compact operational read of the current filtered matrix — intentionally different from the month-wise insight cards below.</div></div>'
-        '<span class="aev-intel-tag">Current filter view</span>'
+        '<div class="aev-intel-sub">Current execution health, campus momentum and the next operational priorities from the active filters.</div></div>'
+        '<span class="aev-intel-tag">Live filtered view</span>'
         '</div>'
     )
     parts.append('<div class="aev-signal-grid">')
@@ -7304,7 +7304,7 @@ def render_activity_event_status_matrix(matrix_df):
     parts.append(
         '<div class="aev-focus-ribbon">'
         '<span>◎</span>'
-        '<span><strong>Action focus:</strong> '
+        '<span><strong>Priority action:</strong> '
         f'Review {planned_count:,} planned and {confirmed_count:,} confirmed records first; '
         f'keep {cancelled_count:,} cancelled and {rescheduled_count:,} rescheduled records on exception watch.</span>'
         '</div>'
